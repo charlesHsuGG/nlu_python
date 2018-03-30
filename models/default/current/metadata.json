@@ -1,0 +1,16 @@
+{
+    "ner_duckling_http": "ner_duckling_http.json",
+    "mitie_file": "./data/total_word_feature_extractor_zh.dat",
+    "trained_at": "20180329-184646",
+    "pipeline": [
+        "rasa_nlu.utils.mitie_utils.MitieNLP",
+        "rasa_nlu.tokenizers.jieba_tokenizer.JiebaTokenizer",
+        "rasa_nlu.extractors.duckling_http_extractor.DucklingHTTPExtractor",
+        "rasa_nlu.extractors.mitie_entity_extractor.MitieEntityExtractor"
+    ],
+    "training_data": "training_data.json",
+    "mitie_feature_extractor_fingerprint": 1810187658478185215,
+    "rasa_nlu_version": "0.10.6",
+    "entity_extractor_mitie": "entity_extractor.dat",
+    "language": "zh"
+}

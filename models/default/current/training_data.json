@@ -1,0 +1,76 @@
+{
+  "rasa_nlu_data": {
+    "entity_synonyms": [],
+    "common_examples": [
+      {
+        "entities": [
+          {
+            "start": 5,
+            "value": "蘇貞昌",
+            "end": 8,
+            "entity": "人名"
+          }
+        ],
+        "text": "她的名字叫蘇貞昌"
+      },
+      {
+        "intent": "",
+        "entities": [
+          {
+            "start": 2,
+            "value": "蘇",
+            "end": 3,
+            "entity": "姓氏"
+          },
+          {
+            "start": 7,
+            "value": "貞昌",
+            "end": 9,
+            "entity": "人名"
+          }
+        ],
+        "text": "他姓蘇,名字叫貞昌"
+      },
+      {
+        "entities": [
+          {
+            "start": 3,
+            "value": "蘇",
+            "end": 4,
+            "entity": "姓氏"
+          },
+          {
+            "start": 9,
+            "value": "貞昌",
+            "end": 11,
+            "entity": "人名"
+          }
+        ],
+        "text": "他姓 蘇，名字叫 貞昌"
+      },
+      {
+        "entities": [
+          {
+            "start": 5,
+            "value": "蘇貞昌",
+            "end": 8,
+            "entity": "人名"
+          }
+        ],
+        "text": "他的名字叫蘇貞昌,出生於1989年10月"
+      },
+      {
+        "entities": [
+          {
+            "start": 2,
+            "value": "許",
+            "end": 3,
+            "entity": "姓氏"
+          }
+        ],
+        "text": "我姓許"
+      }
+    ],
+    "regex_features": []
+  }
+}

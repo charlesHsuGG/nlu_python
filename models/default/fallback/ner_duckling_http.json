@@ -1,0 +1,12 @@
+{
+  "dimensions": [
+    "time",
+    "number",
+    "email",
+    "phone_number",
+    "duration",
+    "ordinal",
+    "temperature",
+    "Url"
+  ]
+}
