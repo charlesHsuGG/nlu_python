@@ -7,7 +7,8 @@ var mainApp = angular.module('mainApp',[
     "ui.router.util",
     //util library
     'app.services',
-    
+    'datatables',
+    'datatables.bootstrap',
     //custom library
     "mercue.services",
     "angularModalService",
@@ -16,7 +17,8 @@ var mainApp = angular.module('mainApp',[
     //page controllers   
     "app.mainctrl",
     "app.aientityctrl",
-
+    "app.aiintenteditctrl",
+    "app.navctrl",
  
 ]);
  
@@ -37,6 +39,7 @@ mainApp.config(function($stateProvider, $urlRouterProvider){
                console.log("page name:"+$stateParams.page);
                return $http.get('./spa/views/'+$stateParams.page+'.html')
                    .then(function(response) {
+                       console.log("load")
                        return scriptLoader.loadScriptTagsFromData(response.data);
                    })
                    .then(function(responseData){
