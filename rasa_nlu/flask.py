@@ -16,7 +16,7 @@ from functools import wraps
 import simplejson
 from builtins import str
 
-from flask import Blueprint, Flask, request, render_template, json
+from flask import Blueprint, Flask, request, make_response,  json
 
 from rasa_nlu.training_data import Message
 
@@ -114,19 +114,19 @@ class RasaFileManeger(object):
 
 
 
-class SimpleWeb(object):
+class EntityWeb(object):
 
     def data_router(self,rasaNLU):
-        custom_webhook = Blueprint('custom_webhook', __name__)
+        entity_webhook = Blueprint('entity_webhook', __name__)
         data_router = rasaNLU.data_router
         config = rasaNLU.config
         feature_extractor = mitie.total_word_feature_extractor(config["mitie_file"])
 
-        @custom_webhook.route("/")
+        @entity_webhook.route("/")
         def main():
-            return render_template("MainPage.html")
+            return make_response(open('rasa_nlu/templates/MainPage.html').read())
         
-        @custom_webhook.route("/parse", methods=['POST'])
+        @entity_webhook.route("/parse", methods=['POST'])
         def parse_get():
             payload = request.json
             text = payload.get("message", None)
@@ -144,14 +144,14 @@ class SimpleWeb(object):
                 logger.exception(e)
                 return (json_to_string({"error": "{}".format(e)}))
 
-        @custom_webhook.route("/project_list", methods=['GET'])
+        @entity_webhook.route("/project_list", methods=['GET'])
         def project_list():
             list_projects = [fn
                 for fn in glob.glob(os.path.join(config['path'], '*'))
                 if os.path.isdir(fn)]
             return str(list_projects)
         
-        @custom_webhook.route("/entity_get", methods=['POST'])
+        @entity_webhook.route("/entity_get", methods=['POST'])
         def entity_get():
             payload = request.json
             text = payload.get("message", None)
@@ -204,7 +204,7 @@ class SimpleWeb(object):
             output = {"code":1, "text": text, "entities": entities_output}
             return (json_to_string(output))
 
-        @custom_webhook.route("/entity_save", methods=['POST'])
+        @entity_webhook.route("/entity_save", methods=['POST'])
         def entity_save():
             payload = request.json
             text = payload.get("message", None)
@@ -241,7 +241,7 @@ class SimpleWeb(object):
             response = {"code":1, "seccess": True}
             return (json_to_string(response))
 
-        @custom_webhook.route("/entity_mitie_train", methods=['POST'])
+        @entity_webhook.route("/entity_mitie_train", methods=['POST'])
         def entity_mitie_train():
             mannger =RasaFileManeger(config["data"])
             data = mannger.load()
@@ -283,7 +283,10 @@ class SimpleWeb(object):
             return (json_to_string(response))
 
 
-        return custom_webhook
+        return entity_webhook
+
+# class IntentWeb(object):
+
 
 if __name__ == "__main__": 
     arg_parser = create_argparser()
@@ -293,7 +296,7 @@ if __name__ == "__main__":
     rasa_nlu_config = RasaNLUConfig(
             cmdline_args.get("config"), os.environ, cmdline_args)
     rasa = RasaNLU(rasa_nlu_config)
-    input_channel = SimpleWeb()
+    input_channel = EntityWeb()
     rasa.app.register_blueprint(input_channel.data_router(rasa), url_prefix='/ai')
     from gevent.wsgi import WSGIServer
     http_server = WSGIServer((rasa_nlu_config['server_ip'], rasa_nlu_config['port']), rasa.app)

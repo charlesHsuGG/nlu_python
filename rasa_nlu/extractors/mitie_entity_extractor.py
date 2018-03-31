@@ -51,7 +51,7 @@ class MitieEntityExtractor(EntityExtractor):
             print("entities:"+str(entities))
             for e in entities:
                 if len(e[0]):
-                    if e[2] > 0.1:
+                    if e[2] > 0.3:
                        start = tokens[e[0][0]].offset
                        end = tokens[e[0][-1]].end
 

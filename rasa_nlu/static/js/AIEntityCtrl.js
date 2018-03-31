@@ -25,7 +25,7 @@ appControllers.controller('AiEntityCtrl',['$scope', '$state', 'MercueRequests','
        console.log($scope.userInput)
        var sendData = {};
        sendData.message = $scope.userInput;
-       sendData.model_dir = "//opt/mnt/nlu_system_data/models/system_model"
+       sendData.model_dir = "/opt/nfs/nlu_system_data/models/system_model"
 
        MercueRequests.cueRequest(function(data, status, headers, config){
 		   console.log(data);
@@ -122,7 +122,7 @@ appControllers.controller('AiEntityCtrl',['$scope', '$state', 'MercueRequests','
 		   console.log(data);
            if (data.code == 1) {
 				var sendData1 = {};
-				sendData1.model_dir = "/opt/mnt/nlu_system_data/models/system_model"
+				sendData1.model_dir = "/opt/nfs/nlu_system_data/models/system_model"
 	 
 				MercueRequests.cueRequest(function(data, status, headers, config){
 					console.log(data);

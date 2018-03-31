@@ -35,7 +35,7 @@ mainApp.config(function($stateProvider, $urlRouterProvider){
            },
            templateProvider: function ($http, $stateParams, scriptLoader) {
                console.log("page name:"+$stateParams.page);
-               return $http.get('./spa/views/'+$stateParams.page+'.html')
+               return $http.get('/static/views/'+$stateParams.page+'.html')
                    .then(function(response) {
                        return scriptLoader.loadScriptTagsFromData(response.data);
                    })
