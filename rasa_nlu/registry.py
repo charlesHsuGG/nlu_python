@@ -50,7 +50,7 @@ component_classes = [
     DucklingHTTPExtractor,
     EntitySynonymMapper,
     MitieFeaturizer, RegexFeaturizer, EmbeddingFeaturizer,
-     WhitespaceTokenizer, JiebaTokenizer,
+    WhitespaceTokenizer, JiebaTokenizer,
     SklearnIntentClassifier, KeywordIntentClassifier, RandomForestClassifier
 ]
 

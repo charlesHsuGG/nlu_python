@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 MODEL_NAME_PREFIX = "model_"
 
-FALLBACK_MODEL_NAME = "fallback"
+FALLBACK_MODEL_NAME = "system_model"
 
 
 class Project(object):

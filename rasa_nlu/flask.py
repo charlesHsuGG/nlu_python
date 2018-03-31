@@ -147,7 +147,7 @@ class SimpleWeb(object):
         @custom_webhook.route("/project_list", methods=['GET'])
         def project_list():
             list_projects = [fn
-                for fn in glob.glob(os.path.join(config['path']+"/default", '*'))
+                for fn in glob.glob(os.path.join(config['path'], '*'))
                 if os.path.isdir(fn)]
             return str(list_projects)
         
@@ -170,16 +170,19 @@ class SimpleWeb(object):
                                      config["duckling_dimensions"])
             matches = duckling._duckling_parse(text)
             relevant_matches = duckling._filter_irrelevant_matches(matches)
+            value_list = []
             for match in relevant_matches:
                 value = extract_value(match)
-                entity = {
-                    "start": match["start"],
-                    "end": match["end"],
-                    "value": match["body"],
-                    "data": value,
-                    "additional_info": match["value"],
-                    "entity": match["dim"]}
-                extracted.append(entity)
+                if value not in value_list:
+                    entity = {
+                        "start": match["start"],
+                        "end": match["end"],
+                        "value": match["body"],
+                        "data": value,
+                        "additional_info": match["value"],
+                        "entity": match["dim"]}
+                    extracted.append(entity)
+                    value_list.append(value)
             extracted = duckling.add_extractor_name(extracted)
             message.set("entities",
                     message.get("entities", []) + extracted)
@@ -189,12 +192,15 @@ class SimpleWeb(object):
             extracted = MitieEntityExtractor(extractor).add_extractor_name(ents)
             message.set("entities", message.get("entities", []) + extracted, add_to_output=True)
             entities_output = []
+            value_list = []
             for entity in message.get("entities"):
-                entity_output = {"tag":entity["entity"],
-                "extractor":entity.get("extractor"),
-                "color":"#1E90FF",
-                "string":entity["value"]}
-                entities_output.append(entity_output)
+                if entity["value"] not in value_list:
+                    entity_output = {"tag":entity["entity"],
+                    "extractor":entity.get("extractor"),
+                    "color":"#1E90FF",
+                    "string":entity["value"]}
+                    entities_output.append(entity_output)
+                    value_list.append(entity["value"])
             output = {"code":1, "text": text, "entities": entities_output}
             return (json_to_string(output))
 
@@ -228,7 +234,7 @@ class SimpleWeb(object):
             new_json = {
                 "rasa_nlu_data": {
                 "common_examples": comment_examples,
-                "entity_synonyms": entity_synonyms
+                "entity_synonyms": []
                 }
             }
             mannger.save(json_to_string(new_json))

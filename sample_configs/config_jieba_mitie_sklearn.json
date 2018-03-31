@@ -10,7 +10,7 @@
   "locale": "zh_TW",
   "duckling_http_url":"http://192.168.2.61:8000",
   "duckling_dimensions": ["time", "number", "email", "phone_number", "duration", "ordinal", "temperature", "Url"],
-  "mitie_file": "/mnt/total_word_feature_extractor_zh.dat",
-  "path" : "./models",
-  "data" : "./data/examples/rasa/demo-rasa_zh.json"
+  "mitie_file": "/opt/mnt/nlu_system_data/data/total_word_feature_extractor_zh.dat",
+  "path" : "/opt/mnt/nlu_system_data/models",
+  "data" : "/opt/mnt/nlu_system_data/data/training_data/examples/rasa/demo-rasa_zh.json"
 }

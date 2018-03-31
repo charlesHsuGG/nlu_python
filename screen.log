@@ -1,569 +1,0 @@
-命令稿啟動於 2018年02月27日 (週二) 11時36分36秒
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Cscript screen.log[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[Ajieba_tokenizer.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/tok[7Penizers/[A[C[C[C[C[C[3PdeepQA/dict.txt /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cjieba_tokenizer.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/tokkenizers/[A[C[C[C[C[Cmitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cscript screen.log[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpython3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-Loading model cost 1.570 seconds.
-DEBUG:jieba:Loading model cost 1.570 seconds.
-Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-INFO:rasa_nlu.converters:Training data format at ./data/examples/rasa/demo-rasa_zh.json is rasa_nlu
-INFO:rasa_nlu.training_data:Training data stats: 
-	- intent examples: 5554 (7 distinct intents)
-	- found intents: '不明白', '再見', '否定', '打招呼', '找餐廳', '確認', '肯定'
-	- entity examples: 5509 (3 distinct entities)
-	- found entities: '地點', '美食', '鄰近'
-
-INFO:rasa_nlu.model:Starting to train component nlp_mitie
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component tokenizer_jieba
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_mitie
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃淡水阿给'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点贡丸'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Example skipped: Invalid entity {'value': '蛋', 'start': 3, 'entity': '美食', 'end': 4} in example '我想点蛋': entities must span whole tokens. Wrong entity start.
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点台北的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的西式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的日式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的韩式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的义式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的南洋料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的南洋料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-Training to recognize 3 labels: '美食', '地點', '鄰近'
-Part I: train segmenter
-words in dictionary: 200000
-num features: 271
-now do training
-C:           20
-epsilon:     0.01
-num threads: 1
-cache size:  5
-max iterations: 2000
-loss per missed segment:  3
-C: 20   loss: 3 	0.999926
-C: 35   loss: 3 	0.999926
-C: 20   loss: 4.5 	0.999926
-C: 5   loss: 3 	0.999926
-C: 20   loss: 1.5 	0.999926
-C: 21   loss: 3 	0.999926
-C: 20   loss: 3.1 	0.999926
-C: 19   loss: 3 	0.999926
-C: 20   loss: 3 	0.999926
-best C: 20
-best loss: 3
-num feats in chunker model: 4095
-train: precision, recall, f1-score: 0.999704        1 0.999852 
-Part I: elapsed time: 553 seconds.
-
-Part II: train segment classifier
-now do training
-num training samples: 13530
-C: 200   f-score: 0.999763
-C: 400   f-score: 0.999763
-C: 300   f-score: 0.999763
-C: 100   f-score: 0.999763
-C: 0.01   f-score: 0.989414
-C: 600   f-score: 0.999763
-C: 1400   f-score: 0.999763
-C: 3000   f-score: 0.999763
-C: 5000   f-score: 0.999763
-C: 2550   f-score: 0.999763
-C: 1325   f-score: 0.999763
-C: 712.5   f-score: 0.999763
-C: 406.25   f-score: 0.999763
-C: 253.125   f-score: 0.999763
-C: 176.562   f-score: 0.999763
-C: 138.281   f-score: 0.999763
-C: 119.141   f-score: 0.999763
-C: 109.57   f-score: 0.999763
-C: 104.785   f-score: 0.999763
-C: 102.393   f-score: 0.999763
-C: 101.196   f-score: 0.999763
-C: 100.598   f-score: 0.999763
-C: 100.299   f-score: 0.999763
-best C: 100.598
-test on train: 
-5467    0    0    0 
-   0 5358    0    0 
-   0    0 2701    0 
-   1    0    0    3 
-
-overall accuracy: 0.999926
-Part II: elapsed time: 2978 seconds.
-df.number_of_classes(): 4
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_synonyms
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '蛋'. Overwriting target '荷包蛋' with '煎蛋'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '蛋'. Overwriting target '煎蛋' with '蛋料理'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '中式料理'. Overwriting target '川菜' with '客家菜'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '中式料理'. Overwriting target '客家菜' with '合菜'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '南洋料理'. Overwriting target '泰式' with '越式'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_entity_featurizer_regex
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_featurizer_mitie
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_classifier_sklearn
-Fitting 2 folds for each of 6 candidates, totalling 12 fits
-[Parallel(n_jobs=1)]: Done  12 out of  12 | elapsed:   11.1s finished
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Successfully saved model into '/home/mercue/rasa_core/rasa_nlu_chi/models/default/model_20180227-123814'
-INFO:__main__:Finished training
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[C[C[C[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models[00m#  ls -al
-總計 12
-drwxr-xr-x  3 root root 4096  2月  7 10:55 [0m[01;34m.[0m
-drwxr-xr-x 20 root root 4096  2月 27 11:36 [01;34m..[0m
-drwxr-xr-x  6 root root 4096  2月 27 12:38 [01;34mdefault[0m
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models[00m#  cd default/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# ls -al
-總計 24
-drwxr-xr-x 6 root root 4096  2月 27 12:38 [0m[01;34m.[0m
-drwxr-xr-x 3 root root 4096  2月  7 10:55 [01;34m..[0m
-drwxr-xr-x 2 root root 4096  2月 23 16:57 [01;34mmodel_20180223-165745[0m
-drwxr-xr-x 2 root root 4096  2月 23 18:41 [01;34mmodel_20180223-184140[0m
-drwxr-xr-x 2 root root 4096  2月 26 20:29 [01;34mmodel_20180226-202952[0m
-drwxr-xr-x 2 root root 4096  2月 27 12:38 [01;34mmodel_20180227-123814[0m
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# sudo rm -rf model_20180223-165745/ model_20180223-184140/ model_20180226
--202952/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# cd ..
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models[00m#  cd ..
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd ..sudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952/[A[1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Cscript screen.log[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpython3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[C[C[C[1P[1P[1P[1P[1P[1@s[1@e[1@r[1@v[1@e[1@r
-INFO:rasa_nlu.data_router:Logging requests to '/home/mercue/rasa_core/rasa_nlu_chi/logs/rasa_nlu_log-20180227-133426-24239.log'.
-INFO:__main__:Started http server on port 5000
-2018-02-27 13:34:26+0800 [-] Log opened.
-2018-02-27 13:34:26+0800 [-] Site starting on 5000
-2018-02-27 13:34:26+0800 [-] Starting factory <twisted.web.server.Site object at 0x7f957cf64978>
-2018-02-27 13:34:38+0800 [-] Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-2018-02-27 13:34:38+0800 [-] Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-2018-02-27 13:34:39+0800 [-] Loading model cost 1.121 seconds.
-DEBUG:jieba:Loading model cost 1.121 seconds.
-2018-02-27 13:34:39+0800 [-] Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-2018-02-27 13:36:28+0800 [-] ['我的', '拉不拉多', '在哪裡']
-2018-02-27 13:36:28+0800 [-] entities:[(range(1, 3), '美食', 0.219543763311536)]
-2018-02-27 13:36:28+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:36:27 +0000] "GET /parse?q=%E6%88%91%E7%9A%84%E6%8B%89%E4%B8%8D%E6%8B%89%E5%A4%9A%E5%9C%A8%E5%93%AA%E8%A3%A1 HTTP/1.1" 200 857 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:36:28+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:36:28 +0000] "GET /favicon.ico HTTP/1.1" 404 233 "http://192.168.2.61:5000/parse?q=%E6%88%91%E7%9A%84%E6%8B%89%E4%B8%8D%E6%8B%89%E5%A4%9A%E5%9C%A8%E5%93%AA%E8%A3%A1" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:37:00+0800 [-] ['我想', '吃', '泰式料理', ',', '有', '推薦', '的', '餐廳', '嗎']
-2018-02-27 13:37:00+0800 [-] entities:[(range(2, 3), '美食', 0.6534652320021279), (range(5, 6), '地點', 0.4389350335161703), (range(7, 8), '美食', 0.48338215471879314)]
-2018-02-27 13:37:00+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:36:59 +0000] "GET /parse?q=%E6%88%91%E6%83%B3%E5%90%83%E6%B3%B0%E5%BC%8F%E6%96%99%E7%90%86,%E6%9C%89%E6%8E%A8%E8%96%A6%E7%9A%84%E9%A4%90%E5%BB%B3%E5%97%8E HTTP/1.1" 200 1139 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:37:43+0800 [-] ['我想', '吃', '南雅夜市', '的', '臭豆腐']
-2018-02-27 13:37:43+0800 [-] entities:[(range(2, 3), '地點', 0.5150830403685235), (range(4, 5), '美食', 0.7764241814182203)]
-2018-02-27 13:37:43+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:37:42 +0000] "GET /parse?q=%E6%88%91%E6%83%B3%E5%90%83%E5%8D%97%E9%9B%85%E5%A4%9C%E5%B8%82%E7%9A%84%E8%87%AD%E8%B1%86%E8%85%90 HTTP/1.1" 200 1003 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:38:21+0800 [-] ['我愛你', '呦']
-2018-02-27 13:38:21+0800 [-] entities:[]
-2018-02-27 13:38:21+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:38:21 +0000] "GET /parse?q=%E6%88%91%E6%84%9B%E4%BD%A0%E5%91%A6 HTTP/1.1" 200 697 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:38:31+0800 [-] ['哈拉', '猛男秀']
-2018-02-27 13:38:31+0800 [-] entities:[(range(1, 2), '美食', 0.2184418854311022)]
-2018-02-27 13:38:31+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:38:31 +0000] "GET /parse?q=%E5%93%88%E6%8B%89%E7%8C%9B%E7%94%B7%E7%A7%80 HTTP/1.1" 200 838 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:39:06+0800 [-] ['我想去', '秀泰', '看電影']
-2018-02-27 13:39:06+0800 [-] entities:[(range(0, 2), '美食', 0.11642067914832813)]
-2018-02-27 13:39:06+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:39:06 +0000] "GET /parse?q=%E6%88%91%E6%83%B3%E5%8E%BB%E7%A7%80%E6%B3%B0%E7%9C%8B%E9%9B%BB%E5%BD%B1 HTTP/1.1" 200 710 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:39:31+0800 [-] ['拉不攏', '東江']
-2018-02-27 13:39:31+0800 [-] entities:[]
-2018-02-27 13:39:31+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:39:31 +0000] "GET /parse?q=%E6%8B%89%E4%B8%8D%E6%94%8F%E6%9D%B1%E6%B1%9F HTTP/1.1" 200 703 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:39:47+0800 [-] ['我', '無顏', '面對', '江東父老']
-2018-02-27 13:39:47+0800 [-] entities:[(range(2, 3), '美食', 0.16623348265010265), (range(3, 4), '美食', 0.1702102380355824)]
-2018-02-27 13:39:47+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:39:47 +0000] "GET /parse?q=%E6%88%91%E7%84%A1%E9%A1%8F%E9%9D%A2%E5%B0%8D%E6%B1%9F%E6%9D%B1%E7%88%B6%E8%80%81 HTTP/1.1" 200 715 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:40:05+0800 [-] ['有', '什麼', '好吃', '的', '嗎']
-2018-02-27 13:40:05+0800 [-] entities:[(range(4, 5), '美食', 0.5451548451601789)]
-2018-02-27 13:40:05+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:40:05 +0000] "GET /parse?q=%E6%9C%89%E4%BB%80%E9%BA%BC%E5%A5%BD%E5%90%83%E7%9A%84%E5%97%8E HTTP/1.1" 200 837 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:40:31+0800 [-] ['附近', '有', '什麼', '好吃', '的', '可以', '推薦', '嗎']
-2018-02-27 13:40:31+0800 [-] entities:[(range(0, 1), '鄰近', 0.8184658876861319)]
-2018-02-27 13:40:31+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:40:31 +0000] "GET /parse?q=%E9%99%84%E8%BF%91%E6%9C%89%E4%BB%80%E9%BA%BC%E5%A5%BD%E5%90%83%E7%9A%84%E5%8F%AF%E4%BB%A5%E6%8E%A8%E8%96%A6%E5%97%8E HTTP/1.1" 200 861 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:40:55+0800 [-] ['阿羅哈']
-2018-02-27 13:40:55+0800 [-] entities:[(range(0, 1), '美食', 0.12216803301462778)]
-2018-02-27 13:40:55+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:40:55 +0000] "GET /parse?q=%E9%98%BF%E7%BE%85%E5%93%88 HTTP/1.1" 200 694 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:41:03+0800 [-] ['哈囉']
-2018-02-27 13:41:03+0800 [-] entities:[]
-2018-02-27 13:41:03+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:41:03 +0000] "GET /parse?q=%E5%93%88%E5%9B%89 HTTP/1.1" 200 697 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:41:10+0800 [-] ['hihi']
-2018-02-27 13:41:10+0800 [-] entities:[(range(0, 1), '美食', 0.1123707290102092)]
-2018-02-27 13:41:10+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:41:10 +0000] "GET /parse?q=hihi HTTP/1.1" 200 687 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:41:17+0800 [-] ['hi', ' ', 'hi']
-2018-02-27 13:41:17+0800 [-] entities:[]
-2018-02-27 13:41:17+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:41:17 +0000] "GET /parse?q=hi%20hi HTTP/1.1" 200 694 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:41:25+0800 [-] ['我', '好', '困']
-2018-02-27 13:41:25+0800 [-] entities:[(range(2, 3), '美食', 0.22078228974578748)]
-2018-02-27 13:41:25+0800 [-] "192.168.2.105" - - [27/Feb/2018:05:41:25 +0000] "GET /parse?q=%E6%88%91%E5%A5%BD%E5%9B%B0 HTTP/1.1" 200 817 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 13:42:25+0800 [-] Timing out client: IPv4Address(TCP, '192.168.2.105', 4677)
-2018-02-27 13:42:25+0800 [-] Timing out client: IPv4Address(TCP, '192.168.2.105', 4646)
-^C2018-02-27 13:44:23+0800 [-] Received SIGINT, shutting down.
-2018-02-27 13:44:23+0800 [twisted.web.server.Site] (TCP Port 5000 Closed)
-2018-02-27 13:44:23+0800 [-] Stopping factory <twisted.web.server.Site object at 0x7f957cf64978>
-2018-02-27 13:44:23+0800 [-] Main loop terminated.
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# ^C
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952/[A[1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Cscript screen.log[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[Ajieba_tokenizer.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/tok[7Penizers/[A[C[C[C[C[C[3PdeepQA/dict.txt /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[Cmkdir jieba_dict[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C~[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -r screen.log [A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo scr[17Pipt screen.log[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[Acd /home[41P/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [K
-[K
-[K[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo cp  /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kconfig_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/co[K[Ksample_configs/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[Aduckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/[Amitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_[1Pnlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952/[A[1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952/[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmdefault/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[Codefault/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[C
-ls/default/[C[C[C
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# cd models/default/[C[C[C[C[C[C[C[Csudo cp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_c
-ore/rasa_nlu_chi/sample_configs/[A[C[C[C[C[C[C[C[Ccd models/default/[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kls -al
-總計 12
-drwxr-xr-x 3 root root 4096  2月 27 13:34 [0m[01;34m.[0m
-drwxr-xr-x 3 root root 4096  2月  7 10:55 [01;34m..[0m
-drwxr-xr-x 2 root root 4096  2月 27 12:38 [01;34mmodel_20180227-123814[0m
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# ls -alcd models/default/[C[C[C[C[C[C[C[Csudo cp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_c
-ore/rasa_nlu_chi/sample_configs/[Aduckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/[Amitie_entity_extractor.py /home/mercue/rasa_core/ras[1Pa_nlu_chi/rasa_nlu/extractors/[A[C[C[C[C[C[C[C[C[C[C[C[C[Cpython3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_skle[Crn.json[K[Acd ..[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm -rf model_20180223-165745/ model_20180223-184140/ model_20180226
--202952[K[K[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K20180227-123814/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models/default[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models/deefault[00m# cd ..
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models[00m#  cd..
-cd..：無此指令
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi/models[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi/models[00m#  cd ..
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd ..[1P.. ..sudo rm  -rf model_20180227-123814/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/default/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[Aduckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/[Amitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_[1Pnlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180223-165745/ model_20180223-184140/ model_20180226-202952/[A[1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd defauult/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Cscript screen.log[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[Ajieba_tokenizer.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/tok[7Penizers/[A[C[C[C[C[C[3PdeepQA/dict.txt /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[Cmkdir jieba_dict[K[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C~[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -r screen.log [A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo scr[17Pipt screen.log[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# cd /home/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[Acd /home[41P/mercue/rasa_core/rasa_nlu_chi/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo python3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Ccp /home/mercue/mitie_entity_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa__nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-Traceback (most recent call last):
-  File "/usr/lib/python3.5/runpy.py", line 184, in _run_module_as_main
-    "__main__", mod_spec)
-  File "/usr/lib/python3.5/runpy.py", line 85, in _run_code
-    exec(code, run_globals)
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/train.py", line 125, in <module>
-    do_train(config)
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/train.py", line 111, in do_train
-    trainer = Trainer(config, component_builder)
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/model.py", line 126, in __init__
-    components.validate_requirements(config.pipeline)
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/components.py", line 77, in validate_requirements
-    from rasa_nlu import registry
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/registry.py", line 26, in <module>
-    from rasa_nlu.extractors.duckling_http_extractor import DucklingHTTPExtractor
-  File "/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/duckling_http_extractor.py", line 35
-    def __init__(self, duckling_url, language, dimensions=None, locale):
-                    ^
-SyntaxError: non-default argument follows default argument
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P.. ..sudo rm  -rf model_20180227-123814/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/default/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[Aduckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-Loading model cost 0.928 seconds.
-DEBUG:jieba:Loading model cost 0.928 seconds.
-Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-INFO:rasa_nlu.converters:Training data format at ./data/examples/rasa/demo-rasa_zh.json is rasa_nlu
-INFO:rasa_nlu.training_data:Training data stats: 
-	- intent examples: 5554 (7 distinct intents)
-	- found intents: '不明白', '再見', '否定', '打招呼', '找餐廳', '確認', '肯定'
-	- entity examples: 5509 (3 distinct entities)
-	- found entities: '地點', '美食', '鄰近'
-
-INFO:rasa_nlu.model:Starting to train component nlp_mitie
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component tokenizer_jieba
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_mitie
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃淡水阿给'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点贡丸'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Example skipped: Invalid entity {'value': '蛋', 'end': 4, 'start': 3, 'entity': '美食'} in example '我想点蛋': entities must span whole tokens. Wrong entity start.
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点台北的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的西式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的日式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的韩式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的义式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的南洋料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的南洋料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-Training to recognize 3 labels: '美食', '地點', '鄰近'
-Part I: train segmenter
-words in dictionary: 200000
-num features: 271
-now do training
-C:           20
-epsilon:     0.01
-num threads: 1
-cache size:  5
-max iterations: 2000
-loss per missed segment:  3
-C: 20   loss: 3 	0.999926
-C: 35   loss: 3 	0.999926
-C: 20   loss: 4.5 	0.999926
-C: 5   loss: 3 	0.999926
-C: 20   loss: 1.5 	0.999926
-C: 21   loss: 3 	0.999926
-C: 20   loss: 3.1 	0.999926
-C: 19   loss: 3 	0.999926
-C: 20   loss: 3 	0.999926
-best C: 20
-best loss: 3
-num feats in chunker model: 4095
-train: precision, recall, f1-score: 0.999704        1 0.999852 
-Part I: elapsed time: 527 seconds.
-
-Part II: train segment classifier
-now do training
-num training samples: 13530
-C: 200   f-score: 0.999763
-C: 400   f-score: 0.999763
-C: 300   f-score: 0.999763
-C: 100   f-score: 0.999763
-C: 0.01   f-score: 0.989414
-C: 600   f-score: 0.999763
-C: 1400   f-score: 0.999763
-C: 3000   f-score: 0.999763
-C: 5000   f-score: 0.999763
-C: 2550   f-score: 0.999763
-C: 1325   f-score: 0.999763
-C: 712.5   f-score: 0.999763
-C: 406.25   f-score: 0.999763
-C: 253.125   f-score: 0.999763
-C: 176.562   f-score: 0.999763
-C: 138.281   f-score: 0.999763
-C: 119.141   f-score: 0.999763
-C: 109.57   f-score: 0.999763
-C: 104.785   f-score: 0.999763
-C: 102.393   f-score: 0.999763
-C: 101.196   f-score: 0.999763
-C: 100.598   f-score: 0.999763
-C: 100.299   f-score: 0.999763
-best C: 100.598
-test on train: 
-5467    0    0    0 
-   0 5358    0    0 
-   0    0 2701    0 
-   1    0    0    3 
-
-overall accuracy: 0.999926
-Part II: elapsed time: 2996 seconds.
-df.number_of_classes(): 4
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_synonyms
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '蛋'. Overwriting target '荷包蛋' with '煎蛋'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '蛋'. Overwriting target '煎蛋' with '蛋料理'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '中式料理'. Overwriting target '川菜' with '客家菜'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '中式料理'. Overwriting target '客家菜' with '合菜'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-/home/mercue/rasa_core/rasa_nlu_chi/rasa_nlu/extractors/entity_synonyms.py:100: UserWarning: Found conflicting synonym definitions for '南洋料理'. Overwriting target '泰式' with '越式'. Check your training data and remove conflicting synonym definitions to prevent this from happening.
-  repr(replacement)))
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_duckling_http
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_entity_featurizer_regex
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_featurizer_mitie
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component intent_classifier_sklearn
-Fitting 2 folds for each of 6 candidates, totalling 12 fits
-[Parallel(n_jobs=1)]: Done  12 out of  12 | elapsed:   11.0s finished
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Successfully saved model into '/home/mercue/rasa_core/rasa_nlu_chi/models/default/model_20180227-182924'
-INFO:__main__:Finished training
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[1P[1P[1P[1P[1@s[1@e[1@r[1@v[1@e[1@r
-INFO:rasa_nlu.data_router:Logging requests to '/home/mercue/rasa_core/rasa_nlu_chi/logs/rasa_nlu_log-20180227-183016-31376.log'.
-INFO:__main__:Started http server on port 5000
-2018-02-27 18:30:17+0800 [-] Log opened.
-2018-02-27 18:30:17+0800 [-] Site starting on 5000
-2018-02-27 18:30:17+0800 [-] Starting factory <twisted.web.server.Site object at 0x7ff99e49ab00>
-2018-02-27 18:30:29+0800 [-] Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-2018-02-27 18:30:29+0800 [-] Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-2018-02-27 18:30:30+0800 [-] Loading model cost 1.406 seconds.
-DEBUG:jieba:Loading model cost 1.406 seconds.
-2018-02-27 18:30:30+0800 [-] Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-2018-02-27 18:32:37+0800 [-] ['我', '好', '困']
-2018-02-27 18:32:37+0800 [-] entities:[(range(2, 3), '美食', 0.22078228974578748)]
-2018-02-27 18:32:37+0800 [-] ['現在', '幾點', '?']
-2018-02-27 18:32:37+0800 [-] entities:[]
-2018-02-27 18:32:38+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:32:37 +0000] "GET /parse?q=%E7%8F%BE%E5%9C%A8%E5%B9%BE%E9%BB%9E? HTTP/1.1" 200 698 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 18:32:38+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:32:37 +0000] "GET /parse?q=%E6%88%91%E5%A5%BD%E5%9B%B0 HTTP/1.1" 200 692 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 18:33:21+0800 [-] ['明天', '早上', '十點']
-2018-02-27 18:33:21+0800 [-] entities:[]
-2018-02-27 18:33:21+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:33:21 +0000] "GET /parse?q=%E6%98%8E%E5%A4%A9%E6%97%A9%E4%B8%8A%E5%8D%81%E9%BB%9E HTTP/1.1" 200 707 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 18:37:50+0800 [-] ['我想', '吃', '泰式']
-2018-02-27 18:37:50+0800 [-] entities:[(range(2, 3), '美食', 0.6396769775301826)]
-2018-02-27 18:37:50+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:37:49 +0000] "GET /parse?q=%E6%88%91%E6%83%B3%E5%90%83%E6%B3%B0%E5%BC%8F HTTP/1.1" 200 847 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 18:38:21+0800 [-] ['0921797157']
-2018-02-27 18:38:21+0800 [-] entities:[]
-2018-02-27 18:38:21+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:38:20 +0000] "GET /parse?q=0921797157 HTTP/1.1" 200 1198 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-2018-02-27 18:40:29+0800 [-] ['那', '麻煩', '幫', '我', '預約', '這禮拜', '六', '早上', '八點']
-2018-02-27 18:40:29+0800 [-] entities:[(range(3, 4), '美食', 0.0859010831378991), (range(6, 7), '美食', 0.0724702515854142)]
-2018-02-27 18:40:29+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:40:28 +0000] "GET /parse?q=%E9%82%A3%E9%BA%BB%E7%85%A9%E5%B9%AB%E6%88%91%E9%A0%90%E7%B4%84%E9%80%99%E7%A6%AE%E6%8B%9C%E5%85%AD%E6%97%A9%E4%B8%8A%E5%85%AB%E9%BB%9E HTTP/1.1" 200 737 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-^C2018-02-27 18:41:41+0800 [-] Received SIGINT, shutting down.
-2018-02-27 18:41:41+0800 [twisted.web.server.Site] (TCP Port 5000 Closed)
-2018-02-27 18:41:41+0800 [-] Stopping factory <twisted.web.server.Site object at 0x7ff99e49ab00>
-2018-02-27 18:41:41+0800 [-] Main loop terminated.
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Ptrain[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@server[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Ptrain[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P.. ..sudo rm  -rf model_20180227-123814/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd modells/default/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [1Pls -al
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo rm  -rf model_20180227-123814/[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [2Pcd ..
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P.. ..sudo pytthon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[7Phon3 -m rasa_nlu.train -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@server[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[A[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cus[K[Ksd[Kudo cp  /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/rasa_nlu[K[K[K[K[K[K[K[Ksample_configs/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Ptrain[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@server[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-INFO:rasa_nlu.data_router:Logging requests to '/home/mercue/rasa_core/rasa_nlu_chi/logs/rasa_nlu_log-20180227-184259-31684.log'.
-INFO:__main__:Started http server on port 5000
-2018-02-27 18:42:59+0800 [-] Log opened.
-2018-02-27 18:42:59+0800 [-] Site starting on 5000
-2018-02-27 18:42:59+0800 [-] Starting factory <twisted.web.server.Site object at 0x7f9c7e964b00>
-2018-02-27 18:43:22+0800 [-] Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-2018-02-27 18:43:22+0800 [-] Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-2018-02-27 18:43:22+0800 [-] Loading model cost 0.875 seconds.
-DEBUG:jieba:Loading model cost 0.875 seconds.
-2018-02-27 18:43:22+0800 [-] Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-2018-02-27 18:45:15+0800 [-] ['那', '麻煩', '幫', '我', '預約', '這禮拜', '六', '早上', '八點']
-2018-02-27 18:45:15+0800 [-] entities:[(range(3, 4), '美食', 0.0859010831378991), (range(6, 7), '美食', 0.0724702515854142)]
-2018-02-27 18:45:15+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:45:14 +0000] "GET /parse?q=%E9%82%A3%E9%BA%BB%E7%85%A9%E5%B9%AB%E6%88%91%E9%A0%90%E7%B4%84%E9%80%99%E7%A6%AE%E6%8B%9C%E5%85%AD%E6%97%A9%E4%B8%8A%E5%85%AB%E9%BB%9E HTTP/1.1" 200 737 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-^C2018-02-27 18:47:28+0800 [-] Received SIGINT, shutting down.
-2018-02-27 18:47:28+0800 [twisted.web.server.Site] (TCP Port 5000 Closed)
-2018-02-27 18:47:28+0800 [-] Stopping factory <twisted.web.server.Site object at 0x7f9c7e964b00>
-2018-02-27 18:47:28+0800 [-] Main loop terminated.
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[Ccp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Ptrain[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo cp  /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[Ccp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-INFO:rasa_nlu.data_router:Logging requests to '/home/mercue/rasa_core/rasa_nlu_chi/logs/rasa_nlu_log-20180227-184739-31799.log'.
-INFO:__main__:Started http server on port 5000
-2018-02-27 18:47:39+0800 [-] Log opened.
-2018-02-27 18:47:39+0800 [-] Site starting on 5000
-2018-02-27 18:47:39+0800 [-] Starting factory <twisted.web.server.Site object at 0x7f8c91cc1b00>
-2018-02-27 18:47:52+0800 [-] Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-2018-02-27 18:47:52+0800 [-] Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-2018-02-27 18:47:53+0800 [-] Loading model cost 0.891 seconds.
-DEBUG:jieba:Loading model cost 0.891 seconds.
-2018-02-27 18:47:53+0800 [-] Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-2018-02-27 18:49:55+0800 [-] ['那', '麻煩', '幫', '我', '預約', '這禮拜', '六', '早上', '八點']
-2018-02-27 18:49:55+0800 [-] entities:[(range(3, 4), '美食', 0.0859010831378991), (range(6, 7), '美食', 0.0724702515854142)]
-2018-02-27 18:49:55+0800 [-] "192.168.2.105" - - [27/Feb/2018:10:49:54 +0000] "GET /parse?q=%E9%82%A3%E9%BA%BB%E7%85%A9%E5%B9%AB%E6%88%91%E9%A0%90%E7%B4%84%E9%80%99%E7%A6%AE%E6%8B%9C%E5%85%AD%E6%97%A9%E4%B8%8A%E5%85%AB%E9%BB%9E HTTP/1.1" 200 1241 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
-^C2018-02-27 18:58:10+0800 [-] Received SIGINT, shutting down.
-2018-02-27 18:58:10+0800 [twisted.web.server.Site] (TCP Port 5000 Closed)
-2018-02-27 18:58:10+0800 [-] Stopping factory <twisted.web.server.Site object at 0x7f8c91cc1b00>
-2018-02-27 18:58:10+0800 [-] Main loop terminated.
-]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# sudo pytthon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json[A[C[C[C[Ccp /home/mercue/duckling_http_extractor.py /home/mercue/rasa_core/rasa_nlu_chi/rasaa_nlu/extractors/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[A[C[C[C[Ccp /home/mercue/config_jieba_mitie_sklearn.json /home/mercue/rasa_core/rasa_nlu_chii/sample_configs/[A[A]0;root@mercue-HP-Compaq-dx7400-Small-Form-Factor: ~/rasa_core/rasa_nlu_chi[01;32mroot@mercue-HP-Compaq-dx7400-Small-Form-Factor[00m:[01;34m~/rasa_core/rasa_nlu_chi[00m# [C[C[C[C[Cpyt[6Phon3 -m rasa_nlu.server -c sample_configs/config_jieba_mitie_sklearn.json
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1Ptrain[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-DEBUG:jieba:Building prefix dict from /home/mercue/rasa_core/rasa_nlu_chi/jieba_dict/dict.txt ...
-Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-DEBUG:jieba:Loading model from cache /tmp/jieba.u4405a223b6112930a482b217ac80f4ef.cache
-Loading model cost 1.233 seconds.
-DEBUG:jieba:Loading model cost 1.233 seconds.
-Prefix dict has been built succesfully.
-DEBUG:jieba:Prefix dict has been built succesfully.
-INFO:rasa_nlu.components:Added 'nlp_mitie' to component cache. Key 'nlp_mitie-/home/mercue/rasa_core/rasa_nlu_chi/data/total_word_feature_extractor_zh.dat'.
-INFO:rasa_nlu.converters:Training data format at ./data/examples/rasa/demo-rasa_zh.json is rasa_nlu
-INFO:rasa_nlu.training_data:Training data stats: 
-	- intent examples: 5554 (7 distinct intents)
-	- found intents: '不明白', '再見', '否定', '打招呼', '找餐廳', '確認', '肯定'
-	- entity examples: 5509 (3 distinct entities)
-	- found entities: '地點', '美食', '鄰近'
-
-INFO:rasa_nlu.model:Starting to train component nlp_mitie
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component tokenizer_jieba
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_duckling_http
-INFO:rasa_nlu.model:Finished training component.
-INFO:rasa_nlu.model:Starting to train component ner_mitie
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃淡水阿给'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想吃馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点贡丸'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点馄饨'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Example skipped: Invalid entity {'value': '蛋', 'end': 4, 'start': 3, 'entity': '美食'} in example '我想点蛋': entities must span whole tokens. Wrong entity start.
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的万峦猪脚'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点基隆的蛋'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '我想点台北的麻豆碗粿'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的中式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什么推荐的西式料理吗?'. Reason: Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().
-WARNING:rasa_nlu.extractors.mitie_entity_extractor:Failed to add entity example 'Invalid range given to ner_training_instance.overlaps_any_entity().  It overlaps an entity given to a previous call to add_entity().' of sentence '有什
