@@ -31,6 +31,7 @@ DEFAULT_CONFIG = {
     "num_threads": 1,
     "max_training_processes": 1,
     "path": "projects",
+    "server_ip": "0.0.0.0",
     "port": 5000,
     "token": None,
     "cors_origins": [],

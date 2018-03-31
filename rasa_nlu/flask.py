@@ -290,5 +290,5 @@ if __name__ == "__main__":
     input_channel = SimpleWeb()
     rasa.app.register_blueprint(input_channel.data_router(rasa), url_prefix='/ai')
     from gevent.wsgi import WSGIServer
-    http_server = WSGIServer(('192.168.2.61', rasa_nlu_config['port']), rasa.app)
+    http_server = WSGIServer((rasa_nlu_config['server_ip'], rasa_nlu_config['port']), rasa.app)
     http_server.serve_forever()

@@ -3,12 +3,14 @@
   "pipeline": ["nlp_mitie",
         "tokenizer_jieba",
         "ner_duckling_http",
-	"ner_mitie"],
+  "ner_mitie"],
+  "server_ip":"0.0.0.0",
+  "port":5000,
   "language": "zh",
   "locale": "zh_TW",
   "duckling_http_url":"http://192.168.2.61:8000",
   "duckling_dimensions": ["time", "number", "email", "phone_number", "duration", "ordinal", "temperature", "Url"],
-  "mitie_file": "./data/total_word_feature_extractor_zh.dat",
+  "mitie_file": "/mnt/total_word_feature_extractor_zh.dat",
   "path" : "./models",
   "data" : "./data/examples/rasa/demo-rasa_zh.json"
 }
