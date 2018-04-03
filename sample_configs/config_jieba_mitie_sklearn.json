@@ -5,7 +5,7 @@
         "ner_duckling_http",
   "ner_mitie"],
   "server_ip":"0.0.0.0",
-  "port":5000,
+  "port":5050,
   "language": "zh",
   "locale": "zh_TW",
   "duckling_http_url":"http://192.168.2.61:8000",
