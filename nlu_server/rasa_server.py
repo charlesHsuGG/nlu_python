@@ -599,10 +599,12 @@ class IntentWeb(object):
                                     for story_ent in entity_list:
                                         entity_json.update({story_ent.entity:story_ent.value})
                                     intent = intent_name + entity_json
+                                    prompt_list = intent_node.prompt
                                     node_json ={
                                         "intent": intent,
                                         "prompt_list":prompt_list
                                     }
+                                    node_intent_list.append(node_json)
                                     break
                                 else:
                                     story_ent_list = list(itertools.permutations(entity_list[0:index]))
@@ -614,6 +616,12 @@ class IntentWeb(object):
                                         "intent": intent,
                                         "prompt_list":prompt_list
                                     }
+                                    node_intent_list.append(node_json)
+                        story_json = {
+                            "story":node_intent_list
+                        }
+                        story_list.append(story_json)
+                    
 
 
                 response = {"code":1, "seccess": True}
