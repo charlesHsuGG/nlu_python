@@ -11,6 +11,7 @@
   "duckling_http_url":"http://192.168.2.61:8000",
   "duckling_dimensions": ["time", "email", "phone_number", "duration", "ordinal", "temperature", "Url"],
   "mitie_file": "/opt/nfs/nlu_system_data/data/total_word_feature_extractor_zh.dat",
-  "path" : "/opt/nfs/nlu_system_data/models",
-  "data" : "/opt/nfs/nlu_system_data/data/training_data/demo-rasa_zh.json"
+  "path" : "/opt/nfs/nlu_system_data/models/",
+  "data" : "/opt/nfs/nlu_system_data/data/training_data/demo-rasa_zh.json",
+  "dm_data_path":"/opt/nfs/nlu_system_data/data/training_data/"
 }
