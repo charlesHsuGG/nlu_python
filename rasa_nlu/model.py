@@ -52,10 +52,10 @@ class Metadata(object):
         # type: (Text) -> 'Metadata'
         """Loads the metadata from a models directory."""
         try:
-            metadata_file = os.path.join(model_dir, 'metadata.json')
+            metadata_file = os.path.join(model_dir+"/nlu", 'metadata.json')
             with io.open(metadata_file, encoding="utf-8") as f:
                 data = json.loads(f.read())
-            return Metadata(data, model_dir)
+            return Metadata(data, model_dir+"/nlu")
         except Exception as e:
             abspath = os.path.abspath(os.path.join(model_dir, 'metadata.json'))
             raise InvalidProjectError("Failed to load model metadata "
@@ -182,7 +182,7 @@ class Trainer(object):
             model_name = fixed_model_name
         else:
             model_name = "model_" + timestamp
-        dir_name = os.path.join(path, project_name, model_name)
+        dir_name = os.path.join(path, project_name, model_name)+"/nlu"
 
         create_dir(dir_name)
 
