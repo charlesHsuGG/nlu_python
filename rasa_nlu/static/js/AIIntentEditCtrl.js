@@ -10,14 +10,14 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 	$scope.responseList = [];
 	$scope.confirmation = true;
 	$scope.slotsListDT = DTOptionsBuilder.newOptions()
-	.withBootstrap()
-	.withDisplayLength(5)
-	.withOption('info', false)
-	.withOption('ordering', false)
-	.withOption('bLengthChange', false)
-	.withOption('searching', false)
-	.withOption('paging', true) 
-	.withDOM('lfrt<"row"<"col-md-4"i><"col-md-8"p>>');
+	// .withBootstrap()
+	// .withDisplayLength(5)
+	// .withOption('info', false)
+	// .withOption('ordering', false)
+	// .withOption('bLengthChange', false)
+	// .withOption('searching', false)
+	// .withOption('paging', true) 
+	// .withDOM('lfrt<"row"<"col-md-4"i><"col-md-8"p>>');
 
 	init();
 
@@ -77,7 +77,7 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 	$scope.addSlots = function(){
 		console.log("add")
 		ModalService.showModal({
-			templateUrl: "./static/spa/views/partial/aislotadd_modal.html",
+			templateUrl: "/static/views/aislotadd_modal.html",
 			controller: "aiSlotAddModalCtrl",
 			preClose: (modal) => { modal.element.modal('hide'); } 
 		}).then(function(modal) {

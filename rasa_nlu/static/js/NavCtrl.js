@@ -15,7 +15,12 @@ $scope.goPage = function(index){
         break;
        
         case 2:
+        
         $state.go("page",{page:"ai_intent_edit"});
+        break
+        case 3:
+
+        $state.go("page",{page:"ai_intent_list"});
         break
 
     }

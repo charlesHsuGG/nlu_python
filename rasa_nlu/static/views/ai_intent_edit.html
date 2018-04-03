@@ -18,7 +18,6 @@ td {
 			<div class="row">
 				<div class="col-md-12">
 
-					<hr>
 					<!-- 例句 -->
 					<div class="col-md-12">
 						<h2 style="display: inline-block; margin-top: 10px;"
@@ -82,7 +81,9 @@ td {
 									<td class="center" style="vertical-align: middle">{{slots.name}}</td>
 									<td class="center" style="vertical-align: middle">{{slots.slotType}}</td>
 									<td class="center" style="vertical-align: middle">{{slots.prompt}}</td>
-									<td class="center" style="vertical-align: middle"></td>
+									<td class="center" style="vertical-align: middle">
+										<button type="button" class="btn btn-info">編輯提示字元</button>
+										<button type="button" class="btn btn-danger">刪除</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -108,16 +109,14 @@ td {
 								<label>確認提示</label>
 								<div class="input-group" style="width: 60%">
 									<input type="text" class="form-control"
-										placeholder="例：請問您輸入的書籍名稱是『書本名稱』嗎？"> <span
-										class="input-group-addon">@</span>
+										placeholder="例：請問您輸入的書籍名稱是『書本名稱』嗎？">  
 								</div>
 							</div>
 							<div class="form-group">
 								<label>取消提示字元，如果使用者取消確認提示</label>
 								<div class="input-group" style="width: 60%">
 									<input type="text" class="form-control"
-										placeholder="例：已為您取消書本名稱"> <span
-										class="input-group-addon">@</span>
+										placeholder="例：已為您取消書本名稱">  
 								</div>
 							</div>
 						</div>
@@ -125,7 +124,7 @@ td {
 					</div>
 					<!-- 提示字元結束 -->
 					<!-- 回應 -->
-					<div class="col-md-12" style="min-height: 200px;">
+					<div class="col-md-12 mb-5" style="min-height: 200px;">
 						<h2
 							style=" margin-top: 10px; margin-bottom: 10px;">
 							系統回應字元<a ng-click="pop()" href="" data-toggle="popover"
@@ -144,9 +143,7 @@ td {
 										<h4 style="margin-left: 15px; color: black;">訊息</h4>
 									</div>
 									<div class="actions">
-										<a class="btn btn-circle btn-icon-only btn-default"
-											href="javascript:;"> <i class="icon-cloud-upload"></i>
-										</a>
+								 
 									</div>
 								</div>
 								<p>多筆訊息會隨機回應</p>

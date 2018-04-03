@@ -19,6 +19,8 @@ var mainApp = angular.module('mainApp',[
     "app.aientityctrl",
     "app.aiintenteditctrl",
     "app.navctrl",
+    "app.aislotaddmodalctrl",
+    "app.aiintentlistctrl",
  
 ]);
  

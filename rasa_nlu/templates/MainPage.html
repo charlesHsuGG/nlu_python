@@ -67,7 +67,8 @@
     <script src="/static/assets/global/plugins/bootstrap-multiselect/js/bootstrap-multiselect.js" type="text/javascript"></script>
     <script src="/static/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
     <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
-
+    
+   
 
     <!-- END THEME LAYOUT STYLES -->
 
@@ -75,11 +76,14 @@
               <link href="./assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
               <link href="./assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
               <link href="./assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" /> -->
-    <link href="/static/assets/theme4/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/assets/theme4/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/assets/theme4/css/components.min.css" rel="stylesheet" type="text/css" />
-    <link href="/static/assets/theme4/css/plugins.min.css" rel="stylesheet" type="text/css" />
-
+    <!-- <link href="/static/assets/theme4/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/theme4/layout4/css/custom.min.css" rel="stylesheet" type="text/css" /> -->
+    <!-- <link href="/static/assets/theme4/css/components.min.css" rel="stylesheet" type="text/css" /> -->
+ 
+    
+    <link href="/static/assets/base/style.bundle.css" rel="stylesheet" type="text/css" />
+    
+ 
 
 
 
@@ -95,15 +99,15 @@
             <div class="inner">
                 <h3 class="masthead-brand"></h3>
                 <nav class="nav nav-masthead justify-content-left">
-                    <ul class="nav nav-pills mb-3 mt-3" id="pills-tab">
+                    <ul class="nav nav-pills mb-3 mt-3">
                         <li class="nav-item ">
-                            <a style="color:white" class="nav-link " id="pills-home-tab" role="tab" ng-click="goPage(1)">文本標註</a>
+                            <a style="color:white" class="nav-link " id="pills-home-tab"  ng-click="goPage(1)">文本標註</a>
                         </li>
                         <li class="nav-item">
-                            <a style="color:white" class="nav-link" id="pills-profile-tab" href="#pills-profile" role="tab" ng-click="goPage(2)">意圖編輯</a>
+                            <a style="color:white" class="nav-link" id="pills-profile-tab"  ng-click="goPage(2)">意圖編輯</a>
                         </li>
                         <li class="nav-item">
-                            <a style="color:white" class="nav-link" id="pills-contact-tab" href="#pills-contact" role="tab">Contact</a>
+                            <a style="color:white" class="nav-link" id="pills-contact-tab"  ng-click="goPage(3)"> 意圖列表</a>
                         </li>
                     </ul>
                 </nav>
@@ -125,6 +129,8 @@
     <script src="/static/js/AIEntityCtrl.js?1" type="text/javascript"></script>
     <script src="/static/js/AIIntentEditCtrl.js?1" type="text/javascript"></script>
     <script src="/static/js/NavCtrl.js?1" type="text/javascript"></script>
+    <script src="/static/js/AISlotAddModal.js?1" type="text/javascript"></script>
+    <script src="/static/js/AIIntentListCtrl.js?1" type="text/javascript"></script>
 </body>
 
 </html>
