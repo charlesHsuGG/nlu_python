@@ -16,7 +16,7 @@ from functools import wraps
 import simplejson
 from builtins import str
 
-from flask import Blueprint, Flask, request, make_response,  json
+from flask import Blueprint, Flask, request, make_response,  json, jsonify
 
 from rasa_nlu.training_data import Message
 
@@ -37,8 +37,6 @@ from rasa_core.agent import Agent
 from rasa_core.channels.channel import UserMessage
 from rasa_core.policies.keras_policy import KerasPolicy
 from rasa_core.policies.memoization import MemoizationPolicy
-from rasa_core.channels.console import ConsoleInputChannel
-from rasa_core.channels.console import ConsoleOutputChannel
 from rasa_core.interpreter import RasaNLUInterpreter
 
 from flask_sqlalchemy import SQLAlchemy
@@ -191,7 +189,34 @@ class EntityWeb(object):
                 for fn in glob.glob(os.path.join(config['path']+"/"+project_name, '*'))
                 if os.path.isdir(fn)]
             return str(list_projects)
-        
+
+        @entity_webhook.route("/slot_get", methods=['POST'])
+        def slot_get():
+            model_dir = payload.get("model_dir", None)
+            model_metadata = Metadata.load(model_dir)
+            print(str(model_metadata))
+            entity_list_duckling = model_metadata.get("ner_duckling_http")
+            entity_list_duckling_file = os.path.join(model_dir, entity_list_duckling)
+            with io.open(entity_list_duckling_file, encoding="utf-8") as f:
+                data = json.loads(f.read())
+            dimensions_duckling = data.get("dimensions", list())
+            entity_list_mitie = model_metadata.get("ner_mitie")
+            entity_list_mitie_file = os.path.join(model_dir, entity_list_mitie)
+            with io.open(entity_list_mitie_file, encoding="utf-8") as f:
+                data = json.loads(f.read())
+            dimensions_mitie = data.get("dimensions", list())
+            dims = []
+            for dim in dimensions_duckling:
+                dim_json={"entity":dim,"ner_extractor":"ner_duckling"}
+                dims.append(dim_json)
+            for dim in dimensions_mitie:
+                dim_json={"entity":dim,"ner_extractor":"ner_mitie"}
+                dims.append(dim_json)
+            dims_json={"entities":dims}
+            return (json_to_string(dims_json))
+
+
+
         @entity_webhook.route("/entity_get", methods=['POST'])
         def entity_get():
             payload = request.json
@@ -337,10 +362,19 @@ class IntentWeb(object):
             payload = request.json
             bot_id = payload.get("bot_id", None)
             intent = payload.get("intent", None)
-            entities = payload.get("entities", list())
+            entities = []
+            if 'entities' in payload:
+                entities = payload.get("entities", list())
             sentences = payload.get("sentences", list())
-            confirm_prompts = payload.get("confirm_prompt", list())
-            response_prompts = payload.get("response_prompt", list())
+            confirm_prompt = None
+            if 'confirm_prompt' in payload:
+                confirm_prompt = payload.get("confirm_prompt", None)
+            cancel_prompt = None
+            if 'cancel_prompt' in payload:
+                cancel_prompt = payload.get("cancel_prompt", None)
+            response_prompt = None
+            if 'response_prompt' in payload:
+                response_prompt = payload.get("response_prompt", None)
 
             intent_db = Intent()
             intent_db.intent_id = generate_key_generator()
@@ -348,10 +382,10 @@ class IntentWeb(object):
             intent_db.bot_id = bot_id
 
             sentences_list = []
+            ent_save = False
             for sentence in sentences:
                 entity_list = []
                 entities_save = []
-                ent_save = False
                 for ent in entities:
                     value = ent.get("value")
                     entity = ent.get("entity")
@@ -359,7 +393,8 @@ class IntentWeb(object):
                     entity_prompts = ent.get("entity_prompt", list())
                     entity_db = Entity()
                     if sentence.find(value) >= 0:
-                        if entity_type.find("user") >= 0:
+                        if entity_type.find("duckling") <= 0:
+                            print("ent_save turn on")
                             ent_save = True
                             entity_save ={
                                 "start": sentence.find(value),
@@ -391,32 +426,47 @@ class IntentWeb(object):
                 sentences_db.sentence = sentence
                 sentences_db.entity = entity_list
                 sentences_list.append(sentences_db)
-                if ent_save is True:
-                    save_json ={
-                        "text":sentence,
-                        "intent":intent,
-                        "entities":entities_save
-                    }
-                    mannger =RasaFileManeger(config["data"])
-                    rasa_json = mannger.nlu_load().get("rasa_nlu_data")
-                    comment_examples = rasa_json.get("common_examples", list())
-                    comment_examples.append(save_json)
+                save_json ={
+                    "text":sentence,
+                    "intent":intent,
+                    "entities":entities_save
+                }
+                mannger =RasaFileManeger(config["data"])
+                rasa_json = mannger.nlu_load().get("rasa_nlu_data")
+                comment_examples = rasa_json.get("common_examples", list())
+                comment_examples.append(save_json)
+                new_json = {
+                "rasa_nlu_data": {
+                "common_examples": comment_examples,
+                "entity_synonyms": []
+                }
+                }
+                mannger.nlu_save(json_to_string(new_json))
 
             intent_db.sentence = sentences_list
             
             prompt_list = []
-            for confirm_prompt in confirm_prompts:
+            if confirm_prompt is not None:
                 confirm_prompt_text = confirm_prompt.get("prompt_text")
-                action_type = entity_prompt.get("action_type")
+                action_type = confirm_prompt.get("action_type")
                 confirm_prompt_db = Prompt()
                 confirm_prompt_db.prompt_id = generate_key_generator()
                 confirm_prompt_db.prompt_text = confirm_prompt_text
                 confirm_prompt_db.prompt_type = "confirm"
                 confirm_prompt_db.action_type = action_type
                 prompt_list.append(confirm_prompt_db)
-            for response_prompt in response_prompts:
+            if cancel_prompt is not None:
+                confirm_prompt_text = cancel_prompt.get("prompt_text")
+                action_type = cancel_prompt.get("action_type")
+                confirm_prompt_db = Prompt()
+                confirm_prompt_db.prompt_id = generate_key_generator()
+                confirm_prompt_db.prompt_text = confirm_prompt_text
+                confirm_prompt_db.prompt_type = "cancel"
+                confirm_prompt_db.action_type = action_type
+                prompt_list.append(confirm_prompt_db)
+            if response_prompt is not None:
                 response_prompt_text = response_prompt.get("prompt_text")
-                action_type = entity_prompt.get("action_type")
+                action_type = response_prompt.get("action_type")
                 response_prompt_db = Prompt()
                 response_prompt_db.prompt_id = generate_key_generator()
                 response_prompt_db.prompt_text = response_prompt_text
@@ -432,6 +482,33 @@ class IntentWeb(object):
             response = {"code":1, "seccess": True}
             return (json_to_string(response))
 
+        @intent_webhook.route("/intent_delete", methods=['POST'])
+        def intent_delete():
+            payload = request.json
+            intent_id = payload.get("intent_id", None)
+            intent_db = Intent()
+            intents = intent_db.query.filter_by(intent_id = intent_id).first()
+            mannger =RasaFileManeger(config["data"])
+            rasa_json = mannger.nlu_load().get("rasa_nlu_data")
+            comment_examples = rasa_json.get("common_examples", list())
+            sentences = intents.sentence
+            new_comment_examples=[]
+            for comment_example in comment_examples:
+                for sent in sentences:
+                    sentence_text = sent.sentence
+                    if sentence_text.find(comment_example.get("text")) >=0:
+                        print("dont save")
+                    else:
+                       new_comment_examples.append(comment_example)
+            new_json = {
+                "rasa_nlu_data": {
+                "common_examples": new_comment_examples,
+                "entity_synonyms": []
+            }
+            }
+            mannger.nlu_save(json_to_string(new_json))
+
+            db.session.delete(intents)
 
         @intent_webhook.route("/intent_list", methods=['POST'])
         def intent_list():
@@ -553,10 +630,8 @@ class IntentWeb(object):
         def intent_train():
             payload = request.json
             bot_id = payload.get("bot_id", None)
-            flow_id = payload.get("flow_id", None)
-            node_list = payload.get("nodeList", list())
             intent_db = Intent()
-            intent_bots = intent_db.query.filter_by(bot_id = bot_id, flow_id = flow_id).all()
+            intent_bots = intent_db.query.filter_by(bot_id = bot_id).all()
             response={}
             if intent_bots is not None:
                 #nlu_train
@@ -579,12 +654,28 @@ class IntentWeb(object):
                 for int_bot in intent_bots:
                     intent = int_bot.intent_name
                     intent_list.append(intent)
+                    utter_confirm_prompt_list = []
+                    utter_response_prompt_list = []
+                    utter_cancel_prompt_list = []
                     for prompt in int_bot.prompt:
-                        prompt_json ={
-                            prompt.action_type+"_"+prompt.prompt_id:prompt.prompt_text
-                        }
-                        action_list.append(prompt.action_type+"_"+prompt.prompt_id)
-                        template_list.append(prompt_json)
+                        if prompt.action_type is "utter":
+                            if prompt.prompt_type is "confirm":
+                                utter_confirm_prompt_list.append(prompt.prompt_text)
+                            elif prompt.prompt_type is "cancel":
+                                utter_cancel_prompt_list.append(prompt.prompt_text)
+                            else:
+                                utter_response_prompt_list.append(prompt.prompt_text)
+                    prompt_json = {}
+                    if utter_confirm_prompt_list is not []:
+                        prompt_json.update({"utter_confirm_"+int_bot.intent_id:utter_confirm_prompt_list})
+                        action_list.append("utter_confirm_"+int_bot.intent_id)
+                    if utter_cancel_prompt_list is not []:
+                        prompt_json.update({"utter_cancel_"+int_bot.intent_id:utter_cancel_prompt_list})
+                        action_list.append("utter_cancel_"+int_bot.intent_id)
+                    if utter_confirm_prompt_list is not []:
+                        prompt_json.update({"utter_response_"+int_bot.intent_id:utter_response_prompt_list})
+                        action_list.append("utter_response_"+int_bot.intent_id)
+                    template_list.append(prompt_json)
                     for sent in int_bot.sentence:
                         for ent in sent.entity:
                             entity_list.append(ent.entity)
@@ -594,11 +685,14 @@ class IntentWeb(object):
                                 }
                             }
                             slot_list.append(slot_json)
+                            prompt_list = []
                             for prompt in ent.prompt:
-                                prompt_json ={
-                                    prompt.action_type+"_"+prompt.prompt_id:prompt.prompt_text
-                                }
-                                template_list.append(prompt_json)
+                                prompt_list.append(prompt.prompt_text)
+                            prompt_json = {
+                                "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id:prompt_list
+                            }
+                            template_list.append(prompt_json)
+                            action_list.append("utter_slot_"+int_bot.intent_id+"_"+ent.entity_id)
                 yaml_json = {
                     "slots":slot_list,
                     "intents":intent_list,
@@ -612,37 +706,22 @@ class IntentWeb(object):
                 ff.write(yaml_dump)  
                 ff.close()
 
-                story_list=[]
-                for node in node_list:
-                    if node is not None:
-                        node_id = node.get("node_id")
-                        story_json = convertdbToStory(node_id)
-                        story_list.append(story_json)
-                        node_link_list = node.get("nodeLinkList",list())
-                        while node_link_list is not []:
-                            sub_story = []
-                            for node_link in node_link_list:
-                                target_node = node_link.get("targetNode")
-                                node_id = target_node.get("node_id")
-                                node_link_list = target_node.get("nodeLinkList")
-                                story_json = convertdbToStory(node_id)
-                                sub_story.append(story_json)
-                            story_list.append(sub_story)
+                story_said = None
+
+                for int_bot in intent_bots:
+                    intent_id = int_bot.intent_id
+                    story_json = convertdbToStory(intent_id)
+                    stories = story_json.get("story", list())
+                    for story in stories:
+                        story_said+= "## " + generate_key_generator() + "\n"
+                        intent_text = story.get("intent")
+                        story_said+= "* " + intent_text + "\n"
+                        template = story.get("template")
+                        story_said+= "    - " + template + "\n" 
 
                 ff = open(config["dm_data_path"]+'stories.md', 'w+')
-                for story in story_list:
-                    stories = story.get("story", list())
-                    story_said = None
-                    if len(stories) is 1:
-                        intent_text = stories.get("intent")
-                        story_said+= "* " + intent_text + "\n"
-                        prompt_list = stories.get("prompt_list")
-                        for prompt in prompt_list:
-                            prompt_id = prompt.get("prompt_id")
-                            action_type = prompt.get("action_type")
-                            story_said+= "    - " + action_type+"_"+prompt_id + "\n"
-                    # else:
-                
+                ff.write(story_said)
+                ff.close()
 
                 agent = Agent(config["dm_data_path"]+'domain.yaml', policies=[MemoizationPolicy(), Policy()])
 
@@ -680,9 +759,7 @@ class ChatWeb(object):
             text = payload.get("message", None)
             interpreter = RasaNLUInterpreter(model_dir+"/nlu")
             agent = Agent.load(model_dir+"/dialogue", interpreter=interpreter)
-            agent.handle_channel(ConsoleInputChannel())
-            
-            message = ConsoleOutputChannel().send_custom_message()
+            message = agent.handle_message(text)
             return jsonify(message)
 
 
@@ -691,10 +768,11 @@ class ChatWeb(object):
 def generate_key_generator():
     return binascii.hexlify(os.urandom(16)).decode()
 
-def convertdbToStory(node_id):
+def convertdbToStory(intent_id):
     import itertools
     intent_node_db = Intent()
-    intent_node = intent_node_db.query.filter_by(node_id = node_id).first()
+    intent_node = intent_node_db.query.filter_by(intent_id = intent_id).first()
+    intent_id = intent_node.intent_id
     intent_name = intent_node.intent_name
     node_intent_list=[]
     for sent in intent_node.sentence:
@@ -707,9 +785,15 @@ def convertdbToStory(node_id):
                 intent = intent_name + entity_json
                 prompt_list = intent_node.prompt
                 node_json ={
-                    "intent": intent,
-                    "prompt_list":prompt_list
+                    "intent": intent
                 }
+                for prom in prompt_list:
+                    if prom.prompt_type is "confirm":
+                        node_json.update({"template":"utter_confirm_"+intent_id})
+                    if prom.prompt_type is "cancel":
+                        node_json.update({"template":"utter_cancel_"+intent_id})
+                    if prom.prompt_type is "response":
+                        node_json.update({"template":"utter_response_"+intent_id})
                 node_intent_list.append(node_json)
                 break
             else:
@@ -717,10 +801,10 @@ def convertdbToStory(node_id):
                 for story_ent in story_ent_list:
                     entity_json.update({story_ent.entity:story_ent.value})
                 intent = intent_name + entity_json
-                prompt_list = story_ent_list[-1].prompt
+                ent_id = story_ent_list[-1].entity_id
                 node_json ={
                     "intent": intent,
-                    "prompt_list":prompt_list
+                    "template":"utter_slot_"+intent_id+"_"+ent_id
                 }
                 node_intent_list.append(node_json)
     story_json = {

@@ -113,8 +113,8 @@ def do_train(config,  # type: RasaNLUConfig
     training_data = load_data(config['data'], config['language'])
     interpreter = trainer.train(training_data)
     persisted_path = trainer.persist(config['path'], persistor,
-                                     config['project'],
-                                     config['fixed_model_name'])
+                                     'system',
+                                     'system_model')
     return trainer, interpreter, persisted_path
 
 

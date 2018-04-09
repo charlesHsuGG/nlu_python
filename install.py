@@ -18,7 +18,10 @@ requirments = [
    "scipy",
    "mitie",
    "spacy",
-   "Flask"
+   "Flask",
+   "mysqlclient",
+   "SQLAlchemy",
+   "PyYAML"
 ]
 
 packages = [package.project_name for package in pip.get_installed_distributions()]

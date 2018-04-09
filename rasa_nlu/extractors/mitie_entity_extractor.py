@@ -20,6 +20,7 @@ from rasa_nlu.model import Metadata
 from rasa_nlu.training_data import Message
 from rasa_nlu.training_data import TrainingData
 from rasa_nlu.utils.langconv import *
+from rasa_nlu.utils import write_json_to_file
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ class MitieEntityExtractor(EntityExtractor):
 
     def __init__(self, ner=None):
         self.ner = ner
+        self.ner_list = []
 
     @classmethod
     def required_packages(cls):
@@ -101,6 +103,8 @@ class MitieEntityExtractor(EntityExtractor):
                 try:
                     # mitie will raise an exception on malicious input - e.g. on overlapping entities
                     sample.add_entity(list(range(start, end)), ent["entity"])
+                    if ent["entity"] not in self.ner_list:
+                        self.ner_list.append(ent["entity"])
                 except Exception as e:
                     logger.warning("Failed to add entity example '{}' of sentence '{}'. Reason: {}".format(
                             str(e), str(text), e))
@@ -141,6 +145,10 @@ class MitieEntityExtractor(EntityExtractor):
         if self.ner:
             entity_extractor_file = os.path.join(model_dir, "entity_extractor.dat")
             self.ner.save_to_disk(entity_extractor_file, pure_model=True)
-            return {"entity_extractor_mitie": "entity_extractor.dat"}
+            file_name = self.name + ".json"
+            full_name = os.path.join(model_dir, file_name)
+            write_json_to_file(full_name, {"dimensions": self.ner_list})
+            return {"entity_extractor_mitie": "entity_extractor.dat",
+                    self.name: file_name}
         else:
             return {"entity_extractor_mitie": None}
