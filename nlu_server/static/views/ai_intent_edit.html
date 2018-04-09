@@ -75,7 +75,7 @@ td {
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="slots in slotsList">
+								<tr ng-repeat="slots in slotsList track by $index">
 									<td class="center" style="vertical-align: middle">{{slots.prioriry}}</td>
 									<td class="center" style="vertical-align: middle">{{slots.required}}</td>
 									<td class="center" style="vertical-align: middle">{{slots.name}}</td>
@@ -83,7 +83,7 @@ td {
 									<td class="center" style="vertical-align: middle">{{slots.prompt}}</td>
 									<td class="center" style="vertical-align: middle">
 										<button type="button" class="btn btn-info">編輯提示字元</button>
-										<button type="button" class="btn btn-danger">刪除</button></td>
+										<button type="button" class="btn btn-danger" ng-click="deleteSlots($index)">刪除</button></td>
 								</tr>
 							</tbody>
 						</table>

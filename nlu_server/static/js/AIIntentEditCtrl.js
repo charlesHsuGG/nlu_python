@@ -85,10 +85,15 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 			modal.element.modal();
 			modal.close.then(function(data) {
 				console.log(data);
-				$scope.slotsList.push(data);
-				
+				if(data != "cancel"){
+					$scope.slotsList.push(data);
+				}
 			});
 		});
+	}
+	$scope.deleteSlots = function(index){
+		console.log(index);
+		$scope.slotsList.splice(index,1);
 	}
 	function loadSlots(){
 
