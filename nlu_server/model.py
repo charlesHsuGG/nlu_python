@@ -79,7 +79,7 @@ class Entity(db.Model):
     update_date = db.Column(db.DATETIME, nullable=False)  
 
     def __repr__(self):
-        return '<Entity %r>' % (self.sentence_id)
+        return '<Entity %r>' % (self.entity_id)
 
 class Prompt(db.Model):
 
@@ -93,4 +93,4 @@ class Prompt(db.Model):
     update_date = db.Column(db.DATETIME, nullable=False)  
 
     def __repr__(self):
-        return '<Prompt %r>' % self.sentence_id
+        return '<Prompt %r>' % self.prompt_id

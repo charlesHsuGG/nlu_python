@@ -632,6 +632,7 @@ class IntentWeb(object):
         def intent_train():
             payload = request.json
             bot_id = payload.get("bot_id", None)
+            model_dir = payload.get("model_dir", None)
             intent_db = Intent()
             intent_bots = intent_db.query.filter_by(bot_id = bot_id).all()
             response={}
@@ -660,21 +661,21 @@ class IntentWeb(object):
                     utter_response_prompt_list = []
                     utter_cancel_prompt_list = []
                     for prompt in int_bot.prompt:
-                        if prompt.action_type is "utter":
-                            if prompt.prompt_type is "confirm":
+                        if prompt.action_type.find("utter") >= 0:
+                            if prompt.prompt_type.find("confirm") >= 0:
                                 utter_confirm_prompt_list.append(prompt.prompt_text)
-                            elif prompt.prompt_type is "cancel":
+                            elif prompt.prompt_type.find("cancel") >= 0:
                                 utter_cancel_prompt_list.append(prompt.prompt_text)
                             else:
                                 utter_response_prompt_list.append(prompt.prompt_text)
                     prompt_json = {}
-                    if utter_confirm_prompt_list is not []:
+                    if len(utter_confirm_prompt_list) is not 0:
                         prompt_json.update({"utter_confirm_"+int_bot.intent_id:utter_confirm_prompt_list})
                         action_list.append("utter_confirm_"+int_bot.intent_id)
-                    if utter_cancel_prompt_list is not []:
+                    if len(utter_cancel_prompt_list) is not 0:
                         prompt_json.update({"utter_cancel_"+int_bot.intent_id:utter_cancel_prompt_list})
                         action_list.append("utter_cancel_"+int_bot.intent_id)
-                    if utter_confirm_prompt_list is not []:
+                    if len(utter_response_prompt_list) is not 0:
                         prompt_json.update({"utter_response_"+int_bot.intent_id:utter_response_prompt_list})
                         action_list.append("utter_response_"+int_bot.intent_id)
                     template_list.append(prompt_json)
@@ -703,12 +704,12 @@ class IntentWeb(object):
                     "actions":action_list
                 }
 
-                ff = open(config["dm_data_path"]+'domain.yaml', 'w+')
-                yaml_dump = yaml.dump(yaml_json, default_flow_style=False)     
+                ff = open(config["dm_data_path"]+'domain.yml', 'w+')
+                yaml_dump = yaml.dump(yaml_json, default_flow_style=False, allow_unicode=True)     
                 ff.write(yaml_dump)  
                 ff.close()
 
-                story_said = None
+                story_said = ""
 
                 for int_bot in intent_bots:
                     intent_id = int_bot.intent_id
@@ -717,15 +718,26 @@ class IntentWeb(object):
                     for story in stories:
                         story_said+= "## " + generate_key_generator() + "\n"
                         intent_text = story.get("intent")
-                        story_said+= "* " + intent_text + "\n"
                         template = story.get("template")
-                        story_said+= "    - " + template + "\n" 
+                        matches = [x for x in template if 'confirm' in x]
+                        if len(matches) > 0:
+                            for temp in template:
+                                if temp.find("response") >= 0:
+                                    story_said+= "* 正確" + "\n"
+                                    story_said+= "    - " + temp + "\n" 
+                                else:
+                                    story_said+= "* " + intent_text + "\n"
+                                    story_said+= "    - " + temp + "\n" 
+                        else:
+                            for temp in template:
+                                story_said+= "* " + intent_text + "\n"
+                                story_said+= "    - " + temp + "\n" 
 
                 ff = open(config["dm_data_path"]+'stories.md', 'w+')
                 ff.write(story_said)
                 ff.close()
 
-                agent = Agent(config["dm_data_path"]+'domain.yaml', policies=[MemoizationPolicy(), Policy()])
+                agent = Agent(config["dm_data_path"]+'domain.yml', policies=[MemoizationPolicy(), Policy()])
 
                 agent.train(
                         config["dm_data_path"]+'stories.md',
@@ -735,7 +747,7 @@ class IntentWeb(object):
                         validation_split=0.2
                 )
 
-                agent.persist(model_path)
+                agent.persist(model_dir+"/dialogue")
                             
 
                 response = {"code":1, "seccess": True}
@@ -776,42 +788,49 @@ def convertdbToStory(intent_id):
     intent_node = intent_node_db.query.filter_by(intent_id = intent_id).first()
     intent_id = intent_node.intent_id
     intent_name = intent_node.intent_name
+    print(intent_name)
     node_intent_list=[]
     for sent in intent_node.sentence:
         entity_list = sent.entity
+        print(entity_list)
         entity_json = {}
-        for index in range(1,len(entity_list)):
-            if index == len(entity_list):
+        for index in range(0,len(entity_list)):
+            if index + 1 == len(entity_list):
                 for story_ent in entity_list:
                     entity_json.update({story_ent.entity:story_ent.value})
-                intent = intent_name + entity_json
+                intent = intent_name + str(entity_json)
                 prompt_list = intent_node.prompt
                 node_json ={
                     "intent": intent
                 }
+                proms = []
                 for prom in prompt_list:
-                    if prom.prompt_type is "confirm":
-                        node_json.update({"template":"utter_confirm_"+intent_id})
-                    if prom.prompt_type is "cancel":
-                        node_json.update({"template":"utter_cancel_"+intent_id})
-                    if prom.prompt_type is "response":
-                        node_json.update({"template":"utter_response_"+intent_id})
+                    if prom.prompt_type.find("confirm") >= 0:
+                        proms.append("utter_confirm_"+intent_id)
+                    if prom.prompt_type.find("cancel") >= 0:
+                        proms.append("utter_cancel_"+intent_id)
+                    if prom.prompt_type.find("response") >= 0:
+                        proms.append("utter_response_"+intent_id)
+                        
+                node_json.update({"template":proms})
                 node_intent_list.append(node_json)
                 break
             else:
-                story_ent_list = list(itertools.permutations(entity_list[0:index]))
+                story_ent_list = list(itertools.permutations(entity_list[0:index+1]))
                 for story_ent in story_ent_list:
                     entity_json.update({story_ent.entity:story_ent.value})
-                intent = intent_name + entity_json
+                intent = intent_name + str(entity_json)
                 ent_id = story_ent_list[-1].entity_id
+                proms = []
                 node_json ={
                     "intent": intent,
-                    "template":"utter_slot_"+intent_id+"_"+ent_id
+                    "template":proms.append("utter_slot_"+intent_id+"_"+ent_id)
                 }
                 node_intent_list.append(node_json)
     story_json = {
         "story":node_intent_list
     }
+    print(story_json)
     return story_json
 
 class Policy(KerasPolicy):
