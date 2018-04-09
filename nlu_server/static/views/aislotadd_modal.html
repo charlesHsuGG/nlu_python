@@ -1,6 +1,6 @@
 <div class="ngmodal modal fade">
 	<div class="modal-dialog modal-lg " style="width: 50%;">
-		<div class="modal-content " style="height: 450px; overflow: auto;">
+		<div class="modal-content " style="height: 430px; overflow: auto;">
 			<!-- Menu -->
 
 			<!-- mainBody -->
@@ -46,27 +46,25 @@
 					</div>
 					<!--提示字元列表-->
 					<div class="form-group m-form__group" ng-repeat="prompt in promptList track by $index"> 
-						<input type="text" class="form-control"  ng-model="prompt" style=" width:90%; display:inline;"  >
-						<a class="btn btn-outline-primary"  ng-click=""  >-</a>			 
+						<input type="text" class="form-control"  ng-model="prompt.prompt" style=" width:90%; display:inline;"  >
+						<a class="btn btn-outline-primary"  ng-click="deletePrompt($index)"  >-</a>			 
 					</div>
 
 
 
 
 				</div>
-			</div>
-			<div class="modal-footer navbar navbar-fixed-bottom" style="background:  #3d4b8b;">
+				<div style="background:  #3d4b8b; height:80px" class="row ">
 
-
-				<div class="row ">
-					<div class="col-md-12" style="margin-top: 10px;">
-						<!--  <span style="font-size: 20px; font-weight: 700 !important;">(0/5)</span>-->
-						<button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal" id="btn_ok">確認</button>
-						<button type="button" ng-click="close('cancel')" class="btn btn-primary" id="btn_cancel" data-dismiss="modal">取消</button>
+						<div  style="margin-top: 20px;" class="col-12">
+							<!--  <span style="font-size: 20px; font-weight: 700 !important;">(0/5)</span>-->
+							<button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal" id="btn_ok" >確認</button>
+							<button type="button" ng-click="close('cancel')" class="btn btn-primary" id="btn_cancel" data-dismiss="modal"   >取消</button>
+						</div>
 					</div>
-				</div>
 
 			</div>
+
 
 
 

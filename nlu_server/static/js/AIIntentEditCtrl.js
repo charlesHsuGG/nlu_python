@@ -77,7 +77,7 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 	$scope.addSlots = function(){
 		console.log("add")
 		ModalService.showModal({
-			templateUrl: "/static/views/aislotadd_modal.html",
+			templateUrl: "/ai/static/views/aislotadd_modal.html",
 			controller: "aiSlotAddModalCtrl",
 			preClose: (modal) => { modal.element.modal('hide'); } 
 		}).then(function(modal) {
@@ -95,20 +95,42 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 		console.log(index);
 		$scope.slotsList.splice(index,1);
 	}
+
 	function loadSlots(){
 
-		var slots ={};
-		slots.prioriry = "1";
-		slots.required = "是";
-		slots.name = "書本名稱";
-		slots.slotType = "書籍資料";
-		slots.prompt = "請問您想租閱的書名是？";
-		$scope.slotsList.push(slots);
-		console.log("push done");
+		// var slots ={};
+		// slots.prioriry = "1";
+		// slots.required = "是";
+		// slots.name = "書本名稱";
+		// slots.slotType = "書籍資料";
+		// slots.prompt = "請問您想租閱的書名是？";
+		// $scope.slotsList.push(slots);
+		// console.log("push done");
 
 
 	}
 
+
+	$scope.submit = function(){
+		console.log("submit");
+		console.log($scope.name);
+		console.log($scope.utterancesList);
+		angular.forEach($scope.utterancesList, function(value, key) {
+			console.log(value);
+		  });
+		
+		console.log($scope.slotsList);
+		console.log($scope.responseText);
+		console.log($scope.confirmText);
+		console.log($scope.responseList);
+		var sendData = {};
+		sendData.intent  = $scope.name;
+	
+
+
+
+
+	}
 
 
 }]);
