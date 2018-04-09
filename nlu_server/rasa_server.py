@@ -194,6 +194,7 @@ class EntityWeb(object):
         
         @entity_webhook.route("/entity_get", methods=['POST'])
         def entity_get():
+            print("in")
             payload = request.json
             text = payload.get("message", None)
             model_dir = payload.get("model_dir", None)
@@ -435,6 +436,7 @@ class IntentWeb(object):
 
         @intent_webhook.route("/intent_list", methods=['POST'])
         def intent_list():
+           
             payload = request.json
             bot_id = payload.get("bot_id", None)
             intent_db = Intent()
