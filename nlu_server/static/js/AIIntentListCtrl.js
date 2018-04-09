@@ -10,7 +10,8 @@ appControllers.controller('AiIntentListCtrl',
 			function init() {
 				$http({
 					method: 'POST',
-					url: './intent_list'
+					url: './ai_intent/intent_list',
+					data: {"bot_id":"be090fcbc28ba19ac835879c36f861f4"}
 				}).then(function successCallback(response) {
 					console.log(response);
 				}, function errorCallback(response) {

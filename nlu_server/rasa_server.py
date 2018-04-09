@@ -51,9 +51,31 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+class PrefixMiddleware(object):
+
+    def __init__(self, app, prefix=''):
+        self.app = app
+        self.prefix = prefix
+
+    def __call__(self, environ, start_response):
+
+        if environ['PATH_INFO'].startswith(self.prefix):
+            environ['PATH_INFO'] = environ['PATH_INFO'][len(self.prefix):]
+            environ['SCRIPT_NAME'] = self.prefix
+            return self.app(environ, start_response)
+        else:
+            start_response('404', [('Content-Type', 'text/plain')])
+            return ["This url does not belong to the app.".encode()]
+
+app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix='/ai')
+
 # Create database resources.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:54027890@192.168.2.71:3306/nlu_python'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+@app.route("/")
+def index():
+    return make_response(open('nlu_server/templates/MainPage.html').read())
 
 db.init_app(app)
 
@@ -140,10 +162,6 @@ class EntityWeb(object):
         data_router = rasaNLU.data_router
         config = rasaNLU.config
         feature_extractor = mitie.total_word_feature_extractor(config["mitie_file"])
-
-        @entity_webhook.route("/")
-        def main():
-            return make_response(open('nlu_server/templates/MainPage.html').read())
         
         @entity_webhook.route("/parse", methods=['POST'])
         def parse_get():

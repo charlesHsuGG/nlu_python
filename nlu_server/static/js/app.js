@@ -39,7 +39,7 @@ mainApp.config(function($stateProvider, $urlRouterProvider){
            },
            templateProvider: function ($http, $stateParams, scriptLoader) {
                console.log("page name:"+$stateParams.page);
-               return $http.get('/static/views/'+$stateParams.page+'.html')
+               return $http.get('/ai/static/views/'+$stateParams.page+'.html')
                    .then(function(response) {
                        console.log("load")
                        return scriptLoader.loadScriptTagsFromData(response.data);
