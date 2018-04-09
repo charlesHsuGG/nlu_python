@@ -33,6 +33,14 @@ from rasa_nlu.extractors.duckling_http_extractor import DucklingHTTPExtractor
 from rasa_nlu.extractors.duckling_extractor import extract_value
 from rasa_nlu.extractors.mitie_entity_extractor import MitieEntityExtractor
 
+from rasa_core.agent import Agent
+from rasa_core.channels.channel import UserMessage
+from rasa_core.policies.keras_policy import KerasPolicy
+from rasa_core.policies.memoization import MemoizationPolicy
+from rasa_core.channels.console import ConsoleInputChannel
+from rasa_core.channels.console import ConsoleOutputChannel
+from rasa_core.interpreter import RasaNLUInterpreter
+
 from flask_sqlalchemy import SQLAlchemy
 
 from nlu_server.shared import db
@@ -455,10 +463,12 @@ class IntentWeb(object):
                         prompt_id = prom.prompt_id
                         prompt_text = prom.prompt_text
                         prompt_type = prom.prompt_type
+                        action_type = prom.action_type
                         ent_prompt_json = {
                             "prompt_id":prompt_id,
                             "prompt_text":prompt_text,
-                            "prompt_type":prompt_type
+                            "prompt_type":prompt_type,
+                            "action_type":action_type
                         }
                         prom_list.append(ent_prompt_json)
                     ent_json={
@@ -483,10 +493,12 @@ class IntentWeb(object):
                 prompt_id = prompt.prompt_id
                 prompt_text = prompt.prompt_text
                 prompt_type = prompt.prompt_type
+                action_type = prom.action_type
                 prompt_json = {
                     "prompt_id":prompt_id,
                     "prompt_text":prompt_text,
-                    "prompt_type":prompt_type
+                    "prompt_type":prompt_type,
+                    "action_type":action_type
                 }
                 prompt_list.append(prompt_json)
             output={
@@ -534,7 +546,6 @@ class IntentWeb(object):
                 from rasa_nlu.config import RasaNLUConfig
                 from rasa_nlu.model import Trainer
                 import yaml
-                import itertools
 
                 training_data = load_data(config["data"])
                 trainer = Trainer(config)
@@ -587,42 +598,46 @@ class IntentWeb(object):
                 for node in node_list:
                     if node is not None:
                         node_id = node.get("node_id")
-                        intent_node_db = Intent()
-                        intent_node = intent_node_db.query.filter_by(node_id = node_id).first()
-                        intent_name = intent_node.intent_name
-                        node_intent_list=[]
-                        for sent in intent_node.sentence:
-                            entity_list = sent.entity
-                            entity_json = {}
-                            for index in range(1,len(entity_list)):
-                                if index == len(entity_list):
-                                    for story_ent in entity_list:
-                                        entity_json.update({story_ent.entity:story_ent.value})
-                                    intent = intent_name + entity_json
-                                    prompt_list = intent_node.prompt
-                                    node_json ={
-                                        "intent": intent,
-                                        "prompt_list":prompt_list
-                                    }
-                                    node_intent_list.append(node_json)
-                                    break
-                                else:
-                                    story_ent_list = list(itertools.permutations(entity_list[0:index]))
-                                    for story_ent in story_ent_list:
-                                        entity_json.update({story_ent.entity:story_ent.value})
-                                    intent = intent_name + entity_json
-                                    prompt_list = story_ent_list[-1].prompt
-                                    node_json ={
-                                        "intent": intent,
-                                        "prompt_list":prompt_list
-                                    }
-                                    node_intent_list.append(node_json)
-                        story_json = {
-                            "story":node_intent_list
-                        }
+                        story_json = convertdbToStory(node_id)
                         story_list.append(story_json)
-                    
+                        node_link_list = node.get("nodeLinkList",list())
+                        while node_link_list is not []:
+                            sub_story = []
+                            for node_link in node_link_list:
+                                target_node = node_link.get("targetNode")
+                                node_id = target_node.get("node_id")
+                                node_link_list = target_node.get("nodeLinkList")
+                                story_json = convertdbToStory(node_id)
+                                sub_story.append(story_json)
+                            story_list.append(sub_story)
 
+                ff = open(config["dm_data_path"]+'stories.md', 'w+')
+                for story in story_list:
+                    stories = story.get("story", list())
+                    story_said = None
+                    if len(stories) is 1:
+                        intent_text = stories.get("intent")
+                        story_said+= "* " + intent_text + "\n"
+                        prompt_list = stories.get("prompt_list")
+                        for prompt in prompt_list:
+                            prompt_id = prompt.get("prompt_id")
+                            action_type = prompt.get("action_type")
+                            story_said+= "    - " + action_type+"_"+prompt_id + "\n"
+                    # else:
+                
+
+                agent = Agent(config["dm_data_path"]+'domain.yaml', policies=[MemoizationPolicy(), Policy()])
+
+                agent.train(
+                        config["dm_data_path"]+'stories.md',
+                        max_history=5,
+                        epochs=1000,
+                        batch_size=400,
+                        validation_split=0.2
+                )
+
+                agent.persist(model_path)
+                            
 
                 response = {"code":1, "seccess": True}
             else:
@@ -633,8 +648,90 @@ class IntentWeb(object):
 
         return intent_webhook
 
+class ChatWeb(object):
+
+    def data_router(self,rasaNLU):
+        chat_webhook = Blueprint('chat_webhook', __name__)
+        config = rasaNLU.config
+
+        @chat_webhook.route("/chat", methods=['POST'])
+        def chat():
+            payload = request.json
+            model_dir = payload.get("model_dir", None)
+            sender_id = payload.get("sender", None)
+            text = payload.get("message", None)
+            interpreter = RasaNLUInterpreter(model_dir+"/nlu")
+            agent = Agent.load(model_dir+"/dialogue", interpreter=interpreter)
+            agent.handle_channel(ConsoleInputChannel())
+            
+            message = ConsoleOutputChannel().send_custom_message()
+            return jsonify(message)
+
+
+        return chat_webhook
+
 def generate_key_generator():
     return binascii.hexlify(os.urandom(16)).decode()
+
+def convertdbToStory(node_id):
+    import itertools
+    intent_node_db = Intent()
+    intent_node = intent_node_db.query.filter_by(node_id = node_id).first()
+    intent_name = intent_node.intent_name
+    node_intent_list=[]
+    for sent in intent_node.sentence:
+        entity_list = sent.entity
+        entity_json = {}
+        for index in range(1,len(entity_list)):
+            if index == len(entity_list):
+                for story_ent in entity_list:
+                    entity_json.update({story_ent.entity:story_ent.value})
+                intent = intent_name + entity_json
+                prompt_list = intent_node.prompt
+                node_json ={
+                    "intent": intent,
+                    "prompt_list":prompt_list
+                }
+                node_intent_list.append(node_json)
+                break
+            else:
+                story_ent_list = list(itertools.permutations(entity_list[0:index]))
+                for story_ent in story_ent_list:
+                    entity_json.update({story_ent.entity:story_ent.value})
+                intent = intent_name + entity_json
+                prompt_list = story_ent_list[-1].prompt
+                node_json ={
+                    "intent": intent,
+                    "prompt_list":prompt_list
+                }
+                node_intent_list.append(node_json)
+    story_json = {
+        "story":node_intent_list
+    }
+    return story_json
+
+class Policy(KerasPolicy):
+    def model_architecture(self, num_features, num_actions, max_history_len):
+        """Build a Keras model and return a compiled model."""
+        from keras.layers import LSTM, Activation, Masking, Dense
+        from keras.models import Sequential
+
+        n_hidden = 32  # size of hidden layer in LSTM
+        # Build Model
+        batch_shape = (None, max_history_len, num_features)
+
+        model = Sequential()
+        model.add(Masking(-1, batch_input_shape=batch_shape))
+        model.add(LSTM(n_hidden, batch_input_shape=batch_shape))
+        # model.add(Dense(input_dim=n_hidden, output_dim=num_actions))
+        model.add(Activation('softmax'))
+
+        model.compile(loss='categorical_crossentropy',
+                      optimizer='adam',
+                      metrics=['accuracy'])
+
+        logger.debug(model.summary())
+        return model
 
 
 if __name__ == "__main__": 
@@ -647,8 +744,10 @@ if __name__ == "__main__":
     rasa = RasaNLU(rasa_nlu_config)
     entity_channel = EntityWeb()
     intent_channel = IntentWeb()
+    chat_channel = ChatWeb()
     app.register_blueprint(entity_channel.data_router(rasa), url_prefix='/ai_entity')
     app.register_blueprint(intent_channel.data_router(rasa), url_prefix='/ai_intent')
+    app.register_blueprint(chat_channel.data_router(rasa), url_prefix='/chat')
     from gevent.wsgi import WSGIServer
     http_server = WSGIServer((rasa_nlu_config['server_ip'], rasa_nlu_config['port']), app)
     http_server.serve_forever()
