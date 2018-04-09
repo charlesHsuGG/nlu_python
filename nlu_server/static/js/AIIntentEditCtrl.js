@@ -1,8 +1,8 @@
 'use strict';
 var appControllers = angular.module('app.aiintenteditctrl', []);
 
-appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequests','DTOptionsBuilder','ModalService'
-	,function ($scope,$state,MercueRequests,DTOptionsBuilder,ModalService){
+appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'MercueRequests','DTOptionsBuilder','ModalService'
+	,function ($http,$scope,$state,MercueRequests,DTOptionsBuilder,ModalService){
 
 	console.log("ai intent edit ctrl...");
 	$scope.utterancesList = [];
@@ -29,6 +29,9 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 	$scope.addUtterances = function(){
 		console.log("click");
 
+		if($scope.currentUtterance == "" || $scope.currentUtterance == null){
+			return
+		};
 		var utterances = {};
 		utterances.utterances = 	$scope.currentUtterance ;
 		$scope.utterancesList.push(utterances);
@@ -58,9 +61,14 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 	
 	//增加回應
 	$scope.addResponse = function(){
+		if($scope.currentResponse == "" || $scope.currentResponse == null){
+			return
+		};
+
 		console.log("click");
 		var response = {};
-		response.response = 	$scope.currentResponse ;
+		response.prompt_text = 	$scope.currentResponse ;
+		response.action_type = 	"utter" ;
 		$scope.responseList.push(response);
 		$scope.currentResponse = ""
 		console.log("addsuccese")
@@ -113,19 +121,60 @@ appControllers.controller('aiIntentEditCtrl',['$scope', '$state', 'MercueRequest
 
 	$scope.submit = function(){
 		console.log("submit");
+		console.log($scope.utterancesList.length);
+		if($scope.utterancesList.length  == 0  ){
+			alert("請新增例句");
+			return
+		}else if($scope.slotsList.length  == 0  ){
+			alert("請新增關鍵字欄位");
+			return
+		}else if($scope.responseList.length  == 0  ){
+			alert("請新增回應句");
+			return
+		}
+
+
+		var sendUtterances = [];
 		console.log($scope.name);
 		console.log($scope.utterancesList);
 		angular.forEach($scope.utterancesList, function(value, key) {
-			console.log(value);
+			console.log(value.utterances);
+			sendUtterances.push(value.utterances);
 		  });
 		
 		console.log($scope.slotsList);
-		console.log($scope.responseText);
 		console.log($scope.confirmText);
-		console.log($scope.responseList);
+		console.log($scope.cancelText);
+		var confirm_prompt = {};
+		confirm_prompt.prompt_text = $scope.confirmText;
+		confirm_prompt.action_type = "utter";
+
+		var cancel_prompt = {};
+		cancel_prompt.prompt_text = $scope.cancelText;
+		cancel_prompt.action_type = "utter";
+
 		var sendData = {};
 		sendData.intent  = $scope.name;
-	
+		sendData.sentences =  sendUtterances;
+		sendData.entities = $scope.slotsList;
+		sendData.confirm_prompt = confirm_prompt;
+		sendData.cancel_prompt = cancel_prompt;
+		sendData.response_prompt = $scope.responseList;
+
+
+
+
+		console.log(sendData);
+		$http({
+			method: 'POST',
+			url: './ai_intent/entity_save',
+			data:  sendData
+		}).then(function successCallback(response) {
+			console.log(response);
+		}, function errorCallback(response) {
+			console.log(response);
+		});
+
 
 
 

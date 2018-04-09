@@ -27,7 +27,8 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	$scope.addPrompt = function(){
 		console.log($scope.sendData.prompt);
 		var prompt = {};
-		prompt.prompt = $scope.sendData.prompt;
+		prompt.prompt_text = $scope.sendData.prompt;
+		prompt.action_type = "utter";
 		$scope.promptList.push(prompt);
 		$scope.sendData.prompt = "";
 		console.log($scope.promptList);
@@ -36,7 +37,7 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	 $scope.promptList.splice(index,1);
 	}
 	$scope.close = function(result) {
-		$scope.sendData.prompt = $scope.promptList;
+		$scope.sendData.entity_prompt = $scope.promptList;
 		console.log( $scope.sendData);
 			if(result == "cancel"){
 				close("cancel", 500);
