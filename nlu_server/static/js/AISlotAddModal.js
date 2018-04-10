@@ -9,10 +9,12 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
   
 	
 	function init()    {
+		var dataPost = {};
+		dataPost.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model";
 		$http({
 			method: 'POST',
-			url: './ai_intent/entity_get',
-			data: {"bot_id":"be090fcbc28ba19ac835879c36f861f4"}
+			url: './ai_entity/slot_get',
+			data: dataPost
 		}).then(function successCallback(response) {
 			console.log(response);
 		}, function errorCallback(response) {

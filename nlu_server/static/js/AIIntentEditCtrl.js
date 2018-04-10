@@ -167,7 +167,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log(sendData);
 		$http({
 			method: 'POST',
-			url: './ai_intent/entity_save',
+			url: './ai_intent/intent_save',
 			data:  sendData
 		}).then(function successCallback(response) {
 			console.log(response);

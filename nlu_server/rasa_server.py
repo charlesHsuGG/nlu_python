@@ -192,6 +192,7 @@ class EntityWeb(object):
 
         @entity_webhook.route("/slot_get", methods=['POST'])
         def slot_get():
+            payload = request.json
             model_dir = payload.get("model_dir", None)
             model_metadata = Metadata.load(model_dir)
             print(str(model_metadata))
