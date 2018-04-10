@@ -31,7 +31,7 @@ entity_prompt = db.Table('entity_prompt',
 class Intent(db.Model):
 
 	# __tablename__ = 'intent'
-
+    
     intent_id = db.Column(db.String(32), nullable=True, primary_key=True)
     intent_name = db.Column(db.Text, nullable=False)
     bot_id = db.Column(db.String(32), nullable=False)
