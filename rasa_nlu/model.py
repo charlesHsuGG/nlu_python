@@ -176,7 +176,7 @@ class Trainer(object):
         }
 
         if project_name is None:
-            project_name = "default"
+            project_name = "system"
 
         if fixed_model_name:
             model_name = fixed_model_name

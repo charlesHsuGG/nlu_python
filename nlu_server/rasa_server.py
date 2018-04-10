@@ -865,7 +865,7 @@ class IntentWeb(object):
                 training_data = load_data(config["data"])
                 trainer = Trainer(config)
                 trainer.train(training_data)
-                trainer.persist(config["path"], fixed_model_name="nlu_system")
+                trainer.persist(config["path"], project_name="system", fixed_model_name="system_model")
 
                 #DM
                 intent_list=[]
@@ -1081,7 +1081,7 @@ class Policy(KerasPolicy):
         model = Sequential()
         model.add(Masking(-1, batch_input_shape=batch_shape))
         model.add(LSTM(n_hidden, batch_input_shape=batch_shape))
-        # model.add(Dense(input_dim=n_hidden, output_dim=num_actions))
+        model.add(Dense(input_dim=n_hidden, output_dim=num_actions))
         model.add(Activation('softmax'))
 
         model.compile(loss='categorical_crossentropy',
