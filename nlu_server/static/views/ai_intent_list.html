@@ -38,12 +38,13 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="slots in slotsList">
-									<td class="center" style="vertical-align: middle">{{slots.prioriry}}</td>
-				 
+								<tr ng-repeat="intent in intent_list track by $index">
+									<td class="center" style="vertical-align: middle">{{intent.intent}}</td>
+									<td class="center" style="vertical-align: middle"> </td>
+									<td class="center" style="vertical-align: middle"> </td>
 									<td class="center" style="vertical-align: middle">
-										<button type="button" class="btn btn-info">編輯提示字元</button>
-										<button type="button" class="btn btn-danger">刪除</button>
+										<button type="button" class="btn btn-info"  ng-click="editIntent($index)">編輯</button>
+										<button type="button" class="btn btn-danger" ng-click="deleteIntent($index)">刪除</button>
 									</td>
 								</tr>
 							</tbody>
