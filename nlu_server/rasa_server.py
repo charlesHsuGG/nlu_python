@@ -197,21 +197,22 @@ class EntityWeb(object):
             model_metadata = Metadata.load(model_dir)
             print(str(model_metadata))
             entity_list_duckling = model_metadata.get("ner_duckling_http")
-            entity_list_duckling_file = os.path.join(model_dir, entity_list_duckling)
+            entity_list_duckling_file = os.path.join(model_dir+"/nlu", entity_list_duckling)
             with io.open(entity_list_duckling_file, encoding="utf-8") as f:
                 data = json.loads(f.read())
             dimensions_duckling = data.get("dimensions", list())
             entity_list_mitie = model_metadata.get("ner_mitie")
             dims = []
-            entity_list_mitie_file = os.path.join(model_dir, entity_list_mitie)
-            if os.path.exists(entity_list_mitie_file):
-                with io.open(entity_list_mitie_file, encoding="utf-8") as f:
-                    data = json.loads(f.read())
-                dimensions_mitie = data.get("dimensions", list())
+            if entity_list_mitie is not None:
+                entity_list_mitie_file = os.path.join(model_dir+"/nlu", entity_list_mitie)
+                if os.path.exists(entity_list_mitie_file):
+                    with io.open(entity_list_mitie_file, encoding="utf-8") as f:
+                        data = json.loads(f.read())
+                    dimensions_mitie = data.get("dimensions", list())
 
-                for dim in dimensions_mitie:
-                    dim_json={"entity":dim,"ner_extractor":"ner_mitie"}
-                    dims.append(dim_json)
+                    for dim in dimensions_mitie:
+                        dim_json={"entity":dim,"ner_extractor":"ner_mitie"}
+                        dims.append(dim_json)
             
             for dim in dimensions_duckling:
                 dim_json={"entity":dim,"ner_extractor":"ner_duckling"}
