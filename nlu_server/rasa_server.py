@@ -524,11 +524,13 @@ class IntentWeb(object):
             if 'response_prompt' in payload:
                 response_prompts = payload.get("response_prompt", list())
 
-            intent_db = Intent()
-            intents = intent_db.query.filter_by(intent_id = intent_id).first()
+            intent_delete_db = Intent()
+            intents = intent_delete_db.query.filter_by(intent_id = intent_id).first()
             db.session.delete(intents)
             db.session.commit()
             
+            intent_db = Intent()
+
             intent_db.intent_id = intent_id
             intent_db.intent_name = intent
             intent_db.bot_id = bot_id
@@ -623,7 +625,7 @@ class IntentWeb(object):
             
             prompt_list = []
             if confirm_prompt is not None:
-                prompt_id = entity_prompt.get("prompt_id")
+                prompt_id = confirm_prompt.get("prompt_id")
                 confirm_prompt_text = confirm_prompt.get("prompt_text")
                 action_type = confirm_prompt.get("action_type")
                 confirm_prompt_db = Prompt()
@@ -636,7 +638,7 @@ class IntentWeb(object):
                 confirm_prompt_db.action_type = action_type
                 prompt_list.append(confirm_prompt_db)
             if cancel_prompt is not None:
-                prompt_id = entity_prompt.get("prompt_id")
+                prompt_id = cancel_prompt.get("prompt_id")
                 confirm_prompt_text = cancel_prompt.get("prompt_text")
                 action_type = cancel_prompt.get("action_type")
                 cancel_prompt_db = Prompt()
@@ -649,7 +651,7 @@ class IntentWeb(object):
                 cancel_prompt_db.action_type = action_type
                 prompt_list.append(cancel_prompt_db)
             for response_prompt in response_prompts:
-                prompt_id = entity_prompt.get("prompt_id")
+                prompt_id = response_prompt.get("prompt_id")
                 response_prompt_text = response_prompt.get("prompt_text")
                 action_type = response_prompt.get("action_type")
                 response_prompt_db = Prompt()
