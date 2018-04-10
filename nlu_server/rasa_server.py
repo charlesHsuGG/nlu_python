@@ -453,17 +453,19 @@ class IntentWeb(object):
                 mannger =RasaFileManeger(config["data"])
                 rasa_json = mannger.nlu_load().get("rasa_nlu_data")
                 comment_examples = rasa_json.get("common_examples", list())
-
+                append_check = False
                 for comment_example in comment_examples:
                     if sentence.find(comment_example.get("text")) == 0:
-                        comment_examples.append(save_json)
-                new_json = {
-                "rasa_nlu_data": {
-                "common_examples": comment_examples,
-                "entity_synonyms": []
-                }
-                }
-                mannger.nlu_save(json_to_string(new_json))
+                        append_check = True
+                if append_check is False:
+                    comment_examples.append(save_json)
+                    new_json = {
+                    "rasa_nlu_data": {
+                    "common_examples": comment_examples,
+                    "entity_synonyms": []
+                    }
+                    }
+                    mannger.nlu_save(json_to_string(new_json))
 
             intent_db.sentence = sentences_list
             
@@ -612,14 +614,19 @@ class IntentWeb(object):
                 mannger =RasaFileManeger(config["data"])
                 rasa_json = mannger.nlu_load().get("rasa_nlu_data")
                 comment_examples = rasa_json.get("common_examples", list())
-                comment_examples.append(save_json)
-                new_json = {
-                "rasa_nlu_data": {
-                "common_examples": comment_examples,
-                "entity_synonyms": []
-                }
-                }
-                mannger.nlu_save(json_to_string(new_json))
+                append_check = False
+                for comment_example in comment_examples:
+                    if sentence.find(comment_example.get("text")) == 0:
+                        append_check = True
+                if append_check is False:
+                    comment_examples.append(save_json)
+                    new_json = {
+                    "rasa_nlu_data": {
+                    "common_examples": comment_examples,
+                    "entity_synonyms": []
+                    }
+                    }
+                    mannger.nlu_save(json_to_string(new_json))
 
             intent_db.sentence = sentences_list
             
