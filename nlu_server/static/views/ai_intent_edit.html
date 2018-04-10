@@ -60,7 +60,7 @@
 								</div>
 								<!-- 自動生成例句 -->
 								<div class="input-group" style="margin: 10px" ng-repeat="utterances in utterancesList track by $index">
-									<input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="utterances.utterances">
+									<input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="utterances.sentence">
 									<a class="btn btn-outline-primary" ng-click="deleteUtterances($index)">-
 									</a>
 								</div>
