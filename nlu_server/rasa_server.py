@@ -361,6 +361,7 @@ class IntentWeb(object):
         @intent_webhook.route("/intent_save", methods=['POST'])
         def intent_save():
             payload = request.json
+            print(payload)
             bot_id = payload.get("bot_id", None)
             intent = payload.get("intent", None)
             entities = []
@@ -394,7 +395,17 @@ class IntentWeb(object):
                     entity_prompts = ent.get("entity_prompt", list())
                     entity_db = Entity()
                     if sentence.find(value) >= 0:
-                        if entity_type.find("duckling") <= 0:
+                        if entity_type is None:
+                            print("ent_save turn on")
+                            ent_save = True
+                            entity_save ={
+                                "start": sentence.find(value),
+                                "end": sentence.find(value)+len(value),
+                                "value": value,
+                                "entity": entity
+                            }
+                            entities_save.append(entity_save)
+                        elif entity_type.find("duckling") <= 0:
                             print("ent_save turn on")
                             ent_save = True
                             entity_save ={
