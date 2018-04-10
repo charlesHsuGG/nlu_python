@@ -43,7 +43,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			return
 		};
 		var utterances = {};
-		utterances.utterances = 	$scope.currentUtterance ;
+		utterances.sentence = 	$scope.currentUtterance ;
 		$scope.utterancesList.push(utterances);
 		$scope.currentUtterance = ""
 	}
@@ -136,8 +136,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log($scope.name);
 		console.log($scope.utterancesList);
 		angular.forEach($scope.utterancesList, function(value, key) {
-			console.log(value.utterances);
-			sendUtterances.push(value.utterances);
+			console.log(value.sentence);
+			sendUtterances.push(value.sentence);
 		  });
 		
 		console.log($scope.slotsList);
@@ -188,9 +188,17 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			data: {intent_id:$scope.edit_id}
 		}).then(function successCallback(response) {
 			console.log(response);
+			
 			var editData = response.data;
+			
 			$scope.name = editData.intent;
-
+			$scope.confirmText = editData.confirm_prompt.prompt_text;
+			$scope.cancelText = editData.cancel_prompt.prompt_text;
+			$scope.responseList = editData.response_prompt;
+			console.log( editData);
+			$scope.utterancesList = editData.sentence;
+			
+			$scope.slotsList = 	 editData.entities;
 		}, function errorCallback(response) {
 			console.log(response);
 		});
