@@ -869,9 +869,9 @@ class IntentWeb(object):
 
                 #DM
                 intent_list=[]
-                template_list=[]
+                template_json_list={}
                 entity_list=[]
-                slot_list=[]
+                slot_json_list={}
                 action_list=[]
                 for int_bot in intent_bots:
                     intent = int_bot.intent_name
@@ -892,20 +892,20 @@ class IntentWeb(object):
                         prompt_json.update({"utter_confirm_"+int_bot.intent_id:utter_confirm_prompt_list})
                         if "utter_confirm_"+int_bot.intent_id not in action_list:
                             action_list.append("utter_confirm_"+int_bot.intent_id)
-                        if prompt_json not in template_list:
-                            template_list.append(prompt_json)
+                        if "utter_confirm_"+int_bot.intent_id not in template_json_list:
+                            template_json_list.update(prompt_json)
                     if len(utter_cancel_prompt_list) is not 0:
                         prompt_json.update({"utter_cancel_"+int_bot.intent_id:utter_cancel_prompt_list})
                         if "utter_cancel_"+int_bot.intent_id not in action_list:
                             action_list.append("utter_cancel_"+int_bot.intent_id)
-                        if prompt_json not in template_list:
-                            template_list.append(prompt_json)
+                        if "utter_cancel_"+int_bot.intent_id not in template_json_list:
+                            template_json_list.update(prompt_json)
                     if len(utter_response_prompt_list) is not 0:
                         prompt_json.update({"utter_response_"+int_bot.intent_id:utter_response_prompt_list})
                         if "utter_response_"+int_bot.intent_id not in action_list:
                             action_list.append("utter_response_"+int_bot.intent_id)
-                        if prompt_json not in template_list:
-                            template_list.append(prompt_json)
+                        if "utter_response_"+int_bot.intent_id not in template_json_list:
+                            template_json_list.update(prompt_json)
                     for sent in int_bot.sentence:
                         for ent in sent.entity:
                             if ent.entity not in entity_list:
@@ -915,23 +915,23 @@ class IntentWeb(object):
                                     "type": "text"
                                 }
                             }
-                            if slot_json not in slot_list:
-                                slot_list.append(slot_json)
+                            if ent.entity not in slot_json_list:
+                                slot_json_list.update(slot_json)
                             prompt_list = []
                             for prompt in ent.prompt:
                                 prompt_list.append(prompt.prompt_text)
                             prompt_json = {
                                 "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id:prompt_list
                             }
-                            if prompt_json not in template_list:
-                                template_list.append(prompt_json)
+                            if "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id not in template_json_list:
+                                template_json_list.update(prompt_json)
                             if "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id not in action_list:
                                 action_list.append("utter_slot_"+int_bot.intent_id+"_"+ent.entity_id)
                 yaml_json = {
-                    "slots":slot_list,
+                    "slots":slot_json_list,
                     "intents":intent_list,
                     "entities":entity_list,
-                    "templates":template_list,
+                    "templates":template_json_list,
                     "actions":action_list
                 }
                 ff = open(config["dm_data_path"]+'domain.yml', 'w+')
@@ -1009,7 +1009,7 @@ class ChatWeb(object):
             model_dir = payload.get("model_dir", None)
             sender_id = payload.get("sender", None)
             text = payload.get("message", None)
-            interpreter = RasaNLUInterpreter(model_dir+"/nlu")
+            interpreter = RasaNLUInterpreter(model_dir)
             agent = Agent.load(model_dir+"/dialogue", interpreter=interpreter)
             message = agent.handle_message(text)
             return jsonify(message)
