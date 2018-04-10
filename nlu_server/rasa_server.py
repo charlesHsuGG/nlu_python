@@ -380,7 +380,7 @@ class IntentWeb(object):
             cancel_prompt = None
             if 'cancel_prompt' in payload:
                 cancel_prompt = payload.get("cancel_prompt", None)
-            response_prompt = None
+            response_prompts = []
             if 'response_prompt' in payload:
                 response_prompts = payload.get("response_prompt", list())
 
@@ -397,8 +397,9 @@ class IntentWeb(object):
                 entities_save = []
                 for ent in entities:
                     value = ent.get("value")
-                    entity = ent.get("entity")
-                    entity_type = ent.get("entity_type")
+                    slot_type = ent.get("slotType")
+                    entity = slot_type.get("entity")
+                    entity_type = slot_type.get("ner_extractor")
                     entity_prompts = ent.get("entity_prompt", list())
                     entity_db = Entity()
                     if sentence.find(value) >= 0:
@@ -522,7 +523,7 @@ class IntentWeb(object):
             cancel_prompt = None
             if 'cancel_prompt' in payload:
                 cancel_prompt = payload.get("cancel_prompt", None)
-            response_prompt = None
+            response_prompt = []
             if 'response_prompt' in payload:
                 response_prompts = payload.get("response_prompt", list())
 
@@ -548,8 +549,9 @@ class IntentWeb(object):
                 for ent in entities:
                     entity_id = ent.get("entity_id")
                     value = ent.get("value")
-                    entity = ent.get("entity")
-                    entity_type = ent.get("entity_type")
+                    slot_type = ent.get("slotType")
+                    entity = slot_type.get("entity")
+                    entity_type = slot_type.get("ner_extractor")
                     entity_prompts = ent.get("entity_prompt", list())
                     entity_db = Entity()
                     if sentence_text.find(value) >= 0:
@@ -773,8 +775,10 @@ class IntentWeb(object):
                     if entity_text not in check_ent_list:
                         ent_json={
                             "entity_id":entity_id,
-                            "entity":entity_text,
-                            "entity_type":entity_type,
+                            "slotType":{
+                                "entity":entity_text,
+                                "ner_extractor":entity_type,
+                            },
                             "value":value,
                             "start":start,
                             "end":end,
@@ -886,31 +890,43 @@ class IntentWeb(object):
                     prompt_json = {}
                     if len(utter_confirm_prompt_list) is not 0:
                         prompt_json.update({"utter_confirm_"+int_bot.intent_id:utter_confirm_prompt_list})
-                        action_list.append("utter_confirm_"+int_bot.intent_id)
+                        if "utter_confirm_"+int_bot.intent_id not in action_list:
+                            action_list.append("utter_confirm_"+int_bot.intent_id)
+                        if prompt_json not in template_list:
+                            template_list.append(prompt_json)
                     if len(utter_cancel_prompt_list) is not 0:
                         prompt_json.update({"utter_cancel_"+int_bot.intent_id:utter_cancel_prompt_list})
-                        action_list.append("utter_cancel_"+int_bot.intent_id)
+                        if "utter_cancel_"+int_bot.intent_id not in action_list:
+                            action_list.append("utter_cancel_"+int_bot.intent_id)
+                        if prompt_json not in template_list:
+                            template_list.append(prompt_json)
                     if len(utter_response_prompt_list) is not 0:
                         prompt_json.update({"utter_response_"+int_bot.intent_id:utter_response_prompt_list})
-                        action_list.append("utter_response_"+int_bot.intent_id)
-                    template_list.append(prompt_json)
+                        if "utter_response_"+int_bot.intent_id not in action_list:
+                            action_list.append("utter_response_"+int_bot.intent_id)
+                        if prompt_json not in template_list:
+                            template_list.append(prompt_json)
                     for sent in int_bot.sentence:
                         for ent in sent.entity:
-                            entity_list.append(ent.entity)
+                            if ent.entity not in entity_list:
+                                entity_list.append(ent.entity)
                             slot_json ={
                                 ent.entity:{
                                     "type": "text"
                                 }
                             }
-                            slot_list.append(slot_json)
+                            if slot_json not in slot_list:
+                                slot_list.append(slot_json)
                             prompt_list = []
                             for prompt in ent.prompt:
                                 prompt_list.append(prompt.prompt_text)
                             prompt_json = {
                                 "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id:prompt_list
                             }
-                            template_list.append(prompt_json)
-                            action_list.append("utter_slot_"+int_bot.intent_id+"_"+ent.entity_id)
+                            if prompt_json not in template_list:
+                                template_list.append(prompt_json)
+                            if "utter_slot_"+int_bot.intent_id+"_"+ent.entity_id not in action_list:
+                                action_list.append("utter_slot_"+int_bot.intent_id+"_"+ent.entity_id)
                 yaml_json = {
                     "slots":slot_list,
                     "intents":intent_list,
@@ -918,7 +934,6 @@ class IntentWeb(object):
                     "templates":template_list,
                     "actions":action_list
                 }
-
                 ff = open(config["dm_data_path"]+'domain.yml', 'w+')
                 yaml_dump = yaml.dump(yaml_json, default_flow_style=False, allow_unicode=True)     
                 ff.write(yaml_dump)  
@@ -931,22 +946,30 @@ class IntentWeb(object):
                     story_json = convertdbToStory(intent_id)
                     stories = story_json.get("story", list())
                     for story in stories:
-                        story_said+= "## " + generate_key_generator() + "\n"
                         intent_text = story.get("intent")
                         template = story.get("template")
-                        matches = [x for x in template if 'confirm' in x]
-                        if len(matches) > 0:
-                            for temp in template:
-                                if temp.find("response") >= 0:
-                                    story_said+= "* 正確" + "\n"
-                                    story_said+= "    - " + temp + "\n" 
-                                else:
-                                    story_said+= "* " + intent_text + "\n"
-                                    story_said+= "    - " + temp + "\n" 
-                        else:
-                            for temp in template:
+                        confirm_matche = [x for x in template if 'confirm' in x]
+                        cancel_matche = [x for x in template if 'cancel' in x]
+                        response_matches = [x for x in template if 'response' in x]
+                        if len(confirm_matche) > 0:
+                            for response_match in response_matches:
+                                story_said+= "## " + generate_key_generator() + "\n"
                                 story_said+= "* " + intent_text + "\n"
-                                story_said+= "    - " + temp + "\n" 
+                                story_said+= "    - " + confirm_matche[0] + "\n" 
+                                story_said+= "* 正確" + "\n"
+                                story_said+= "    - " + response_match + "\n" 
+                        if len(cancel_matche) > 0:
+                            for response_match in response_matches:
+                                story_said+= "## " + generate_key_generator() + "\n"
+                                story_said+= "* " + intent_text + "\n"
+                                story_said+= "    - " + confirm_matche[0] + "\n" 
+                                story_said+= "* 取消" + "\n"
+                                story_said+= "    - " + response_match + "\n" 
+                        if len(cancel_matche) is 0 and len(confirm_matche) is 0:
+                            for response_match in response_matches:
+                                story_said+= "## " + generate_key_generator() + "\n"
+                                story_said+= "* " + intent_text + "\n"
+                                story_said+= "    - " + response_match + "\n" 
 
                 ff = open(config["dm_data_path"]+'stories.md', 'w+')
                 ff.write(story_said)
@@ -1003,11 +1026,9 @@ def convertdbToStory(intent_id):
     intent_node = intent_node_db.query.filter_by(intent_id = intent_id).first()
     intent_id = intent_node.intent_id
     intent_name = intent_node.intent_name
-    print(intent_name)
     node_intent_list=[]
     for sent in intent_node.sentence:
         entity_list = sent.entity
-        print(entity_list)
         entity_json = {}
         for index in range(0,len(entity_list)):
             if index + 1 == len(entity_list):
@@ -1045,7 +1066,6 @@ def convertdbToStory(intent_id):
     story_json = {
         "story":node_intent_list
     }
-    print(story_json)
     return story_json
 
 class Policy(KerasPolicy):

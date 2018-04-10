@@ -66,7 +66,7 @@ class Entity(db.Model):
     entity_id = db.Column(db.String(32), nullable=True, primary_key=True)
     value = db.Column(db.Text, nullable=False)
     entity = db.Column(db.Text, nullable=False)
-    entity_type = db.Column(db.String(10), nullable=False)
+    entity_type = db.Column(db.String(20), nullable=False)
     start_sentence = db.Column(db.Integer, nullable=False)
     end_sentence = db.Column(db.Integer, nullable=False)
     prompt = db.relationship('Prompt', secondary=entity_prompt, lazy='select',
