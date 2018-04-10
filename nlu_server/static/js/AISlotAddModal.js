@@ -5,6 +5,7 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	 
 	console.log("call slotCtrlctrl...");
 	$scope.promptList = [];
+	$scope.sendData = {};
 	init();
   
 	
@@ -16,7 +17,10 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 			url: './ai_entity/slot_get',
 			data: dataPost
 		}).then(function successCallback(response) {
-			console.log(response);
+
+			console.log(response.data.entities);
+			$scope.entities = response.data.entities;
+			$scope.sendData.slotType = 	$scope.entities[0];
 		}, function errorCallback(response) {
 			console.log(response);
 		});

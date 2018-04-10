@@ -31,23 +31,24 @@
 						<input class="form-control m-input m-input--square" ng-model="sendData.value">
 					</div>
 					<div class="form-group m-form__group">
-						<label>
-							類型
-						</label>
-						<input class="form-control m-input m-input--square" ng-model="sendData.slotType">
+
+						<label for="select">類型</label>
+						<select class="form-control" id="select" ng-model="sendData.slotType " ng-options="option.entity for option in entities  ">
+
+						</select>
 					</div>
 					<div class="form-group m-form__group">
 						<label style="display:block">
 							提示字元
 						</label>
-						<input type="text" class="form-control"  ng-model="sendData.prompt" style=" width:90%; display:inline;"  >
-						<a class="btn btn-outline-primary" ng-click="addPrompt()"  >+</a>
-						 
+						<input type="text" class="form-control" ng-model="sendData.prompt" style=" width:90%; display:inline;">
+						<a class="btn btn-outline-primary" ng-click="addPrompt()">+</a>
+
 					</div>
 					<!--提示字元列表-->
-					<div class="form-group m-form__group" ng-repeat="prompt in promptList track by $index"> 
-						<input type="text" class="form-control"  ng-model="prompt.prompt_text" style=" width:90%; display:inline;"  >
-						<a class="btn btn-outline-primary"  ng-click="deletePrompt($index)"  >-</a>			 
+					<div class="form-group m-form__group" ng-repeat="prompt in promptList track by $index">
+						<input type="text" class="form-control" ng-model="prompt.prompt_text" style=" width:90%; display:inline;">
+						<a class="btn btn-outline-primary" ng-click="deletePrompt($index)">-</a>
 					</div>
 
 
@@ -56,12 +57,12 @@
 				</div>
 				<div style="background:  #3d4b8b; height:80px" class="row ">
 
-						<div  style="margin-top: 20px;" class="col-12">
-							<!--  <span style="font-size: 20px; font-weight: 700 !important;">(0/5)</span>-->
-							<button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal" id="btn_ok" >確認</button>
-							<button type="button" ng-click="close('cancel')" class="btn btn-primary" id="btn_cancel" data-dismiss="modal"   >取消</button>
-						</div>
+					<div style="margin-top: 20px;" class="col-12">
+						<!--  <span style="font-size: 20px; font-weight: 700 !important;">(0/5)</span>-->
+						<button type="button" ng-click="close()" class="btn btn-primary" data-dismiss="modal" id="btn_ok">確認</button>
+						<button type="button" ng-click="close('cancel')" class="btn btn-primary" id="btn_cancel" data-dismiss="modal">取消</button>
 					</div>
+				</div>
 
 			</div>
 
