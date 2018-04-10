@@ -16,7 +16,7 @@ appControllers.controller('AiIntentListCtrl',
 				$state.go("page", { page: "ai_intent_edit" });
 			}
 			$scope.editIntent = function (index) {
-			 
+				window.location.href = "/ai/#/ai_intent_edit/?"+$scope.intent_list[index].intent_id;
 			}
 			$scope.deleteIntent = function (index) {
 				console.log("click");
