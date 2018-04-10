@@ -56,7 +56,7 @@
 
 								<div class="input-group" style="margin: 10px">
 									<input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="currentUtterance">
-									<a class="btn btn-outline-primary" ng-click="addUtterances()">+</a>
+									<a class="btn btn-primary" ng-click="addUtterances()"style="color: white;" >新增</a>
 								</div>
 								<!-- 自動生成例句 -->
 								<div class="input-group" style="margin: 10px" ng-repeat="utterances in utterancesList track by $index">
@@ -159,7 +159,7 @@
 										<!-- 回應訊息 -->
 										<div class="input-group" style="margin: 10px">
 											<input type="text" class="form-control" placeholder="例：感謝您，系統已完成訂購。" ng-model="currentResponse">
-											<a class="btn btn-outline-primary" ng-click="addResponse()">+</a>
+											<a class="btn btn-primary" ng-click="addResponse()"style="color: white;" >新增</a>
 										</div>
 
 										<div class="input-group" style="margin: 10px" ng-repeat="response in responseList track by $index">
