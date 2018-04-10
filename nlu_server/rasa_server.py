@@ -13,6 +13,8 @@ import glob
 import mitie
 from functools import wraps
 
+import datetime
+
 import simplejson
 from builtins import str
 
@@ -380,12 +382,13 @@ class IntentWeb(object):
                 cancel_prompt = payload.get("cancel_prompt", None)
             response_prompt = None
             if 'response_prompt' in payload:
-                response_prompt = payload.get("response_prompt", None)
+                response_prompts = payload.get("response_prompt", list())
 
             intent_db = Intent()
             intent_db.intent_id = generate_key_generator()
             intent_db.intent_name = intent
             intent_db.bot_id = bot_id
+            intent_db.create_date = datetime.datetime.now()
 
             sentences_list = []
             ent_save = False
@@ -480,7 +483,7 @@ class IntentWeb(object):
                 confirm_prompt_db.prompt_type = "cancel"
                 confirm_prompt_db.action_type = action_type
                 prompt_list.append(confirm_prompt_db)
-            if response_prompt is not None:
+            for response_prompt in response_prompts:
                 response_prompt_text = response_prompt.get("prompt_text")
                 action_type = response_prompt.get("action_type")
                 response_prompt_db = Prompt()
@@ -497,6 +500,150 @@ class IntentWeb(object):
             db.session.commit()
             response = {"code":1, "seccess": True}
             return (json_to_string(response))
+
+        @intent_webhook.route("/intent_update", methods=['POST'])
+        def intent_update():
+            payload = request.json
+            intent_id = payload.get("intent_id", None)
+            bot_id = payload.get("bot_id", None)
+            intent = payload.get("intent", None)
+            entities = []
+            if 'entities' in payload:
+                entities = payload.get("entities", list())
+            sentences = payload.get("sentences", list())
+            confirm_prompt = None
+            if 'confirm_prompt' in payload:
+                confirm_prompt = payload.get("confirm_prompt", None)
+            cancel_prompt = None
+            if 'cancel_prompt' in payload:
+                cancel_prompt = payload.get("cancel_prompt", None)
+            response_prompt = None
+            if 'response_prompt' in payload:
+                response_prompts = payload.get("response_prompt", list())
+
+            intent_db = Intent()
+            intents = intent_db.query.filter_by(intent_id = intent_id).first()
+
+            intent_db.intent_id = intent_id
+            intent_db.intent_name = intent
+            intent_db.bot_id = bot_id
+            intent_db.update_date = datetime.datetime.now()
+
+            sentences_list = []
+            ent_save = False
+            for sentence in sentences:
+                entity_list = []
+                entities_save = []
+                for ent in entities:
+                    value = ent.get("value")
+                    entity = ent.get("entity")
+                    entity_type = ent.get("entity_type")
+                    entity_prompts = ent.get("entity_prompt", list())
+                    entity_db = Entity()
+                    if sentence.find(value) >= 0:
+                        if entity_type is None:
+                            print("ent_save turn on")
+                            ent_save = True
+                            entity_save ={
+                                "start": sentence.find(value),
+                                "end": sentence.find(value)+len(value),
+                                "value": value,
+                                "entity": entity
+                            }
+                            entities_save.append(entity_save)
+                        elif entity_type.find("duckling") <= 0:
+                            print("ent_save turn on")
+                            ent_save = True
+                            entity_save ={
+                                "start": sentence.find(value),
+                                "end": sentence.find(value)+len(value),
+                                "value": value,
+                                "entity": entity
+                            }
+                            entities_save.append(entity_save)
+                        entity_db.entity_id = generate_key_generator()
+                        entity_db.value = value
+                        entity_db.entity = entity
+                        entity_db.entity_type = entity_type
+                        entity_db.start_sentence = sentence.find(value)
+                        entity_db.end_sentence = sentence.find(value)+len(value)
+                        entity_prompt_list = []
+                        for entity_prompt in entity_prompts:
+                            prompt_text = entity_prompt.get("prompt_text")
+                            action_type = entity_prompt.get("action_type")
+                            entity_prompt_db = Prompt()
+                            entity_prompt_db.prompt_id = generate_key_generator()
+                            entity_prompt_db.prompt_text = prompt_text
+                            entity_prompt_db.prompt_type = "entity"
+                            entity_prompt_db.action_type = action_type
+                            entity_prompt_list.append(entity_prompt_db)
+                        entity_db.prompt = entity_prompt_list
+                        entity_list.append(entity_db)
+                sentences_db = Sentence()
+                sentences_db.sentence_id = generate_key_generator()
+                sentences_db.sentence = sentence
+                sentences_db.entity = entity_list
+                sentences_list.append(sentences_db)
+                save_json ={
+                    "text":sentence,
+                    "intent":intent,
+                    "entities":entities_save
+                }
+                mannger =RasaFileManeger(config["data"])
+                rasa_json = mannger.nlu_load().get("rasa_nlu_data")
+                comment_examples = rasa_json.get("common_examples", list())
+                for comment_example in comment_examples:
+                    if sentence.find(comment_example.get("text")) >=0:
+                        print("dont save")
+                    else:
+                       comment_examples.append(save_json)
+                new_json = {
+                "rasa_nlu_data": {
+                "common_examples": comment_examples,
+                "entity_synonyms": []
+                }
+                }
+                mannger.nlu_save(json_to_string(new_json))
+
+            intent_db.sentence = sentences_list
+            
+            prompt_list = []
+            if confirm_prompt is not None:
+                confirm_prompt_text = confirm_prompt.get("prompt_text")
+                action_type = confirm_prompt.get("action_type")
+                confirm_prompt_db = Prompt()
+                confirm_prompt_db.prompt_id = generate_key_generator()
+                confirm_prompt_db.prompt_text = confirm_prompt_text
+                confirm_prompt_db.prompt_type = "confirm"
+                confirm_prompt_db.action_type = action_type
+                prompt_list.append(confirm_prompt_db)
+            if cancel_prompt is not None:
+                confirm_prompt_text = cancel_prompt.get("prompt_text")
+                action_type = cancel_prompt.get("action_type")
+                confirm_prompt_db = Prompt()
+                confirm_prompt_db.prompt_id = generate_key_generator()
+                confirm_prompt_db.prompt_text = confirm_prompt_text
+                confirm_prompt_db.prompt_type = "cancel"
+                confirm_prompt_db.action_type = action_type
+                prompt_list.append(confirm_prompt_db)
+            for response_prompt in response_prompts:
+                response_prompt_text = response_prompt.get("prompt_text")
+                action_type = response_prompt.get("action_type")
+                response_prompt_db = Prompt()
+                response_prompt_db.prompt_id = generate_key_generator()
+                response_prompt_db.prompt_text = response_prompt_text
+                response_prompt_db.prompt_type = "response"
+                response_prompt_db.action_type = action_type
+                prompt_list.append(response_prompt_db)
+
+            intent_db.prompt = prompt_list
+
+            db.session.update(intent_db)
+            db.session.commit()
+            response = {"code":1, "seccess": True}
+            return (json_to_string(response))
+            
+
 
         @intent_webhook.route("/intent_delete", methods=['POST'])
         def intent_delete():
@@ -525,6 +672,9 @@ class IntentWeb(object):
             mannger.nlu_save(json_to_string(new_json))
 
             db.session.delete(intents)
+            db.session.commit()
+            response = {"code":1, "seccess": True}
+            return (json_to_string(response))
 
         @intent_webhook.route("/intent_list", methods=['POST'])
         def intent_list():
