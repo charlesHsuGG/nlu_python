@@ -22,7 +22,17 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	init();
 
 	function init()	{
-		loadSlots();
+		
+		 var url = location.href.toString(); 
+		 console.log(url);
+		 url = url.split("?");
+		 console.log(url[1]);
+		 if(url[1] != null){
+				console.log("edit mode");		 
+				$scope.edit_id = url[1];
+				loadData();
+		 }
+		 
 
 	}
 	//增加例句
@@ -104,19 +114,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		$scope.slotsList.splice(index,1);
 	}
 
-	function loadSlots(){
-
-		// var slots ={};
-		// slots.prioriry = "1";
-		// slots.required = "是";
-		// slots.name = "書本名稱";
-		// slots.slotType = "書籍資料";
-		// slots.prompt = "請問您想租閱的書名是？";
-		// $scope.slotsList.push(slots);
-		// console.log("push done");
-
-
-	}
+ 
 
 
 	$scope.submit = function(){
@@ -160,7 +158,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		sendData.confirm_prompt = confirm_prompt;
 		sendData.cancel_prompt = cancel_prompt;
 		sendData.response_prompt = $scope.responseList;
-
+		sendData.bot_id =  "be090fcbc28ba19ac835879c36f861f4";
+	 
 
 
 
@@ -171,6 +170,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			data:  sendData
 		}).then(function successCallback(response) {
 			console.log(response);
+			$state.go("page",{page:"ai_intent_list"});
+
 		}, function errorCallback(response) {
 			console.log(response);
 		});
@@ -180,7 +181,21 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 
 
 	}
+	function loadData(){
+		$http({
+			method: 'POST',
+			url: './ai_intent/intent_get',
+			data: {intent_id:$scope.edit_id}
+		}).then(function successCallback(response) {
+			console.log(response);
+			var editData = response.data;
+			$scope.name = editData.intent;
 
+		}, function errorCallback(response) {
+			console.log(response);
+		});
+
+	}
 
 }]);
 
