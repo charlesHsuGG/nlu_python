@@ -544,10 +544,14 @@ class IntentWeb(object):
             for sentence in sentences:
                 entity_list = []
                 entities_save = []
-                sentence_id = sentence.get("sentence_id")
-                sentence_text = sentence.get("sentence")
+                sentence_id = None
+                if "sentence_id" in sentence:
+                    sentence_id = sentence.get("sentence_id")
+                sentence_text = sentence
                 for ent in entities:
-                    entity_id = ent.get("entity_id")
+                    entity_id = None
+                    if "entity_id" in ent:
+                        entity_id = ent.get("entity_id")
                     value = ent.get("value")
                     slot_type = ent.get("slotType")
                     entity = slot_type.get("entity")
@@ -586,7 +590,9 @@ class IntentWeb(object):
                         entity_db.end_sentence = sentence_text.find(value)+len(value)
                         entity_prompt_list = []
                         for entity_prompt in entity_prompts:
-                            prompt_id = entity_prompt.get("prompt_id")
+                            prompt_id = None
+                            if "prompt_id" in entity_prompt:
+                                prompt_id = entity_prompt.get("prompt_id")
                             prompt_text = entity_prompt.get("prompt_text")
                             action_type = entity_prompt.get("action_type")
                             entity_prompt_db = Prompt()
@@ -634,7 +640,9 @@ class IntentWeb(object):
             
             prompt_list = []
             if confirm_prompt is not None:
-                prompt_id = confirm_prompt.get("prompt_id")
+                prompt_id = None
+                if "prompt_id" in confirm_prompt:
+                    prompt_id = confirm_prompt.get("prompt_id")
                 confirm_prompt_text = confirm_prompt.get("prompt_text")
                 action_type = confirm_prompt.get("action_type")
                 confirm_prompt_db = Prompt()
@@ -647,7 +655,9 @@ class IntentWeb(object):
                 confirm_prompt_db.action_type = action_type
                 prompt_list.append(confirm_prompt_db)
             if cancel_prompt is not None:
-                prompt_id = cancel_prompt.get("prompt_id")
+                prompt_id = None
+                if "prompt_id" in cancel_prompt:
+                    prompt_id = cancel_prompt.get("prompt_id")
                 confirm_prompt_text = cancel_prompt.get("prompt_text")
                 action_type = cancel_prompt.get("action_type")
                 cancel_prompt_db = Prompt()
@@ -660,7 +670,9 @@ class IntentWeb(object):
                 cancel_prompt_db.action_type = action_type
                 prompt_list.append(cancel_prompt_db)
             for response_prompt in response_prompts:
-                prompt_id = response_prompt.get("prompt_id")
+                prompt_id = None
+                if "prompt_id" in response_prompt:
+                    prompt_id = response_prompt.get("prompt_id")
                 response_prompt_text = response_prompt.get("prompt_text")
                 action_type = response_prompt.get("action_type")
                 response_prompt_db = Prompt()
@@ -752,7 +764,8 @@ class IntentWeb(object):
             for sent in sentences:
                 sentence_id = sent.sentence_id
                 sentence_text = sent.sentence
-                for ent in sent.entity:
+                entities = sent.entity
+                for ent in entities:
                     entity_id = ent.entity_id
                     entity_text = ent.entity
                     value = ent.value
@@ -772,7 +785,7 @@ class IntentWeb(object):
                             "action_type":action_type
                         }
                         prom_list.append(ent_prompt_json)
-                    if entity_text not in check_ent_list:
+                    if value not in check_ent_list:
                         ent_json={
                             "entity_id":entity_id,
                             "slotType":{
@@ -785,7 +798,7 @@ class IntentWeb(object):
                             "prompt":prom_list
                         }
                         ent_list.append(ent_json)
-                        check_ent_list.append(entity_text)
+                        check_ent_list.append(value)
                 sent_json={
                     "sentence_id":sentence_id,
                     "sentence":sentence_text,
