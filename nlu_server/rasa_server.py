@@ -799,7 +799,7 @@ class IntentWeb(object):
                 prompt_id = prompt.prompt_id
                 prompt_text = prompt.prompt_text
                 prompt_type = prompt.prompt_type
-                action_type = prom.action_type
+                action_type = prompt.action_type
                 prompt_json = {
                     "prompt_id":prompt_id,
                     "prompt_text":prompt_text,
