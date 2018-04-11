@@ -400,7 +400,7 @@ class IntentWeb(object):
                     slot_type = ent.get("slotType")
                     entity = slot_type.get("entity")
                     entity_type = slot_type.get("ner_extractor")
-                    entity_prompts = ent.get("entity_prompt", list())
+                    entity_prompts = ent.get("prompt", list())
                     entity_db = Entity()
                     if sentence.find(value) >= 0:
                         if entity_type is None:
@@ -552,7 +552,7 @@ class IntentWeb(object):
                     slot_type = ent.get("slotType")
                     entity = slot_type.get("entity")
                     entity_type = slot_type.get("ner_extractor")
-                    entity_prompts = ent.get("entity_prompt", list())
+                    entity_prompts = ent.get("prompt", list())
                     entity_db = Entity()
                     if sentence_text.find(value) >= 0:
                         if entity_type is None:
