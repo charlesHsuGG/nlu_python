@@ -43,7 +43,7 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	 $scope.promptList.splice(index,1);
 	}
 	$scope.close = function(result) {
-		$scope.sendData.entity_prompt = $scope.promptList;
+		$scope.sendData.prompt = $scope.promptList;
 		console.log( $scope.sendData);
 			if(result == "cancel"){
 				close("cancel", 500);

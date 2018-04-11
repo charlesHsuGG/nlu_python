@@ -190,14 +190,16 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			console.log(response);
 			
 			var editData = response.data;
-			
-			$scope.name = editData.intent;
+			if(editData.cancel_prompt =! null){
+				$scope.cancelText = editData.cancel_prompt.prompt_text;
+			}
+			if(editData.confirmText =! null){
+				$scope.confirmText = editData.confirm_prompt.prompt_text;
+			}
 			$scope.confirmText = editData.confirm_prompt.prompt_text;
-			$scope.cancelText = editData.cancel_prompt.prompt_text;
 			$scope.responseList = editData.response_prompt;
-			console.log( editData);
+			$scope.name = editData.intent;
 			$scope.utterancesList = editData.sentence;
-			
 			$scope.slotsList = 	 editData.entities;
 		}, function errorCallback(response) {
 			console.log(response);

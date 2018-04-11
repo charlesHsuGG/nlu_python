@@ -93,7 +93,7 @@
 										<td class="center" style="vertical-align: middle">{{slots.value}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.slotType.entity}}</td>
 										<td class="center" style="vertical-align: middle">
-											<sapn ng-repeat="prompt in slots.entity_prompt">{{prompt.prompt_text}}</sapn>
+											<sapn ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</sapn>
 										</td>
 										<td class="center" style="vertical-align: middle">
 											<button type="button" class="btn btn-danger" ng-click="deleteSlots($index)">刪除</button>
