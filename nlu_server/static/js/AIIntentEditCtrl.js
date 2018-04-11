@@ -10,6 +10,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	$scope.responseList = [];
 	$scope.confirmation = true;
 	$scope.slotsListDT = DTOptionsBuilder.newOptions()
+	$scope.submitText = "送出"
+	$scope.editMode = false;
 	// .withBootstrap()
 	// .withDisplayLength(5)
 	// .withOption('info', false)
@@ -30,6 +32,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		 if(url[1] != null){
 				console.log("edit mode");		 
 				$scope.edit_id = url[1];
+				$scope.submitText = "更新"
+				$scope.editMode = true;
 				loadData();
 		 }
 		 
@@ -159,14 +163,20 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		sendData.cancel_prompt = cancel_prompt;
 		sendData.response_prompt = $scope.responseList;
 		sendData.bot_id =  "be090fcbc28ba19ac835879c36f861f4";
-	 
+		
+		
+		var url = "./ai_intent/intent_save"
+		if($scope.editMode == true){
+			url = './ai_intent/intent_update'
+			sendData.intent_id = $scope.edit_id;
+		}
 
 
 
 		console.log(sendData);
 		$http({
 			method: 'POST',
-			url: './ai_intent/intent_save',
+			url: url ,
 			data:  sendData
 		}).then(function successCallback(response) {
 			console.log(response);
@@ -201,6 +211,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			$scope.name = editData.intent;
 			$scope.utterancesList = editData.sentence;
 			$scope.slotsList = 	 editData.entities;
+		 
 		}, function errorCallback(response) {
 			console.log(response);
 		});
