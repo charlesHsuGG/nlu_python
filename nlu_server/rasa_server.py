@@ -377,7 +377,7 @@ class EntityWeb(object):
                 mitie_ner = trainer.train()
             mitie_ner.save_to_disk(entity_extractor_file, pure_model=True)   
             file_name = "ner_mitie.json"
-            full_name = os.path.join(model_dir, file_name)
+            full_name = os.path.join(model_dir+"/nlu", file_name)
             write_json_to_file(full_name, {"dimensions": dims}) 
             response = {"code":1, "seccess": True}
             return (json_to_string(response))
