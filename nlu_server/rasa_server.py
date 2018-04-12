@@ -4,7 +4,10 @@ from __future__ import division
 from __future__ import absolute_import
 
 from gevent import monkey
+from gevent.pywsgi import WSGIServer
 monkey.patch_all()
+
+from multiprocessing import cpu_count, Process
 
 import argparse
 import logging
@@ -31,7 +34,7 @@ from rasa_nlu.data_router import DataRouter, InvalidProjectError, \
 from rasa_nlu.train import TrainingException
 from rasa_nlu.model import Metadata
 from rasa_nlu.version import __version__
-from rasa_nlu.utils import json_to_string
+from rasa_nlu.utils import json_to_string, write_json_to_file
 from rasa_nlu.utils.langconv import *
 from rasa_nlu.tokenizers.jieba_tokenizer import JiebaTokenizer
 from rasa_nlu.extractors.duckling_http_extractor import DucklingHTTPExtractor
@@ -1134,6 +1137,9 @@ class Policy(KerasPolicy):
         logger.debug(model.summary())
         return model
 
+def serve_forever():
+    http_server.start_accepting()
+    http_server._stop_event.wait()
 
 if __name__ == "__main__": 
     arg_parser = create_argparser()
@@ -1149,6 +1155,8 @@ if __name__ == "__main__":
     app.register_blueprint(entity_channel.data_router(rasa), url_prefix='/ai_entity')
     app.register_blueprint(intent_channel.data_router(rasa), url_prefix='/ai_intent')
     app.register_blueprint(chat_channel.data_router(rasa), url_prefix='/chat')
-    from gevent.pywsgi import WSGIServer
     http_server = WSGIServer((rasa_nlu_config['server_ip'], rasa_nlu_config['port']), app)
-    http_server.serve_forever()
+    http_server.start()
+    for i in range(cpu_count()):
+        p = Process(target=serve_forever)
+        p.start()
