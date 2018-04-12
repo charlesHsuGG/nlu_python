@@ -3,6 +3,9 @@ from __future__ import print_function
 from __future__ import division
 from __future__ import absolute_import
 
+from gevent import monkey
+monkey.patch_all()
+
 import argparse
 import logging
 import os
@@ -319,6 +322,25 @@ class EntityWeb(object):
             mannger =RasaFileManeger(config["data"])
             data = mannger.nlu_load()
             comment_examples = data['rasa_nlu_data'].get("common_examples", list())
+            
+            # Mitie will fail to train if there is not a single entity tagged
+            payload = request.json
+            model_dir = payload.get("model_dir", None)
+            model_metadata = Metadata.load(model_dir)
+
+            entity_list_mitie = model_metadata.get("ner_mitie")
+
+            dims = []
+            if entity_list_mitie is not None:
+                entity_list_mitie_file = os.path.join(model_dir+"/nlu", entity_list_mitie)
+                if os.path.exists(entity_list_mitie_file):
+                    with io.open(entity_list_mitie_file, encoding="utf-8") as f:
+                        data = json.loads(f.read())
+                    dimensions_mitie = data.get("dimensions", list())
+
+                    for dim in dimensions_mitie:
+                        dims.append(dim)
+            
             mitie_ner = None
             trainer = mitie.ner_trainer(config["mitie_file"])
             trainer.num_threads = config["num_threads"]
@@ -338,20 +360,22 @@ class EntityWeb(object):
                     try:
                         # mitie will raise an exception on malicious input - e.g. on overlapping entities
                         sample.add_entity(list(range(start, end)), entity["entity"])
+                        if entity["entity"] not in dims:
+                            dims.append(entity["entity"])
                     except Exception as e:
                         logger.warning("Failed to add entity example '{}' of sentence '{}'. Reason: {}".format(
                             str(e), str(text), e))
                         continue
                     found_one_entity = True
                 trainer.add(sample)
-            # Mitie will fail to train if there is not a single entity tagged
-            payload = request.json
-            model_dir = payload.get("model_dir", None)
             entity_extractor_file = os.path.join(model_dir+"/nlu", "entity_extractor.dat")
             # mitie_ner = mitie.named_entity_extractor(entity_extractor_file)
             if found_one_entity:
                 mitie_ner = trainer.train()
-            mitie_ner.save_to_disk(entity_extractor_file, pure_model=True)    
+            mitie_ner.save_to_disk(entity_extractor_file, pure_model=True)   
+            file_name = "ner_mitie.json"
+            full_name = os.path.join(model_dir, file_name)
+            write_json_to_file(full_name, {"dimensions": dims}) 
             response = {"code":1, "seccess": True}
             return (json_to_string(response))
 
@@ -529,168 +553,174 @@ class IntentWeb(object):
 
             intent_delete_db = Intent()
             intents = intent_delete_db.query.filter_by(intent_id = intent_id).first()
-            db.session.delete(intents)
-            db.session.commit()
-            
-            intent_db = Intent()
+            try:
+                intent_db = Intent()
 
-            intent_db.intent_id = intent_id
-            intent_db.intent_name = intent
-            intent_db.bot_id = bot_id
-            intent_db.create_date = datetime.datetime.now()
+                intent_db.intent_id = intent_id
+                intent_db.intent_name = intent
+                intent_db.bot_id = bot_id
+                intent_db.create_date = datetime.datetime.now()
 
-            sentences_list = []
-            ent_save = False
-            for sentence in sentences:
-                entity_list = []
-                entities_save = []
-                sentence_id = None
-                if "sentence_id" in sentence:
-                    sentence_id = sentence.get("sentence_id")
-                sentence_text = sentence
-                for ent in entities:
-                    entity_id = None
-                    if "entity_id" in ent:
-                        entity_id = ent.get("entity_id")
-                    value = ent.get("value")
-                    slot_type = ent.get("slotType")
-                    entity = slot_type.get("entity")
-                    entity_type = slot_type.get("ner_extractor")
-                    entity_prompts = ent.get("prompt", list())
-                    entity_db = Entity()
-                    if sentence_text.find(value) >= 0:
-                        if entity_type is None:
-                            print("ent_save turn on")
-                            ent_save = True
-                            entity_save ={
-                                "start": sentence_text.find(value),
-                                "end": sentence_text.find(value)+len(value),
-                                "value": value,
-                                "entity": entity
-                            }
-                            entities_save.append(entity_save)
-                        elif entity_type.find("duckling") <= 0:
-                            print("ent_save turn on")
-                            ent_save = True
-                            entity_save ={
-                                "start": sentence_text.find(value),
-                                "end": sentence_text.find(value)+len(value),
-                                "value": value,
-                                "entity": entity
-                            }
-                            entities_save.append(entity_save)
-                        if entity_id is not None:
-                            entity_db.entity_id = entity_id
-                        else:
-                            entity_db.entity_id = generate_key_generator()
-                        entity_db.value = value
-                        entity_db.entity = entity
-                        entity_db.entity_type = entity_type
-                        entity_db.start_sentence = sentence_text.find(value)
-                        entity_db.end_sentence = sentence_text.find(value)+len(value)
-                        entity_prompt_list = []
-                        for entity_prompt in entity_prompts:
-                            prompt_id = None
-                            if "prompt_id" in entity_prompt:
-                                prompt_id = entity_prompt.get("prompt_id")
-                            prompt_text = entity_prompt.get("prompt_text")
-                            action_type = entity_prompt.get("action_type")
-                            entity_prompt_db = Prompt()
-                            if prompt_id is not None:
-                                entity_prompt_db.prompt_id = prompt_id
+                sentences_list = []
+                ent_save = False
+                for sentence in sentences:
+                    entity_list = []
+                    entities_save = []
+                    sentence_id = None
+                    if "sentence_id" in sentence:
+                        sentence_id = sentence.get("sentence_id")
+                    sentence_text = sentence
+                    for ent in entities:
+                        entity_id = None
+                        if "entity_id" in ent:
+                            entity_id = ent.get("entity_id")
+                        value = ent.get("value")
+                        slot_type = ent.get("slotType")
+                        entity = slot_type.get("entity")
+                        entity_type = slot_type.get("ner_extractor")
+                        entity_prompts = ent.get("prompt", list())
+                        entity_db = Entity()
+                        if sentence_text.find(value) >= 0:
+                            if entity_type is None:
+                                print("ent_save turn on")
+                                ent_save = True
+                                entity_save ={
+                                    "start": sentence_text.find(value),
+                                    "end": sentence_text.find(value)+len(value),
+                                    "value": value,
+                                    "entity": entity
+                                }
+                                entities_save.append(entity_save)
+                            elif entity_type.find("duckling") <= 0:
+                                print("ent_save turn on")
+                                ent_save = True
+                                entity_save ={
+                                    "start": sentence_text.find(value),
+                                    "end": sentence_text.find(value)+len(value),
+                                    "value": value,
+                                    "entity": entity
+                                }
+                                entities_save.append(entity_save)
+                            if entity_id is not None:
+                                entity_db.entity_id = entity_id
                             else:
-                                entity_prompt_db.prompt_id = generate_key_generator()
-                            entity_prompt_db.prompt_text = prompt_text
-                            entity_prompt_db.prompt_type = "entity"
-                            entity_prompt_db.action_type = action_type
-                            entity_prompt_list.append(entity_prompt_db)
-                        entity_db.prompt = entity_prompt_list
-                        entity_list.append(entity_db)
-                sentences_db = Sentence()
-                if sentence_id is not None:
-                    sentences_db.sentence_id = sentence_id
-                else:
-                    sentences_db.sentence_id = generate_key_generator()
-                sentences_db.sentence = sentence_text
-                sentences_db.entity = entity_list
-                sentences_list.append(sentences_db)
-                save_json ={
-                    "text":sentence_text,
-                    "intent":intent,
-                    "entities":entities_save
-                }
-                mannger =RasaFileManeger(config["data"])
-                rasa_json = mannger.nlu_load().get("rasa_nlu_data")
-                comment_examples = rasa_json.get("common_examples", list())
-                append_check = False
-                for comment_example in comment_examples:
-                    if sentence.find(comment_example.get("text")) == 0:
-                        append_check = True
-                if append_check is False:
-                    comment_examples.append(save_json)
-                    new_json = {
-                    "rasa_nlu_data": {
-                    "common_examples": comment_examples,
-                    "entity_synonyms": []
+                                entity_db.entity_id = generate_key_generator()
+                            entity_db.value = value
+                            entity_db.entity = entity
+                            entity_db.entity_type = entity_type
+                            entity_db.start_sentence = sentence_text.find(value)
+                            entity_db.end_sentence = sentence_text.find(value)+len(value)
+                            entity_prompt_list = []
+                            for entity_prompt in entity_prompts:
+                                prompt_id = None
+                                if "prompt_id" in entity_prompt:
+                                    prompt_id = entity_prompt.get("prompt_id")
+                                prompt_text = entity_prompt.get("prompt_text")
+                                action_type = entity_prompt.get("action_type")
+                                entity_prompt_db = Prompt()
+                                if prompt_id is not None:
+                                    entity_prompt_db.prompt_id = prompt_id
+                                else:
+                                    entity_prompt_db.prompt_id = generate_key_generator()
+                                entity_prompt_db.prompt_text = prompt_text
+                                entity_prompt_db.prompt_type = "entity"
+                                entity_prompt_db.action_type = action_type
+                                entity_prompt_list.append(entity_prompt_db)
+                            entity_db.prompt = entity_prompt_list
+                            entity_list.append(entity_db)
+                    sentences_db = Sentence()
+                    if sentence_id is not None:
+                        sentences_db.sentence_id = sentence_id
+                    else:
+                        sentences_db.sentence_id = generate_key_generator()
+                    sentences_db.sentence = sentence_text
+                    sentences_db.entity = entity_list
+                    sentences_list.append(sentences_db)
+                    save_json ={
+                        "text":sentence_text,
+                        "intent":intent,
+                        "entities":entities_save
                     }
-                    }
-                    mannger.nlu_save(json_to_string(new_json))
+                    mannger =RasaFileManeger(config["data"])
+                    rasa_json = mannger.nlu_load().get("rasa_nlu_data")
+                    comment_examples = rasa_json.get("common_examples", list())
+                    append_check = False
+                    for comment_example in comment_examples:
+                        if sentence.find(comment_example.get("text")) == 0:
+                            append_check = True
+                    if append_check is False:
+                        comment_examples.append(save_json)
+                        new_json = {
+                        "rasa_nlu_data": {
+                        "common_examples": comment_examples,
+                        "entity_synonyms": []
+                        }
+                        }
+                        mannger.nlu_save(json_to_string(new_json))
 
-            intent_db.sentence = sentences_list
-            
-            prompt_list = []
-            if confirm_prompt is not None:
-                prompt_id = None
-                if "prompt_id" in confirm_prompt:
-                    prompt_id = confirm_prompt.get("prompt_id")
-                confirm_prompt_text = confirm_prompt.get("prompt_text")
-                action_type = confirm_prompt.get("action_type")
-                confirm_prompt_db = Prompt()
-                if prompt_id is not None:
-                    confirm_prompt_db.prompt_id = prompt_id
-                else:
-                    confirm_prompt_db.prompt_id = generate_key_generator()
-                confirm_prompt_db.prompt_text = confirm_prompt_text
-                confirm_prompt_db.prompt_type = "confirm"
-                confirm_prompt_db.action_type = action_type
-                prompt_list.append(confirm_prompt_db)
-            if cancel_prompt is not None:
-                prompt_id = None
-                if "prompt_id" in cancel_prompt:
-                    prompt_id = cancel_prompt.get("prompt_id")
-                confirm_prompt_text = cancel_prompt.get("prompt_text")
-                action_type = cancel_prompt.get("action_type")
-                cancel_prompt_db = Prompt()
-                if prompt_id is not None:
-                    cancel_prompt_db.prompt_id = prompt_id
-                else:
-                    cancel_prompt_db.prompt_id = generate_key_generator()
-                cancel_prompt_db.prompt_text = confirm_prompt_text
-                cancel_prompt_db.prompt_type = "cancel"
-                cancel_prompt_db.action_type = action_type
-                prompt_list.append(cancel_prompt_db)
-            for response_prompt in response_prompts:
-                prompt_id = None
-                if "prompt_id" in response_prompt:
-                    prompt_id = response_prompt.get("prompt_id")
-                response_prompt_text = response_prompt.get("prompt_text")
-                action_type = response_prompt.get("action_type")
-                response_prompt_db = Prompt()
-                if prompt_id is not None:
-                    response_prompt_db.prompt_id = prompt_id
-                else:
-                    response_prompt_db.prompt_id = generate_key_generator()
-                response_prompt_db.prompt_text = response_prompt_text
-                response_prompt_db.prompt_type = "response"
-                response_prompt_db.action_type = action_type
-                prompt_list.append(response_prompt_db)
+                intent_db.sentence = sentences_list
+                
+                prompt_list = []
+                if confirm_prompt is not None:
+                    prompt_id = None
+                    if "prompt_id" in confirm_prompt:
+                        prompt_id = confirm_prompt.get("prompt_id")
+                    confirm_prompt_text = confirm_prompt.get("prompt_text")
+                    action_type = confirm_prompt.get("action_type")
+                    confirm_prompt_db = Prompt()
+                    if prompt_id is not None:
+                        confirm_prompt_db.prompt_id = prompt_id
+                    else:
+                        confirm_prompt_db.prompt_id = generate_key_generator()
+                    confirm_prompt_db.prompt_text = confirm_prompt_text
+                    confirm_prompt_db.prompt_type = "confirm"
+                    confirm_prompt_db.action_type = action_type
+                    prompt_list.append(confirm_prompt_db)
+                if cancel_prompt is not None:
+                    prompt_id = None
+                    if "prompt_id" in cancel_prompt:
+                        prompt_id = cancel_prompt.get("prompt_id")
+                    confirm_prompt_text = cancel_prompt.get("prompt_text")
+                    action_type = cancel_prompt.get("action_type")
+                    cancel_prompt_db = Prompt()
+                    if prompt_id is not None:
+                        cancel_prompt_db.prompt_id = prompt_id
+                    else:
+                        cancel_prompt_db.prompt_id = generate_key_generator()
+                    cancel_prompt_db.prompt_text = confirm_prompt_text
+                    cancel_prompt_db.prompt_type = "cancel"
+                    cancel_prompt_db.action_type = action_type
+                    prompt_list.append(cancel_prompt_db)
+                for response_prompt in response_prompts:
+                    prompt_id = None
+                    if "prompt_id" in response_prompt:
+                        prompt_id = response_prompt.get("prompt_id")
+                    response_prompt_text = response_prompt.get("prompt_text")
+                    action_type = response_prompt.get("action_type")
+                    response_prompt_db = Prompt()
+                    if prompt_id is not None:
+                        response_prompt_db.prompt_id = prompt_id
+                    else:
+                        response_prompt_db.prompt_id = generate_key_generator()
+                    response_prompt_db.prompt_text = response_prompt_text
+                    response_prompt_db.prompt_type = "response"
+                    response_prompt_db.action_type = action_type
+                    prompt_list.append(response_prompt_db)
 
-            intent_db.prompt = prompt_list
+                intent_db.prompt = prompt_list
 
+                db.session.delete(intents)
+                db.session.commit()
 
-            db.session.add(intent_db)
-            db.session.commit()
-            response = {"code":1, "seccess": True}
+                db.session.add(intent_db)
+                db.session.commit()
+                response = {"code":1, "seccess": True}
+            except:
+                print("error update")
+                response = {"code":-1, "seccess": False}
+                # db.session.add(intents)
+                # db.session.commit()
+
             return (json_to_string(response))
             
 
@@ -1119,6 +1149,6 @@ if __name__ == "__main__":
     app.register_blueprint(entity_channel.data_router(rasa), url_prefix='/ai_entity')
     app.register_blueprint(intent_channel.data_router(rasa), url_prefix='/ai_intent')
     app.register_blueprint(chat_channel.data_router(rasa), url_prefix='/chat')
-    from gevent.wsgi import WSGIServer
+    from gevent.pywsgi import WSGIServer
     http_server = WSGIServer((rasa_nlu_config['server_ip'], rasa_nlu_config['port']), app)
     http_server.serve_forever()
