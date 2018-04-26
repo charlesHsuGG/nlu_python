@@ -5,6 +5,7 @@ var mainApp = angular.module('mainApp',[
     //import library
     "ui.router",
     "ui.router.util",
+    "ui.bootstrap",
     //util library
     'app.services',
     'datatables',
@@ -21,7 +22,8 @@ var mainApp = angular.module('mainApp',[
     "app.navctrl",
     "app.aislotaddmodalctrl",
     "app.aiintentlistctrl",
- 
+    "app.aichatctrl",
+    "app.aieditchatmodalctrl"
 ]);
  
  

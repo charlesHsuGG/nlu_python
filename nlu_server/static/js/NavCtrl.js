@@ -22,7 +22,10 @@ $scope.goPage = function(index){
 
         $state.go("page",{page:"ai_intent_list"});
         break
+        case 4:
 
+        $state.go("page",{page:"ai_chat"});
+        break
     }
 }
             
