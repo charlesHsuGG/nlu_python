@@ -22,6 +22,7 @@ from rasa_nlu.model import Metadata
 from rasa_nlu.training_data import Message
 from rasa_nlu.training_data import TrainingData
 from rasa_nlu.utils.langconv import *
+from rasa_nlu.utils import write_json_to_file
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,7 @@ class CRFEntityExtractor(EntityExtractor):
 
     def __init__(self, ner=None):
         self.ner = ner
+        self.ner_list = []
         
     @classmethod
     def required_packages(cls):
@@ -49,10 +51,14 @@ class CRFEntityExtractor(EntityExtractor):
             for token in tokens:
                 if value.find(token.text) >= 0:
                     word.append(token.text)
-                    if tag[-1].find("O") is 0:
-                        tag.append("B-"+ent["entity"])
+                    last_tag = tag[-1:]
+                    if last_tag:
+                        if last_tag[0].find("O") is 0:
+                            tag.append("B-"+ent["entity"])
+                        else:
+                            tag.append("I-"+ent["entity"])
                     else:
-                        tag.append("I-"+ent["entity"])
+                        tag.append("B-"+ent["entity"])
                 else:
                     word.append(token.text)
                     tag.append("O")
@@ -66,21 +72,32 @@ class CRFEntityExtractor(EntityExtractor):
         sents, labels = [], []
         for example in training_data.entity_examples:
             tokens = example.get("tokens")
+            for ent in example.get("entities", []):
+                if ent["entity"] not in self.ner_list:
+                    self.ner_list.append(ent["entity"])
             word, tag = CRFEntityExtractor.load_data_and_labels(example, tokens)
             sents.append(word)
             labels.append(tag)
+        model = {}
+        for word in embedding.vocab:
+            wv = embedding.word_vec(word)
+            vector = np.array(wv)
+            model[word] = vector
         print(str(sents))
         print(str(labels))
-        sents_np = np.asarray(sents)
-        labels_np = np.asarray(labels)
-        model = anago.Sequence(embeddings=embedding)
-        self.ner = model.train(sents, labels, sents_np, labels_np)
+        x_train = np.asarray(sents)
+        y_train = np.asarray(labels)
+        print(len(x_train), 'train sequences')
+        self.ner = anago.Sequence(batch_size=1, word_emb_size=150,embeddings=model)
+        self.ner.train(x_train, y_train, x_train, y_train)
+        self.ner.eval(x_train, y_train)
 
         
     def process(self, message, **kwargs):
         import anago
-        message.get
-        matches = self.ner.analyze(message.text)
+        tokens = message.get("tokens")
+        token_list = [token.text for token in tokens]
+        matches = self.ner.analyze(token_list)
         ents = matches.get("entities")
         entities = []
         for ent in ents:
@@ -104,7 +121,7 @@ class CRFEntityExtractor(EntityExtractor):
             crf_extractor_file = os.path.join(model_dir, model_metadata.get("entity_extractor_crf"))
             embedding = kwargs.get("embedding")
             print(embedding)
-            model = anago.Sequence(embeddings=embedding).load(crf_extractor_file)
+            model = anago.Sequence().load(crf_extractor_file)
             return CRFEntityExtractor(model)
         else:
             return CRFEntityExtractor()
@@ -112,8 +129,13 @@ class CRFEntityExtractor(EntityExtractor):
     def persist(self, model_dir):
         if self.ner:
             entity_extractor_file = os.path.join(model_dir, "crf_entity_extractor")
+            if not os.path.exists(entity_extractor_file):
+                os.makedirs(entity_extractor_file)
             self.ner.save(entity_extractor_file)
-            return {"entity_extractor_crf": "crf_entity_extractor"}
+            file_name = self.name + ".json"
+            full_name = os.path.join(model_dir, file_name)
+            write_json_to_file(full_name, {"dimensions": self.ner_list})
+            return {"entity_extractor_crf": "crf_entity_extractor", self.name: file_name}
         else:
             return {"entity_extractor_crf": None}
         

@@ -45,15 +45,15 @@ class EmbeddingFeaturizer(Featurizer):
         import numpy as np
         embedding = kwargs.get("embedding")
         print(embedding)
-        embeddings = []
+        embedding_list = []
         for example in training_data.intent_examples:
             tokens = example.get("tokens")
             if tokens is not None:
                 for token in tokens:
                     if token.text in embedding.vocab:
-                        embeddings.append(embedding.word_vec(token.text))
-            if len(embeddings) > 0:
-                sentence_embeds = np.asarray(embeddings, dtype=float).mean(axis=0)
+                        embedding_list.append(embedding.word_vec(token.text))
+            if len(embedding_list) > 0:
+                sentence_embeds = np.asarray(embedding_list, dtype=float).mean(axis=0)
                 example.set("text_features", self._combine_with_existing_text_features(example, sentence_embeds))
             else:
                 sentence_embeds = np.asarray(None, dtype=float).mean(axis=0)
@@ -62,14 +62,14 @@ class EmbeddingFeaturizer(Featurizer):
     def process(self, message, **kwargs):
         # type: (Message, **Any) -> None
         import numpy as np
-        embeddings = []
+        embedding_list = []
         tokens = message.get("tokens")
         if tokens is not None:
             for token in tokens:
                 if token.text in self.embeddings.vocab:
-                    embeddings.append(self.embeddings.word_vec(token.text))
-        if len(embeddings) > 0:
-            sentence_embeds = np.asarray(embeddings, dtype=float).mean(axis=0)
+                    embedding_list.append(self.embeddings.word_vec(token.text, use_norm=True))
+        if len(embedding_list) > 0:
+            sentence_embeds = np.asarray(embedding_list, dtype=float).mean(axis=0)
             message.set("text_features", self._combine_with_existing_text_features(message, sentence_embeds))
         else:
             sentence_embeds = np.asarray(None, dtype=float).mean(axis=0)

@@ -22,7 +22,7 @@ class NoEmulator(object):
         _data["text"] = data["q"][0] if type(data["q"]) == list else data["q"]
 
         if not data.get("project"):
-            _data["project"] = "default"
+            _data["project"] = "system"
         elif type(data["project"]) == list:
             _data["project"] = data["project"][0]
         else:

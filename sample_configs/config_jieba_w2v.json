@@ -2,16 +2,16 @@
     "name": "rasa_nlu_test",
     "pipeline": ["nlp_word2vec",
           "tokenizer_jieba",
-          "intent_featurizer_w2v",
-          "random_forest_classifier"],
+          "ner_crf"],
     "language": "zh",
     "locale": "zh_TW",
     "server_ip":"0.0.0.0",
     "port":5000,
     "duckling_http_url":"http://192.168.2.61:8000",
     "duckling_dimensions": ["time", "number", "email", "phone_number", "duration", "ordinal", "temperature", "Url"],
-    "embedding_model_path": "/mnt/vectors.txt.word2vec",
+    "embedding_model_path": "/opt/nfs/nlu_system_data/data/vectors.txt.word2vec",
     "embedding_type": "word2vec",
-    "path" : "./models",
-    "data" : "./data/examples/rasa/demo-rasa_zh.json"
+    "path" : "/opt/nfs/nlu_system_data/models/",
+    "data" : "/opt/nfs/nlu_system_data/data/training_data/demo-rasa_zh.json",
+    "dm_data_path":"/opt/nfs/nlu_system_data/data/training_data/"
   }

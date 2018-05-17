@@ -39,7 +39,40 @@ class W2VNLP(Component):
             self.embedding_model_path = config["embedding_model_path"]
             self.embedding_type = config["embedding_type"]
             self.corpus = config["embedding_corpus_path"]
-            self.wv_model = wv_model
+            from gensim.models import Word2Vec
+            import os.path
+
+            if os.path.exists(self.embedding_model_path):
+                # already have model
+                if self.corpus:
+                    corpus = self.process_raw_data(self.corpus)
+                    from gensim.models.keyedvectors import KeyedVectors
+                    is_binary = True if self.embedding_type == "bin" else False
+                    self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
+                    self.wv_model.train(corpus, total_examples=self.wv_model.corpus_count, epochs=self.wv_model.iter)
+                    logger.info("retrain model") 
+                else:
+                    from gensim.models.keyedvectors import KeyedVectors
+                    is_binary = True if self.embedding_type == "bin" else False
+                    self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
+                    logger.info("setting model as training data")
+            else:
+                if self.corpus:
+                    corpus = self.process_raw_data(self.corpus)
+                    model = Word2Vec(corpus, size=config.train_config["size"],
+                                alpha=config.train_config["alpha"],
+                                window=config.train_config["window"],
+                                min_count=config.train_config["min_count"],
+                                workers=config.train_config["workers"],
+                                sample=config.train_config["sample"],
+                                sg=config.train_config["sg"],
+                                hs=config.train_config["hs"],
+                                negative=config.train_config["negative"],
+                                cbow_mean=1, iter=config.train_config["iter"])
+                    self.wv_model = model
+
+                else:
+                    logger.error("need Data corpus file path.")
 
     @classmethod
     def required_packages(cls):
@@ -53,51 +86,16 @@ class W2VNLP(Component):
     @classmethod
     def cache_key(cls, model_metadata):
         # type: (Metadata) -> Optional[Text]
-        return None
+        embedding_model_file = model_metadata.metadata.get("embedding_model_path", None)
+        if embedding_model_file is not None:
+            return cls.name + "-" + str(os.path.abspath(embedding_model_file))
+        else:
+            return None
 
     def provide_context(self):
         # type: () -> Dict[Text, Any]
 
         return {"embedding": self.wv_model}
-
-    def train(self, training_data, config, **kwargs):
-        # type: (Optional[mitie.total_word_feature_extractor]) -> None
-
-        from gensim.models import Word2Vec
-        import os.path
-
-
-        if os.path.exists(self.embedding_model_path):
-            # already have model
-            if self.corpus:
-                corpus = self.process_raw_data(self.corpus)
-                from gensim.models.keyedvectors import KeyedVectors
-                is_binary = True if self.embedding_type == "bin" else False
-                self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
-                self.wv_model.train(corpus, total_examples=self.wv_model.corpus_count, epochs=self.wv_model.iter)
-                logger.info("retrain model") 
-            else:
-                from gensim.models.keyedvectors import KeyedVectors
-                is_binary = True if self.embedding_type == "bin" else False
-                self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
-                logger.info("setting model as training data")
-        else:
-            if self.corpus:
-                corpus = self.process_raw_data(self.corpus)
-                model = Word2Vec(corpus, size=config.train_config["size"],
-                             alpha=config.train_config["alpha"],
-                             window=config.train_config["window"],
-                             min_count=config.train_config["min_count"],
-                             workers=config.train_config["workers"],
-                             sample=config.train_config["sample"],
-                             sg=config.train_config["sg"],
-                             hs=config.train_config["hs"],
-                             negative=config.train_config["negative"],
-                             cbow_mean=1, iter=config.train_config["iter"])
-                self.wv_model = model
-
-            else:
-                logger.error("need Data corpus file path.")
 
         
     @classmethod
