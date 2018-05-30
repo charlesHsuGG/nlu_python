@@ -1,8 +1,8 @@
 'use strict';
 var appControllers = angular.module('app.aiintenteditctrl', []);
 
-appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'MercueRequests','DTOptionsBuilder','ModalService'
-	,function ($http,$scope,$state,MercueRequests,DTOptionsBuilder,ModalService){
+appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'MercueRequests','DTOptionsBuilder','ModalService','$sce'
+	,function ($http,$scope,$state,MercueRequests,DTOptionsBuilder,ModalService,$sce){
 
 	console.log("ai intent edit ctrl...");
 	$scope.utterancesList = [];
@@ -11,7 +11,10 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	$scope.confirmation = true;
 	$scope.slotsListDT = DTOptionsBuilder.newOptions()
 	$scope.submitText = "送出"
+	$scope.selectText = "";
 	$scope.editMode = false;
+
+	$scope.popoverIsOpen = [];
 	// .withBootstrap()
 	// .withDisplayLength(5)
 	// .withOption('info', false)
@@ -21,6 +24,15 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	// .withOption('paging', true) 
 	// .withDOM('lfrt<"row"<"col-md-4"i><"col-md-8"p>>');
 
+	
+	$scope.dynamicPopover = {
+		content: 'Hello, World!',
+		templateUrl: 'myPopoverTemplate.html',
+		title: $scope.selectText
+	  };
+	 
+	 
+	  
 	init();
 
 	function init()	{
@@ -36,9 +48,15 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 				$scope.editMode = true;
 				loadData();
 		 }
+		 //設定反白事件
+		 
+	 
 		 
 
+
+		
 	}
+ 
 	//增加例句
 	$scope.addUtterances = function(){
 		console.log("click");
@@ -47,9 +65,13 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			return
 		};
 		var utterances = {};
+	 
 		utterances.sentence = 	$scope.currentUtterance ;
+		var sentenceHtml =  $sce.trustAsHtml( '<span >'+$scope.currentUtterance+ '</span>');
+		utterances.sentenceHtml = sentenceHtml;
 		$scope.utterancesList.push(utterances);
-		$scope.currentUtterance = ""
+		$scope.currentUtterance = "";
+		setMouseUp();
 	}
 	//刪除例句
 	$scope.deleteUtterances  = function(index){
@@ -97,6 +119,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		}
 	}
 	$scope.addSlots = function(){
+		closeAllPop();
 		console.log("add")
 		ModalService.showModal({
 			templateUrl: "/ai/static/views/aislotadd_modal.html",
@@ -117,8 +140,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log(index);
 		$scope.slotsList.splice(index,1);
 	}
-
  
+
 
 
 	$scope.submit = function(){
@@ -216,6 +239,91 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			console.log(response);
 		});
 
+	}
+	$scope.setSlot = function(){
+		console.log("set");
+		console.log($scope.selectPop);
+		console.log($scope.utterancesList[$scope.selectPop]);
+		console.log($scope.selectText);
+
+		// var myRegExp = new RegExp($scope.selectText, 'g');
+		// var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
+		// var tag = '<button class="badge badge-primary">'+'美食'+'</button>';
+		// var sentenceHtml =  sentence.replace(myRegExp,tag);
+		console.log($scope.utterancesList);
+		// sentence = sentence.replace(myRegExp,"")
+		console.log(sentence);
+
+		//s$scope.utterancesList[$scope.selectPop].sentence = sentence;
+		
+	 
+		// $scope.utterancesList[$scope.selectPop].sentenceHtml =  $sce.trustAsHtml( '<span >'+sentenceHtml+ '</span>');
+		
+		console.log($scope.utterancesList.sentenceHtml);
+		$scope.$apply();
+	}
+		
+	$scope.closePop = function()   {
+	console.log("123");
+	closeAllPop();   
+		  $scope.$apply();
+	}
+	
+ 
+
+
+
+	$scope.openPop = function(index){
+		closeAllPop();
+		$scope.selectPop = index;
+		console.log($scope.selectText);
+		if($scope.selectText != ""){
+			$scope.dynamicPopover = {
+				content: '請選擇slot',
+				templateUrl: 'myPopoverTemplate.html',
+				title: $scope.selectText
+				
+			  };
+			$scope.popoverIsOpen[index] = true ;
+			console.log("set true");		 
+			$scope.$apply();
+		}		 
+	
+
+	}
+
+
+	function setMouseUp(){
+		console.log("set");
+		setTimeout(function(){ 
+			$('#input_text').mouseup(function(e) { 
+				console.log("mouse");
+				$scope.selectText = "";
+				var text=getSelectedText();
+				if (text!='') {
+				//alert(text) 
+				$scope.selectText = text;
+				}	
+			
+			});
+
+		 }, 500);
+	}
+
+	function closeAllPop(){
+		for(var i = 0;i<$scope.popoverIsOpen.length;i++){
+			console.log(i);
+			$scope.popoverIsOpen[i] = false;
+		}
+
+	}
+	function getSelectedText() {
+		if (window.getSelection) {
+			return window.getSelection().toString();
+		} else if (document.selection) {
+			return document.selection.createRange().text;
+		}
+		return ''
 	}
 
 }]);
