@@ -57,53 +57,6 @@ component_classes = [
 # Mapping from a components name to its class to allow name based lookup.
 registered_components = {c.name: c for c in component_classes}
 
-# To simplify usage, there are a couple of model templates, that already add
-# necessary components in the right order. They also implement
-# the preexisting `backends`.
-registered_pipeline_templates = {
-    "mitie": [
-        "nlp_mitie",
-        "tokenizer_mitie",
-        "ner_mitie",
-        "ner_synonyms",
-        "intent_entity_featurizer_regex",
-        "intent_classifier_mitie",
-    ],
-    "mitie_sklearn": [
-        "nlp_mitie",
-        "tokenizer_mitie",
-        "ner_mitie",
-        "ner_synonyms",
-        "intent_entity_featurizer_regex",
-        "intent_featurizer_mitie",
-        "intent_classifier_sklearn",
-    ],
-    "keyword": [
-        "intent_classifier_keyword",
-    ],
-    # this template really is just for testing
-    # every component should be in here so train-persist-load-use cycle can be
-    # tested they still need to be in a useful order - hence we can not simply
-    # generate this automatically.
-    "all_components": [
-        "nlp_mitie",
-        "nlp_word2vec",
-        "tokenizer_whitespace",
-        "tokenizer_jieba",
-        "intent_featurizer_mitie",
-        "intent_featurizer_w2v",
-        "intent_entity_featurizer_regex",
-        "ner_mitie",
-        "ner_crf",
-        "ner_duckling",
-        "ner_duckling_http",
-        "ner_synonyms",
-        "intent_classifier_keyword",
-        "random_forest_classifier",
-        "intent_classifier_sklearn",
-    ]
-}
-
 
 def get_component_class(component_name):
     # type: (Text) -> Optional[Type[Component]]

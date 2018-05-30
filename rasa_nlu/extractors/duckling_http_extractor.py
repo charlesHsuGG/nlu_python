@@ -120,14 +120,6 @@ class DucklingHTTPExtractor(EntityExtractor):
                     message.get("entities", []) + extracted,
                     add_to_output=True)
 
-    def persist(self, model_dir):
-        # type: (Text) -> Dict[Text, Any]
-
-        file_name = self.name + ".json"
-        full_name = os.path.join(model_dir, file_name)
-        write_json_to_file(full_name, {"dimensions": self.dimensions})
-        return {self.name: file_name}
-
     @classmethod
     def load(cls,
              model_dir=None,  # type: Text
@@ -136,17 +128,9 @@ class DucklingHTTPExtractor(EntityExtractor):
              **kwargs  # type: **Any
              ):
         # type: (...) -> DucklingHTTPExtractor
-
-        persisted = os.path.join(model_dir, model_metadata.get(cls.name))
         config = kwargs.get("config", {})
-        dimensions = None
-
-        if os.path.isfile(persisted):
-            with io.open(persisted, encoding='utf-8') as f:
-                persisted_data = simplejson.loads(f.read())
-                dimensions = persisted_data["dimensions"]
-
+        
         return DucklingHTTPExtractor(config.get("duckling_http_url"),
-                                     model_metadata.get("language"),
+                                     config.get("language"),
                                      config["locale"],
-                                     dimensions)
+                                     config["duckling_dimensions"])

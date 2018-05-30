@@ -1,0 +1,12 @@
+{
+  "name": "system",
+  "server_ip":"0.0.0.0",
+  "port":5050,
+  "language": "zh",
+  "locale": "zh_TW",
+  "duckling_http_url":"http://192.168.2.61:8000",
+  "duckling_dimensions": ["time", "email", "phone_number", "duration", "ordinal", "temperature", "Url"],
+  "mitie_file": "/opt/nfs/nlu_system_data/data/total_word_feature_extractor_zh.dat",
+  "embedding_model_path": "/opt/nfs/nlu_system_data/data/vectors.txt.word2vec",
+  "embedding_type": "text"
+}
