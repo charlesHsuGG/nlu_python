@@ -12,14 +12,15 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	
 	function init()    {
 		var dataPost = {};
-		dataPost.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model";
+		dataPost.admin_id = "40w9dse0277455f634fw40439sd";
+		//dataPost.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model";
 		$http({
 			method: 'POST',
-			url: './ai_entity/slot_get',
+			url: './ai_entity/entity_list',
 			data: dataPost
 		}).then(function successCallback(response) {
 
-			console.log(response.data.entities);
+			console.log(response.data);
 			$scope.entities = response.data.entities;
 			$scope.sendData.slotType = 	$scope.entities[0];
 		}, function errorCallback(response) {

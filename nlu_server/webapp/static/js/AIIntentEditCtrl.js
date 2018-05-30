@@ -240,12 +240,12 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		});
 
 	}
-	$scope.setSlot = function(){
+	$scope.setSlot = function(slot){
 		console.log("set");
 		console.log($scope.selectPop);
 		console.log($scope.utterancesList[$scope.selectPop]);
 		console.log($scope.selectText);
-
+		console.log(slot);
 		// var myRegExp = new RegExp($scope.selectText, 'g');
 		// var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
 		// var tag = '<button class="badge badge-primary">'+'美食'+'</button>';
