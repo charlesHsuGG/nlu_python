@@ -1,6 +1,10 @@
 [
     {
-        "name": "ai-MS-7A79",
+        "name": "ai",
+        "path": "/system.json" 
+    },
+    {
+        "name": "kevin",
         "path": "/system.json" 
     }
 ]

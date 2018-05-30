@@ -17,7 +17,7 @@ import re
 import six
 import glob
 import mitie
-import platform
+import getpass
 import simplejson
 from builtins import str
 from functools import wraps
@@ -70,7 +70,7 @@ def serve_forever():
     http_server._stop_event.wait()
 
 if __name__ == "__main__":
-    system_name = platform.node()
+    system_name = getpass.getuser()
     config_path = None
     try:
         filter_name = "nlu_server/resources/filter.json"
