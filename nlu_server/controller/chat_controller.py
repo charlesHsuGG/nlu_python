@@ -22,12 +22,10 @@ from flask import Blueprint, request,  json
 
 logger = logging.getLogger(__name__)
 
-class ChatWeb(object):
+class ChatWebController(object):
 
-    def data_router(self,rasaNLU):
+    def data_router(self,system_config):
         chat_webhook = Blueprint('chat_webhook', __name__)
-        data_router = rasaNLU.data_router
-        config = rasaNLU.config
 
         @chat_webhook.route("/chat", methods=['POST'])
         def chat():

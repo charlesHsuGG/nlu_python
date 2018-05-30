@@ -11,6 +11,7 @@ import re
 import six
 import glob
 import mitie
+import datetime
 
 from flask import Blueprint, request,  json
 
@@ -18,22 +19,21 @@ from nlu_server.utils.data_router import RasaNLU
 from nlu_server.model.model import Intent, Sentence, Slot, Prompt
 from nlu_server.utils.generate_key import generate_key_generator
 
-from rasa_core.policies.keras_policy import KerasPolicy
-from rasa_core.policies.memoization import MemoizationPolicy
+from rasa_nlu.utils import json_to_string
+
 
 logger = logging.getLogger(__name__)
 
-class IntentWeb(object):
+class IntentWebController(object):
 
-    def data_router(self,rasaNLU):
+    def data_router(self,system_config):
         intent_webhook = Blueprint('intent_webhook', __name__)
-        config = rasaNLU.config
 
         @intent_webhook.route("/intent_save", methods=['POST'])
         def intent_save():
             payload = request.json
             print(payload)
-            bot_id = payload.get("bot_id", None)
+            admin_id = payload.get("admin_id", None)
             intent = payload.get("intent", None)
             slots = []
             if 'slots' in payload:
@@ -52,7 +52,7 @@ class IntentWeb(object):
             intent_db = Intent()
             intent_db.intent_id = generate_key_generator()
             intent_db.intent_name = intent
-            intent_db.bot_id = bot_id
+            intent_db.admin_id = admin_id
             intent_db.create_date = datetime.datetime.now()
 
             sentences_list = []
@@ -135,8 +135,9 @@ class IntentWeb(object):
         def intent_update():
             payload = request.json
             intent_id = payload.get("intent_id", None)
-            bot_id = payload.get("bot_id", None)
+            admin_id = payload.get("admin_id", None)
             intent = payload.get("intent", None)
+            create_date = payload.get("create_date")
             slots = []
             if 'slots' in payload:
                 slots = payload.get("slots", list())
@@ -158,8 +159,9 @@ class IntentWeb(object):
 
                 intent_db.intent_id = intent_id
                 intent_db.intent_name = intent
-                intent_db.bot_id = bot_id
-                intent_db.create_date = datetime.datetime.now()
+                intent_db.admin_id = admin_id
+                intent_db.create_date = create_date
+                intent_db.update_date = datetime.datetime.now()
 
                 sentences_list = []
                 for sentence in sentences:
@@ -180,7 +182,7 @@ class IntentWeb(object):
                         slot_prompts = ent.get("prompt", list())
                         slot_db = Slot()
                         if sentence_text.find(name) >= 0:
-                            if slot_id is not None:
+                            if slot_id is not None or slot_id is not "":
                                 slot_db.slot_id = slot_id
                             else:
                                 slot_db.slot_id = generate_key_generator()
@@ -194,7 +196,7 @@ class IntentWeb(object):
                                 prompt_text = slot_prompt.get("prompt_text")
                                 action_type = slot_prompt.get("action_type")
                                 slot_prompt_db = Prompt()
-                                if prompt_id is not None:
+                                if prompt_id is not None or prompt_id is not "":
                                     slot_prompt_db.prompt_id = prompt_id
                                 else:
                                     slot_prompt_db.prompt_id = generate_key_generator()
@@ -205,7 +207,7 @@ class IntentWeb(object):
                             slot_db.prompt = slot_prompt_list
                             slot_list.append(slot_db)
                     sentences_db = Sentence()
-                    if sentence_id is not None:
+                    if sentence_id is not None or sentence_id is not "":
                         sentences_db.sentence_id = sentence_id
                     else:
                         sentences_db.sentence_id = generate_key_generator()
@@ -223,7 +225,7 @@ class IntentWeb(object):
                     confirm_prompt_text = confirm_prompt.get("prompt_text")
                     action_type = confirm_prompt.get("action_type")
                     confirm_prompt_db = Prompt()
-                    if prompt_id is not None:
+                    if prompt_id is not None or prompt_id is not "":
                         confirm_prompt_db.prompt_id = prompt_id
                     else:
                         confirm_prompt_db.prompt_id = generate_key_generator()
@@ -238,7 +240,7 @@ class IntentWeb(object):
                     confirm_prompt_text = cancel_prompt.get("prompt_text")
                     action_type = cancel_prompt.get("action_type")
                     cancel_prompt_db = Prompt()
-                    if prompt_id is not None:
+                    if prompt_id is not None or prompt_id is not "":
                         cancel_prompt_db.prompt_id = prompt_id
                     else:
                         cancel_prompt_db.prompt_id = generate_key_generator()
@@ -253,7 +255,7 @@ class IntentWeb(object):
                     response_prompt_text = response_prompt.get("prompt_text")
                     action_type = response_prompt.get("action_type")
                     response_prompt_db = Prompt()
-                    if prompt_id is not None:
+                    if prompt_id is not None or prompt_id is not "":
                         response_prompt_db.prompt_id = prompt_id
                     else:
                         response_prompt_db.prompt_id = generate_key_generator()
@@ -296,9 +298,9 @@ class IntentWeb(object):
         def intent_list():
            
             payload = request.json
-            bot_id = payload.get("bot_id", None)
+            admin_id = payload.get("admin_id", None)
             intent_db = Intent()
-            intent_bots = intent_db.query.filter_by(bot_id = bot_id).all()
+            intent_bots = intent_db.query.filter_by(admin_id = admin_id).all()
             
             intent_list=[]
             for int_bot in intent_bots:
@@ -330,15 +332,15 @@ class IntentWeb(object):
                 sentence_id = sent.sentence_id
                 sentence_text = sent.sentence
                 slots = sent.slot
-                for slot in slots:
-                    slot_id = slot.slot_id
-                    name = slot.name
-                    slot_type = slot.slot_type
-                    entity_id = slot.entity_id
-                    entity_name = slot.entity_name
-                    required = slot.required
+                for slo in slots:
+                    slot_id = slo.slot_id
+                    name = slo.name
+                    slot_type = slo.slot_type
+                    entity_id = slo.entity_id
+                    entity_name = slo.entity_name
+                    required = slo.required
                     prom_list = []
-                    for prom in slot.prompt:
+                    for prom in slo.prompt:
                         prompt_id = prom.prompt_id
                         prompt_text = prom.prompt_text
                         prompt_type = prom.prompt_type
@@ -350,13 +352,15 @@ class IntentWeb(object):
                             "action_type":action_type
                         }
                         prom_list.append(ent_prompt_json)
-                        slot_json={
+                    slot_json={
                             "slot_id":slot_id,
                             "name":name,
                             "slot_type":slot_type,
-                            "prompt":prom_list
-                        }
-                        ent_list.append(slot_json)
+                            "prompt":prom_list,
+                            "entity_id":entity_id,
+                            "entity_name":entity_name
+                    }
+                    slot_list.append(slot_json)
                 sent_json={
                     "sentence_id":sentence_id,
                     "sentence":sentence_text,
@@ -387,7 +391,7 @@ class IntentWeb(object):
                 "intent_id":intent_id,
                 "intent":intent,
                 "sentence":sent_list,
-                "entities":ent_list,
+                "slots":slot_list,
                 "response_prompt":response_prompts
             }
             if confirm_prompt is not None:
@@ -396,19 +400,17 @@ class IntentWeb(object):
                 output.update({"cancel_prompt":cancel_prompt})
             return (json_to_string(output))
 
-        @intent_webhook.route("/binding_node_intent", methods=['POST'])
+        @intent_webhook.route("/binding_admin_intent", methods=['POST'])
         def binding_node_intent():
             payload = request.json
-            node_id = payload.get("node_id", None)
-            flow_id = payload.get("flow_id", None)
+            admin_id = payload.get("admin_id", None)
             intent_id = payload.get("intent_id", None)
             intent_db = Intent()
             intents = intent_db.query.filter_by(intent_id = intent_id).first()
             
             response = {}
             if intents is not None:
-                intents.node_id = node_id
-                intents.flow_id = flow_id
+                intents.admin_id = admin_id
                 db.session.commit()
 
                 response = {"code":1, "seccess": True}

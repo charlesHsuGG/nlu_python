@@ -36,7 +36,6 @@ class CRFEntityExtractor(EntityExtractor):
 
     def __init__(self, ner=None):
         self.ner = ner
-        self.ner_list = []
         
     @classmethod
     def required_packages(cls):
@@ -72,9 +71,6 @@ class CRFEntityExtractor(EntityExtractor):
         sents, labels = [], []
         for example in training_data.entity_examples:
             tokens = example.get("tokens")
-            for ent in example.get("entities", []):
-                if ent["entity"] not in self.ner_list:
-                    self.ner_list.append(ent["entity"])
             word, tag = CRFEntityExtractor.load_data_and_labels(example, tokens)
             sents.append(word)
             labels.append(tag)
@@ -132,10 +128,7 @@ class CRFEntityExtractor(EntityExtractor):
             if not os.path.exists(entity_extractor_file):
                 os.makedirs(entity_extractor_file)
             self.ner.save(entity_extractor_file)
-            file_name = self.name + ".json"
-            full_name = os.path.join(model_dir, file_name)
-            write_json_to_file(full_name, {"dimensions": self.ner_list})
-            return {"entity_extractor_crf": "crf_entity_extractor", self.name: file_name}
+            return {"entity_extractor_crf": "crf_entity_extractor"}
         else:
             return {"entity_extractor_crf": None}
         

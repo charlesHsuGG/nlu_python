@@ -74,14 +74,14 @@ class Metadata(object):
     def language(self):
         # type: () -> Optional[Text]
         """Language of the underlying model"""
-
+ 
         return self.get('language')
-
+ 
     @property
     def pipeline(self):
         # type: () -> List[Text]
         """Names of the processing pipeline elements."""
-
+ 
         return self.get('pipeline', [])
 
     def persist(self, model_dir):
@@ -106,7 +106,7 @@ class Trainer(object):
     the training."""
 
     # Officially supported languages (others might be used, but might fail)
-    SUPPORTED_LANGUAGES = ["de", "en"]
+    SUPPORTED_LANGUAGES = ["de", "en", "zh"]
 
     def __init__(self, config, component_builder=None, skip_validation=False):
         # type: (RasaNLUConfig, Optional[ComponentBuilder], bool) -> None
@@ -169,11 +169,7 @@ class Trainer(object):
         Returns the directory of the persisted model."""
 
         timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-        metadata = {
-            "language": self.config["language"],
-            "pipeline": [utils.module_path_from_object(component)
-                         for component in self.pipeline],
-        }
+        metadata = {}
 
         if project_name is None:
             project_name = "system"
@@ -186,9 +182,6 @@ class Trainer(object):
 
         create_dir(dir_name)
 
-        if self.training_data:
-            metadata.update(self.training_data.persist(dir_name))
-
         for component in self.pipeline:
             update = component.persist(dir_name)
             if update:
@@ -196,8 +189,8 @@ class Trainer(object):
 
         Metadata(metadata, dir_name).persist(dir_name)
 
-        if persistor is not None:
-            persistor.persist(dir_name, model_name, project_name)
+        # if persistor is not None:
+        #     persistor.persist(dir_name, model_name, project_name)
         logger.info("Successfully saved model into "
                     "'{}'".format(os.path.abspath(dir_name)))
         return dir_name

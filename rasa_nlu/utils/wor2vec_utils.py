@@ -109,20 +109,12 @@ class W2VNLP(Component):
 
     def persist(self, model_dir):
         # type: (Text) -> Dict[Text, Any]
-        if os.path.exists(self.embedding_model_path):
-            persist_config = {
-                "embedding_model_path": self.embedding_model_path,
-                "embedding_type": self.embedding_type
-            }
-        else:
+        if not os.path.exists(self.embedding_model_path):
             mkdir = './data/vectors.txt.word2vec'
             is_binary = True if self.embedding_type == "bin" else False
-            self.wv_model.wv.save_word2vec_format(mkdir, binary=is_binary)
-            persist_config = {
-                "embedding_model_path": mkdir,
-                "embedding_type": self.embedding_type
-            }
-        return persist_config
+            self.wv_model.wv.save_word2vec_format(self.embedding_model_path, binary=is_binary)
+
+        return None
 
     @classmethod
     def process_raw_data(cls, sentences, max_sentence_length=MAX_WORDS_IN_BATCH, limit=None):

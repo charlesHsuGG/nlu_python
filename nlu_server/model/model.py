@@ -34,9 +34,7 @@ class Intent(db.Model):
     
     intent_id = db.Column(db.String(32), nullable=True, primary_key=True)
     intent_name = db.Column(db.Text, nullable=False)
-    bot_id = db.Column(db.String(32), nullable=False)
-    node_id = db.Column(db.String(32), nullable=False)
-    flow_id = db.Column(db.String(32), nullable=False)
+    admin_id = db.Column(db.String(32), nullable=False)
     create_date = db.Column(db.DATETIME, nullable=False)
     update_date = db.Column(db.DATETIME, nullable=False)  
     sentence = db.relationship('Sentence', secondary=intent_sentence, lazy='select',
@@ -87,17 +85,10 @@ class Prompt(db.Model):
     def __repr__(self):
         return '<Prompt %r>' % self.prompt_id
 
-
-entity_value = db.Table('entity_value',
-    db.Column('entity_id', db.String(32), db.ForeignKey('entity.entity_id'), primary_key=True),
-    db.Column('value_id', db.String(32), db.ForeignKey('value.value_id'), primary_key=True)
+article_entity_value = db.Table('article_entity_value',
+    db.Column('article_id', db.String(32), db.ForeignKey('article.article_id'), primary_key=True),
+    db.Column('entity_value_id', db.String(32), db.ForeignKey('entity_value.entity_value_id'), primary_key=True)
 )
-
-tagtext_value = db.Table('tagtext_value',
-    db.Column('tagtext_id', db.String(32), db.ForeignKey('tagtext.tagtext_id'), primary_key=True),
-    db.Column('value_id', db.String(32), db.ForeignKey('value.value_id'), primary_key=True)
-)
-
 
 class Entity(db.Model):
 
@@ -107,45 +98,86 @@ class Entity(db.Model):
     entity_name = db.Column(db.Text, nullable=False)
     entity_type = db.Column(db.Text, nullable=False)
     entity_extractor = db.Column(db.String(80), nullable=False)
-    value = db.relationship('Value', secondary=entity_value, lazy='select',
-            backref=db.backref('entity', lazy=True), cascade="all,delete")
+    admin_id = db.Column(db.String(80), nullable=False)
 
     def __repr__(self):
         return '<Entity %r>' % (self.entity_id)
 
-class Tagtext(db.Model):
+class Article(db.Model):
 
-	# __tablename__ = 'tagtext'
+	# __tablename__ = 'article'
 
-    tagtext_id = db.Column(db.String(32), nullable=True, primary_key=True)
-    tagtext_title = db.Column(db.Text, nullable=False)
-    tagtext_content = db.Column(db.Text, nullable=False)
-    value = db.relationship('Value', secondary=tagtext_value, lazy='select',
-            backref=db.backref('tagtext', lazy=True), cascade="all,delete")
+    article_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    article_title = db.Column(db.Text, nullable=False)
+    article_content = db.Column(db.Text, nullable=False)
+    admin_id = db.Column(db.String(80), nullable=False)
+    create_date = db.Column(db.DATETIME, nullable=False)
+    update_date = db.Column(db.DATETIME, nullable=False) 
+    entity_value = db.relationship('EntityValue', secondary=article_entity_value, lazy='select',
+            backref=db.backref('article', lazy=True), cascade="all,delete")
 
     def __repr__(self):
-        return '<Tagtext %r>' % self.tagtext_id
+        return '<Article %r>' % self.tagtext_id
 
-class Value(db.Model):
+class EntityValue(db.Model):
 
-	# __tablename__ = 'value'
+	# __tablename__ = 'entity_value'
 
-    value_id = db.Column(db.String(32), nullable=True, primary_key=True)
-    value = db.Column(db.Text, nullable=False)
+    entity_value_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    entity_value = db.Column(db.Text, nullable=False)
     value_start = db.Column(db.Integer, nullable=False)
     value_end = db.Column(db.Integer, nullable=False)
+    value_from = db.Column(db.String(32), nullable=False)
+    entity_id = db.Column(db.String(32), nullable=False)
 
     def __repr__(self):
-        return '<Value %r>' % self.value_id
+        return '<EntityValue %r>' % self.entity_value_id
 
+config_node= db.Table('config_node',
+    db.Column('config_id', db.String(32), db.ForeignKey('config.config_id'), primary_key=True),
+    db.Column('node_id', db.String(32), db.ForeignKey('node.node_id'), primary_key=True)
+)
 
-class Model(db.Model):
+class Config(db.Model):
 
-	# __tablename__ = 'model'
+	# __tablename__ = 'config'
 
-    model_id = db.Column(db.String(32), nullable=True, primary_key=True)
-    model_name = db.Column(db.String(80), nullable=False)
+    config_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    config_name = db.Column(db.String(80), nullable=False)
     model_path = db.Column(db.String(255), nullable=False)
+    mitie_embeding_path = db.Column(db.String(255), nullable=False)
+    w2v_embeding_path = db.Column(db.String(255), nullable=False)
+    w2v_embeding_type = db.Column(db.String(20), nullable=False)
+    admin_id = db.Column(db.String(32), nullable=False)
+    node = db.relationship('Node', secondary=config_node, lazy='select',
+            backref=db.backref('config', lazy=True), cascade="all,delete",
+            order_by='Node.order')
 
     def __repr__(self):
-        return '<Model %r>' % self.model_id
+        return '<Config %r>' % self.config_id
+
+class Admin(db.Model):
+
+	# __tablename__ = 'admin'
+
+    admin_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    admin_name = db.Column(db.String(80), nullable=False)
+    available = db.Column(db.Boolean, nullable=False)
+    create_date = db.Column(db.DATETIME, nullable=False)
+    update_date = db.Column(db.DATETIME, nullable=False)
+
+    def __repr__(self):
+        return '<Admin %r>' % self.admin_id
+
+
+class Node(db.Model):
+
+	# __tablename__ = 'node'
+
+    node_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    class_name = db.Column(db.String(80), nullable=False)
+    module_name = db.Column(db.String(80), nullable=False)
+    order = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return '<Node %r>' % self.node_id

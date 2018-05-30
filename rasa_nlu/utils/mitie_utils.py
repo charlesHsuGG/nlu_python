@@ -78,6 +78,5 @@ class MitieNLP(Component):
         # type: (Text) -> Dict[Text, Any]
 
         return {
-            "mitie_feature_extractor_fingerprint": self.extractor.fingerprint,
-            "mitie_file": self.mitie_file
+            "mitie_feature_extractor_fingerprint": self.extractor.fingerprint
         }

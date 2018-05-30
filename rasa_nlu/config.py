@@ -19,8 +19,6 @@ DEFAULT_CONFIG = {
     "project": None,
     "fixed_model_name": None,
     "config": DEFAULT_CONFIG_LOCATION,
-    "data": None,
-    "dm_data_path":None,
     "emulate": None,
     "language": "en",
     "log_file": None,
