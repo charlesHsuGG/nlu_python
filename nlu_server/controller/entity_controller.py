@@ -230,7 +230,7 @@ class EntityWebController(object):
             entity_db = Entity()
             system_entities = entity_db.query.filter_by(entity_type = 'system').all()
             user_define_entities = entity_db.query.filter_by(entity_type = 'user', admin_id = admin_id).all()
-            system_entity_list=[]
+            ent_list=[]
             for system_entity in system_entities:
                 json ={
                     "entity_id":system_entity.entity_id,
@@ -238,19 +238,17 @@ class EntityWebController(object):
                     "entity_type":system_entity.entity_type,
                     "entity_extractor":system_entity.entity_extractor
                 }
-                system_entity_list.append(json)
-            user_define_entity_list=[]
+                ent_list.append(json)
             for user_define_entity in user_define_entities:
                 json ={
-                    "entity_id":system_entity.entity_id,
-                    "entity_name":system_entity.entity_name,
-                    "entity_type":system_entity.entity_type,
-                    "entity_extractor":system_entity.entity_extractor
+                    "entity_id":user_define_entity.entity_id,
+                    "entity_name":user_define_entity.entity_name,
+                    "entity_type":user_define_entity.entity_type,
+                    "entity_extractor":user_define_entity.entity_extractor
                 }
-                user_define_entity_list.append(json)
+                ent_list.append(json)
             entity_list={
-                "system_entities":system_entity_list,
-                "user_define_entities":user_define_entity_list
+                "entities":ent_list
             }
             return json_to_string(entity_list)
 
