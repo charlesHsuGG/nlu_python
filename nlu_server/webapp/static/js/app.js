@@ -15,6 +15,8 @@ var mainApp = angular.module('mainApp',[
     "angularModalService",
     "ngFileUpload",
     "vcRecaptcha",
+    "ngSanitize",
+    'ngAnimate',
     //page controllers   
     "app.mainctrl",
     "app.aientityctrl",
@@ -23,7 +25,8 @@ var mainApp = angular.module('mainApp',[
     "app.aislotaddmodalctrl",
     "app.aiintentlistctrl",
     "app.aichatctrl",
-    "app.aieditchatmodalctrl"
+    "app.aieditchatmodalctrl",
+    "app.aientitylistctrl",
 ]);
  
  

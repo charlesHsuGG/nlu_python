@@ -7,14 +7,14 @@
 		vertical-align: middle !important;
 	}
 </style>
-<div ng-controller="AiIntentListCtrl">
+<div ng-controller="AIEntityListCtrl">
 	<div class="page-head">
 		<div class="page-title">
-			<!-- <h1 style="display: inline-block;">意圖列表</h1> -->
+			<!-- <h1 style="display: inline-block;">標註表</h1> -->
 		</div>
 	</div>
-	<div class="portlet-body container">
-		<div class="portlet light portlet-fit">
+	<div class=" portlet-body container">
+		
 			<div class="row">
 				<div class="col-md-12">
 
@@ -26,14 +26,14 @@
 						 
 						 
 						</h2>
-						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增意圖
+						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增標註
 						</button>
 						<table class="table table-striped table-bordered table-advance table-hover" datatable="ng" dt-options="slotsListDT">
 							<thead>
 								<tr>
-									<th class=" ">意圖名稱</th>
-									<th class=" ">狀態</th>
-									<th class=" ">新增日期</th>
+									<th class=" ">標題</th>
+									<th class=" ">內容</th>
+									<th class=" ">日期</th>
 									<th class=" ">功能</th>
 								</tr>
 							</thead>
@@ -54,6 +54,6 @@
 
 				</div>
 			</div>
-		</div>
+		
 	</div>
 </div>

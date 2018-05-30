@@ -8,14 +8,18 @@
 	}
 
 </style>
+
+
 <div ng-controller="aiIntentEditCtrl">
+
+
 	<div class="page-head">
 		<div class="page-title">
-			<h1 style="display: inline-block;">意圖編輯</h1>
+			<!-- <h1 style="display: inline-block;">意圖編輯</h1> -->
 		</div>
 	</div>
 	<div class="portlet-body container">
-		<div class="portlet light portlet-fit">
+		
 			<div class="row">
 				<div class="col-md-12">
 					<!-- 名稱 -->
@@ -55,15 +59,19 @@
 								<!-- 首要例句 -->
 
 								<div class="input-group" style="margin: 10px">
-									<input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="currentUtterance">
-									<a class="btn btn-primary" ng-click="addUtterances()"style="color: white;" >新增</a>
+									<input  type="text"  class="form-control" placeholder="例：我想要買一本書" ng-model="currentUtterance">
+									<a class="btn btn-primary" ng-click="addUtterances()"style="color: white;"  >新增</a>
 								</div>
 								<!-- 自動生成例句 -->
-								<div class="input-group" style="margin: 10px" ng-repeat="utterances in utterancesList track by $index">
-									<input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="utterances.sentence">
+								<span  id="input_text">
+								<div  class="input-group" style="margin: 10px" ng-repeat="utterances in utterancesList track by $index">
+									<!-- <input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="utterances.sentence"> -->
+ 									<div   ng-click="openPop($index)"    class="form-control" style="font-size: 18px;"   ng-bind-html='utterances.sentenceHtml' popover-placement="bottom" uib-popover-template="dynamicPopover.templateUrl" popover-is-open="popoverIsOpen[{{$index}}]" popover-trigger ="'none'"></div>
+									
 									<a class="btn btn-outline-primary" ng-click="deleteUtterances($index)">-
 									</a>
 								</div>
+							</span>
 							</div>
 						</div>
 						<!-- 插槽 -->
@@ -82,6 +90,7 @@
 									<tr>
 										<th class=" ">順序</th>
 										<th class=" ">名稱</th>
+										<th class=" ">必填</th>
 										<th class=" ">類型</th>
 										<th class=" ">提示字元</th>
 										<th class=" ">功能</th>
@@ -91,6 +100,7 @@
 									<tr ng-repeat="slots in slotsList track by $index">
 										<td class="center" style="vertical-align: middle">{{$index}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.value}}</td>
+										<td class="center" style="vertical-align: middle">{{slots.required}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.slotType.entity}}</td>
 										<td class="center" style="vertical-align: middle">
 											<sapn ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</sapn>
@@ -176,10 +186,26 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			
 		</div>
 		<div class="page-head" style=" min-height:70px;margin-top:20px;">
 			<button class="btn btn-primary" style="background: #3d4b8b; width: 100px; color: white; float: right; margin: 10px" ng-click="submit()">{{submitText}}</button>
 
 		</div>
+
+		
+		<script type="text/ng-template" id="myPopoverTemplate.html">
+			<button class="btn  btn-light float-right mb-1" ng-click=" closePop()" >X</button>
+			<div style="min-width:250px" class=" card p-2 align-items-center" > 
+				
+			<h5 class="mt-2">{{dynamicPopover.content}}</h5>
+			<hr class="w-100">
+			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot()">{{slot.value}}</button>
+			  
+			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">  新增slot</button>
+			 
+			</div> 
+		</script>
+
+
 	</div>

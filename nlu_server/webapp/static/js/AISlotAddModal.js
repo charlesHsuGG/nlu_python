@@ -6,6 +6,7 @@ appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'cl
 	console.log("call slotCtrlctrl...");
 	$scope.promptList = [];
 	$scope.sendData = {};
+	$scope.required = false;
 	init();
   
 	
