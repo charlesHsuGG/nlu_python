@@ -63,10 +63,8 @@ class Slot(db.Model):
 
     slot_id = db.Column(db.String(32), nullable=True, primary_key=True)
     name = db.Column(db.Text, nullable=False)
-    slot_type = db.Column(db.Text, nullable=False)
     required = db.Column(db.Boolean, default=False, nullable=False)
-    entity_id = db.Column(db.String(32), nullable=False)
-    entity_name = db.Column(db.Text, nullable=False)
+    entity_id = db.Column(db.String(32), db.ForeignKey('entity.entity_id'))
     prompt = db.relationship('Prompt', secondary=slot_prompt, lazy='select',
             backref=db.backref('slot', lazy=True), cascade="all,delete")
 

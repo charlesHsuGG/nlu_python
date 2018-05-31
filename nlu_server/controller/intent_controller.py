@@ -15,8 +15,9 @@ import datetime
 
 from flask import Blueprint, request,  json
 
+from nlu_server.shared import db
 from nlu_server.utils.data_router import RasaNLU
-from nlu_server.model.model import Intent, Sentence, Slot, Prompt
+from nlu_server.model.model import Intent, Sentence, Slot, Prompt, Entity
 from nlu_server.utils.generate_key import generate_key_generator
 
 from rasa_nlu.utils import json_to_string
@@ -61,18 +62,15 @@ class IntentWebController(object):
                 slot_list = []
                 for slot in slots:
                     name = slotent.get("name")
-                    slot_type = slot.get("slot_type")
+                    slot_type = slot.get("slotType")
+                    entity_id = slot_type.get("entity_id")
                     slot_prompts = slot.get("prompt", list())
-                    entity_id = slot.get("entity_id")
-                    entity_name = slot.get("entity_name")
                     required = slot.get("required")
                     slot_db = Slot()
                     if sentence.find(name) >= 0:
                         slot_db.slot_id = generate_key_generator()
                         slot_db.name = name
-                        slot_db.slot_type = slot_type
                         slot_db.entity_id = entity_id
-                        slot_db.entity_name = entity_name
                         slot_db.required = required
                         slot_prompt_list = []
                         for slot_prompt in slot_prompts:
@@ -175,9 +173,8 @@ class IntentWebController(object):
                         if "slot_id" in slot:
                             slot_id = ent.get("slot_id")
                         name = ent.get("name")
-                        slot_type = ent.get("slot_type")
-                        entity_id = slot.get("entity_id")
-                        entity_name = slot.get("entity_name")
+                        slot_type = slot.get("slotType")
+                        entity_id = slot_type.get("entity_id")
                         required = slot.get("required")
                         slot_prompts = ent.get("prompt", list())
                         slot_db = Slot()
@@ -187,7 +184,7 @@ class IntentWebController(object):
                             else:
                                 slot_db.slot_id = generate_key_generator()
                             slot_db.name = name
-                            slot_db.slot_type = slot_type
+                            slot_db.entity_id = entity_id
                             slot_prompt_list = []
                             for slot_prompt in slot_prompts:
                                 prompt_id = None
@@ -335,9 +332,9 @@ class IntentWebController(object):
                 for slo in slots:
                     slot_id = slo.slot_id
                     name = slo.name
-                    slot_type = slo.slot_type
                     entity_id = slo.entity_id
-                    entity_name = slo.entity_name
+                    ent_db = Entity()
+                    ent = ent_db.query.filter_by(entity_id = entity_id).first()
                     required = slo.required
                     prom_list = []
                     for prom in slo.prompt:
@@ -355,11 +352,14 @@ class IntentWebController(object):
                     slot_json={
                             "slot_id":slot_id,
                             "name":name,
-                            "slot_type":slot_type,
+                            "slotType":{
+                                "entity_id":ent.entity_id,
+                                "entity_name":ent.entity_name,
+                                "entity_type":ent.entity_type,
+                                "entity_extractor":ent.entity_extractor
+                            },
                             "prompt":prom_list,
-                            "required":required,
-                            "entity_id":entity_id,
-                            "entity_name":entity_name
+                            "required":required
                     }
                     slot_list.append(slot_json)
                 sent_json={

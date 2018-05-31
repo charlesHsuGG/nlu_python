@@ -20,6 +20,7 @@ from rasa_nlu.model import Interpreter
 from rasa_nlu.utils.langconv import *
 from rasa_nlu.utils import json_to_string
 
+from nlu_server.shared import db
 from nlu_server.utils.data_router import RasaNLU
 from nlu_server.utils.generate_key import generate_key_generator
 from nlu_server.model.model import Entity, Article, EntityValue, Config
