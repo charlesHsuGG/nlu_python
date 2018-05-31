@@ -200,9 +200,9 @@
 				
 			<h5 class="mt-2">{{dynamicPopover.content}}</h5>
 			<hr class="w-100">
-			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot()">{{slot.value}}</button>
+			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">{{slot.value}}</button>
 			  
-			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">  新增slot</button>
+			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">新增slot</button>
 			 
 			</div> 
 		</script>
