@@ -1,6 +1,20 @@
 'use strict';
 var appControllers = angular.module('app.aiintenteditctrl', []);
 
+appControllers.filter('convertState', function ($sce) {
+	return function (state) {
+ 
+		state =	state.replace(/{/g,'<tag class="btn badge badge-primary">');
+		state = state.replace(/}/g,'</tag>');
+		console.log("filter");
+		console.log(state);
+
+			return $sce.trustAsHtml( state );
+		 
+	}
+});
+
+
 appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'MercueRequests','DTOptionsBuilder','ModalService','$sce'
 	,function ($http,$scope,$state,MercueRequests,DTOptionsBuilder,ModalService,$sce){
 
@@ -69,6 +83,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		utterances.sentence = 	$scope.currentUtterance ;
 		var sentenceHtml =  $sce.trustAsHtml( '<span >'+$scope.currentUtterance+ '</span>');
 		utterances.sentenceHtml = sentenceHtml;
+		utterances.slot = [];
 		$scope.utterancesList.push(utterances);
 		$scope.currentUtterance = "";
 		setMouseUp();
@@ -164,7 +179,9 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log($scope.utterancesList);
 		angular.forEach($scope.utterancesList, function(value, key) {
 			console.log(value.sentence);
-			sendUtterances.push(value.sentence);
+			var sentenceList = {};
+			sentenceList.sentence = value.sentence 
+			sendUtterances.push(sentenceList);
 		  });
 		
 		console.log($scope.slotsList);
@@ -180,8 +197,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 
 		var sendData = {};
 		sendData.intent  = $scope.name;
-		sendData.sentences =  sendUtterances;
-		sendData.entities = $scope.slotsList;
+		sendData.sentence =  sendUtterances;
+		sendData.slot = $scope.slotsList;
 		sendData.confirm_prompt = confirm_prompt;
 		sendData.cancel_prompt = cancel_prompt;
 		sendData.response_prompt = $scope.responseList;
@@ -246,21 +263,30 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log($scope.utterancesList[$scope.selectPop]);
 		console.log($scope.selectText);
 		console.log(slot);
-		// var myRegExp = new RegExp($scope.selectText, 'g');
-		// var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
-		// var tag = '<button class="badge badge-primary">'+'美食'+'</button>';
-		// var sentenceHtml =  sentence.replace(myRegExp,tag);
-		console.log($scope.utterancesList);
-		// sentence = sentence.replace(myRegExp,"")
-		console.log(sentence);
 
-		//s$scope.utterancesList[$scope.selectPop].sentence = sentence;
+		var myRegExp = new RegExp($scope.selectText, 'g');
+		var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
+		var tag = '<button class="badge badge-primary">'+slot.name+'</button>';
+
+		var sentenceHtml =  sentence.replace(myRegExp,tag);
+		$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.name+'}');
+
+		console.log($scope.utterancesList);
+		sentence = sentence.replace(myRegExp,'{'+slot.name+'}')
+		console.log(sentence);
+		var tagData = {};
+
 		
-	 
-		// $scope.utterancesList[$scope.selectPop].sentenceHtml =  $sce.trustAsHtml( '<span >'+sentenceHtml+ '</span>');
+		$scope.utterancesList[$scope.selectPop].sentence = sentence;
+		//$scope.utterancesList[$scope.selectPop].sentenceHtml =  $sce.trustAsHtml( '<span >'+sentenceHtml+ '</span>');
+		$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
 		
-		console.log($scope.utterancesList.sentenceHtml);
+
+
+		console.log($scope.utterancesList[$scope.selectPop]);
+
 		$scope.$apply();
+	
 	}
 		
 	$scope.closePop = function()   {

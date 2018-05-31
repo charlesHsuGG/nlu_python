@@ -66,7 +66,7 @@
 								<span  id="input_text">
 								<div  class="input-group" style="margin: 10px" ng-repeat="utterances in utterancesList track by $index">
 									<!-- <input type="text" class="form-control" placeholder="例：我想要買一本書" ng-model="utterances.sentence"> -->
- 									<div   ng-click="openPop($index)"    class="form-control" style="font-size: 18px;"   ng-bind-html='utterances.sentenceHtml' popover-placement="bottom" uib-popover-template="dynamicPopover.templateUrl" popover-is-open="popoverIsOpen[{{$index}}]" popover-trigger ="'none'"></div>
+ 									<div      ng-click="openPop($index)"    class="form-control" style="font-size: 18px;"   ng-bind-html='utterances.sentence | convertState' popover-placement="bottom" uib-popover-template="dynamicPopover.templateUrl" popover-is-open="popoverIsOpen[{{$index}}]" popover-trigger ="'none'"></div>
 									
 									<a class="btn btn-outline-primary" ng-click="deleteUtterances($index)">-
 									</a>
@@ -99,9 +99,9 @@
 								<tbody>
 									<tr ng-repeat="slots in slotsList track by $index">
 										<td class="center" style="vertical-align: middle">{{$index}}</td>
-										<td class="center" style="vertical-align: middle">{{slots.value}}</td>
+										<td class="center" style="vertical-align: middle">{{slots.name}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.required}}</td>
-										<td class="center" style="vertical-align: middle">{{slots.slotType.entity}}</td>
+										<td class="center" style="vertical-align: middle">{{slots.slotType.entity_name}}</td>
 										<td class="center" style="vertical-align: middle">
 											<sapn ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</sapn>
 										</td>
@@ -200,7 +200,7 @@
 				
 			<h5 class="mt-2">{{dynamicPopover.content}}</h5>
 			<hr class="w-100">
-			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">{{slot.value}}</button>
+			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">{{slot.name}}</button>
 			  
 			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">新增slot</button>
 			 

@@ -28,12 +28,12 @@
 						<label>
 							名稱
 						</label>
-						<input class="form-control m-input m-input--square" ng-model="sendData.value">
+						<input class="form-control m-input m-input--square" ng-model="sendData.name">
 					</div>
 					<div class="form-group m-form__group">
 
 						<label for="select">類型</label>
-						<select class="form-control" id="select" ng-model="sendData.slotType " ng-options="option.entity for option in entities  ">
+						<select class="form-control" id="select" ng-model="sendData.slotType " ng-options="option.entity_name for option in entities  ">
 
 						</select>
 					</div>
