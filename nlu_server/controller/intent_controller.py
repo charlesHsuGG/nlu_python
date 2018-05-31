@@ -357,6 +357,7 @@ class IntentWebController(object):
                             "name":name,
                             "slot_type":slot_type,
                             "prompt":prom_list,
+                            "required":required,
                             "entity_id":entity_id,
                             "entity_name":entity_name
                     }
