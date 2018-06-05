@@ -5,7 +5,6 @@ appControllers.controller('AIEditChatModalCtrl',['$scope', '$http','$window' ,'c
 function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder){
 	 
 	console.log("call editchat...");
-	$scope.promptList = [];
 	$scope.sendData = {};
 	init();
   
@@ -16,7 +15,8 @@ function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder){
 	}
 
 	$scope.close = function(result) {
-		$scope.sendData.prompt = $scope.promptList;
+		$scope.sendData.slot_list = $scope.slot_list;
+		$scope.sendData.intent_ranking_list = $scope.intent_ranking_list;
 		console.log( $scope.sendData);
 			if(result == "cancel"){
 				close("cancel", 500);

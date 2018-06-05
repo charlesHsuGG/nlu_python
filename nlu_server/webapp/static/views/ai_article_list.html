@@ -7,7 +7,7 @@
 		vertical-align: middle !important;
 	}
 </style>
-<div ng-controller="AIEntityListCtrl">
+<div ng-controller="AIArticleListCtrl">
 	<div class="page-head">
 		<div class="page-title">
 			<!-- <h1 style="display: inline-block;">標註表</h1> -->
@@ -26,25 +26,25 @@
 						 
 						 
 						</h2>
-						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增Entity
+						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增文本標註
 						</button>
 						<table class="table table-striped table-bordered table-advance table-hover" datatable="ng" dt-options="slotsListDT">
 							<thead>
 								<tr>
 									<th class=" ">標題</th>
-									<th class=" ">狀態</th>
+									<th class=" ">內文</th>
 									<th class=" ">日期</th>
 									<th class=" ">功能</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="entity in entity_list track by $index">
-									<td class="center" style="vertical-align: middle">{{entity.entity_name}}</td>
-									<td class="center" style="vertical-align: middle">{{entity.entity_type}}</td>
-									<td class="center" style="vertical-align: middle"> </td>
+								<tr ng-repeat="article in article_list track by $index">
+									<td class="center" style="vertical-align: middle">{{article.article_title}}</td>
+									<td class="center" style="vertical-align: middle">{{article.article_content}}</td>
+									<td class="center" style="vertical-align: middle">{{article.create_date}}</td>
 									<td class="center" style="vertical-align: middle">
-										<button type="button" class="btn btn-info" ng-show="entity.entity_type != 'system'"  ng-click="editIntent($index)">編輯</button>
-										<button type="button" class="btn btn-danger" ng-show="entity.entity_type != 'system'"  ng-click="deleteIntent($index)">刪除</button>
+										<button type="button" class="btn btn-info" ng-show="entity.entity_type != 'system'"  ng-click="editArticle($index)">編輯</button>
+										<button type="button" class="btn btn-danger" ng-show="entity.entity_type != 'system'"  ng-click="deleteArticle($index)">刪除</button>
 									</td>
 								</tr>
 							</tbody>

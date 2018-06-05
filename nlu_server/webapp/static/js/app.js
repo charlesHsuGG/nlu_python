@@ -19,7 +19,6 @@ var mainApp = angular.module('mainApp',[
     'ngAnimate',
     //page controllers   
     "app.mainctrl",
-    "app.aientityctrl",
     "app.aiintenteditctrl",
     "app.navctrl",
     "app.aislotaddmodalctrl",
@@ -27,6 +26,8 @@ var mainApp = angular.module('mainApp',[
     "app.aichatctrl",
     "app.aieditchatmodalctrl",
     "app.aientitylistctrl",
+    "app.aiarticlelistctrl",
+    "app.aiarticlectrl"
 ]);
  
  

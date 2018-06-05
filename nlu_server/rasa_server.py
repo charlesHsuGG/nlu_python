@@ -31,6 +31,7 @@ from nlu_server.shared import db
 from nlu_server.utils.data_router import RasaNLU
 from nlu_server.controller.intent_controller import IntentWebController
 from nlu_server.controller.entity_controller import EntityWebController
+from nlu_server.controller.train_controller import TrainWebController
 from nlu_server.controller.chat_controller import ChatWebController
 
 logger = logging.getLogger(__name__)
@@ -92,10 +93,12 @@ if __name__ == "__main__":
     
     entity_channel = EntityWebController()
     intent_channel = IntentWebController()
+    train_channel = TrainWebController()
     chat_channel = ChatWebController()
     app.register_blueprint(entity_channel.data_router(rasa_system_config), url_prefix='/ai_entity')
     app.register_blueprint(intent_channel.data_router(rasa_system_config), url_prefix='/ai_intent')
-    app.register_blueprint(chat_channel.data_router(rasa_system_config), url_prefix='/chat')
+    app.register_blueprint(train_channel.data_router(rasa_system_config))
+    app.register_blueprint(chat_channel.data_router(rasa_system_config))
     http_server = WSGIServer((rasa_system_config['server_ip'], rasa_system_config['port']), app)
     http_server.start()
     for i in range(cpu_count()):

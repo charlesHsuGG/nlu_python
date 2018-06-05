@@ -165,9 +165,6 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		if($scope.utterancesList.length  == 0  ){
 			alert("請新增例句");
 			return
-		}else if($scope.slotsList.length  == 0  ){
-			alert("請新增關鍵字欄位");
-			return
 		}else if($scope.responseList.length  == 0  ){
 			alert("請新增回應句");
 			return
@@ -202,13 +199,14 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		sendData.confirm_prompt = confirm_prompt;
 		sendData.cancel_prompt = cancel_prompt;
 		sendData.response_prompt = $scope.responseList;
-		sendData.bot_id =  "be090fcbc28ba19ac835879c36f861f4";
+		sendData.admin_id =  "40w9dse0277455f634fw40439sd";
 		
 		
 		var url = "./ai_intent/intent_save"
 		if($scope.editMode == true){
 			url = './ai_intent/intent_update'
 			sendData.intent_id = $scope.edit_id;
+			sendData.create_date = $scope.create_date
 		}
 
 
@@ -250,7 +248,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			$scope.responseList = editData.response_prompt;
 			$scope.name = editData.intent;
 			$scope.utterancesList = editData.sentence;
-			$scope.slotsList = 	 editData.entities;
+			$scope.slotsList = 	 editData.slots;
+			$scope.create_date = editData.create_date
 		 
 		}, function errorCallback(response) {
 			console.log(response);

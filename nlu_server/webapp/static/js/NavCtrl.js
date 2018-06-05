@@ -21,7 +21,7 @@ $scope.goPage = function(index){
 
     switch(index){
         case 1:
-        $state.go("page",{page:"ai_entity"});
+        $state.go("page",{page:"ai_article"});
         console.log("go page")
         break;
        
@@ -40,6 +40,11 @@ $scope.goPage = function(index){
         case 5:
 
         $state.go("page",{page:"ai_chat"});
+        break
+
+        case 6:
+
+        $state.go("page",{page:"ai_article_list"});
         break
         
     }
