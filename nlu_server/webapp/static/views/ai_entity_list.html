@@ -26,8 +26,12 @@
 						 
 						 
 						</h2>
+<<<<<<< HEAD
 					
 						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增標註
+=======
+						<button class="btn btn btn-primary" style="float:right" ng-click="addSlots()">新增Entity
+>>>>>>> db4c0a940d41d48b9fcbe0c6b3f9027bbc6c210b
 						</button>
 
 						<button class="btn btn btn-info mr-2" style="float:right" ng-click="">開始訓練
@@ -36,19 +40,19 @@
 							<thead>
 								<tr>
 									<th class=" ">標題</th>
-									<th class=" ">內容</th>
+									<th class=" ">狀態</th>
 									<th class=" ">日期</th>
 									<th class=" ">功能</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="intent in intent_list track by $index">
-									<td class="center" style="vertical-align: middle">{{intent.intent}}</td>
-									<td class="center" style="vertical-align: middle"> </td>
+								<tr ng-repeat="entity in entity_list track by $index">
+									<td class="center" style="vertical-align: middle">{{entity.entity_name}}</td>
+									<td class="center" style="vertical-align: middle">{{entity.entity_type}}</td>
 									<td class="center" style="vertical-align: middle"> </td>
 									<td class="center" style="vertical-align: middle">
-										<button type="button" class="btn btn-info"  ng-click="editIntent($index)">編輯</button>
-										<button type="button" class="btn btn-danger" ng-click="deleteIntent($index)">刪除</button>
+										<button type="button" class="btn btn-info" ng-show="entity.entity_type != 'system'"  ng-click="editIntent($index)">編輯</button>
+										<button type="button" class="btn btn-danger" ng-show="entity.entity_type != 'system'"  ng-click="deleteIntent($index)">刪除</button>
 									</td>
 								</tr>
 							</tbody>

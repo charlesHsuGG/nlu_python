@@ -34,7 +34,7 @@
 							<thead>
 								<tr>
 									<th class=" ">意圖名稱</th>
-									<th class=" ">狀態</th>
+									<!-- <th class=" ">狀態</th> -->
 									<th class=" ">新增日期</th>
 									<th class=" ">功能</th>
 								</tr>
@@ -42,8 +42,8 @@
 							<tbody>
 								<tr ng-repeat="intent in intent_list track by $index">
 									<td class="center" style="vertical-align: middle">{{intent.intent}}</td>
-									<td class="center" style="vertical-align: middle"> </td>
-									<td class="center" style="vertical-align: middle"> </td>
+									<!-- <td class="center" style="vertical-align: middle">{{intent.create_date}}</td> -->
+									<td class="center" style="vertical-align: middle">{{intent.create_date}}</td>
 									<td class="center" style="vertical-align: middle">
 										<button type="button" class="btn btn-info"  ng-click="editIntent($index)">編輯</button>
 										<button type="button" class="btn btn-danger" ng-click="deleteIntent($index)">刪除</button>

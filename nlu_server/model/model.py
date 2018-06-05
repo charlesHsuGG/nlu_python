@@ -18,8 +18,8 @@ intent_prompt = db.Table('intent_prompt',
     db.Column('prompt_id', db.String(32), db.ForeignKey('prompt.prompt_id'), primary_key=True)
 )
 
-sentence_slot = db.Table('sentence_slot',
-    db.Column('sentence_id', db.String(32), db.ForeignKey('sentence.sentence_id'), primary_key=True),
+intent_slot = db.Table('intent_slot',
+    db.Column('intent_id', db.String(32), db.ForeignKey('intent.intent_id'), primary_key=True),
     db.Column('slot_id', db.String(32), db.ForeignKey('slot.slot_id'), primary_key=True)
 )
 
@@ -39,6 +39,8 @@ class Intent(db.Model):
     update_date = db.Column(db.DATETIME, nullable=False)  
     sentence = db.relationship('Sentence', secondary=intent_sentence, lazy='select',
         backref=db.backref('intent', lazy=True), cascade="all,delete")
+    slot = db.relationship('Slot', secondary=intent_slot, lazy='select',
+        backref=db.backref('intent', lazy=True), cascade="all,delete")
     prompt = db.relationship('Prompt', secondary=intent_prompt, lazy='select',
         backref=db.backref('intent', lazy=True), cascade="all,delete")
 
@@ -51,8 +53,6 @@ class Sentence(db.Model):
 
     sentence_id = db.Column(db.String(32), nullable=True, primary_key=True)
     sentence = db.Column(db.Text, nullable=False)
-    slot = db.relationship('Slot', secondary=sentence_slot, lazy='select',
-                backref=db.backref('sentence', lazy=True), cascade="all,delete")
 
     def __repr__(self):
         return '<Sentence %r>' % (self.sentence_id)

@@ -1,10 +1,10 @@
 'use strict';
-var appControllers = angular.module('app.aientityctrl', ['ngSanitize']);
+var appControllers = angular.module('app.aiarticlectrl', ['ngSanitize']);
  
-appControllers.controller('AiEntityCtrl',['$scope', '$state', 'MercueRequests','$sce'
+appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests','$sce'
     ,function ($scope,$state,MercueRequests,$sce){
    
-   console.log("ai AiEntityCtrl list ctrl...");
+   console.log("ai AiArticleCtrl list ctrl...");
     $('#color_pick').minicolors();
     //選取玩圖片事件
     $scope.tagList = [];
@@ -15,7 +15,15 @@ appControllers.controller('AiEntityCtrl',['$scope', '$state', 'MercueRequests','
    function init()
    {
        setTimeout(function(){
-    
+            url = url.split("?");
+            console.log(url[1]);
+            if(url[1] != null){
+                console.log("edit mode");		 
+                $scope.edit_id = url[1];
+                $scope.submitText = "更新"
+                $scope.editMode = true;
+                loadData();
+            }
    
        },300);
    }
@@ -150,5 +158,33 @@ appControllers.controller('AiEntityCtrl',['$scope', '$state', 'MercueRequests','
            console.log("reSet");
          } );
    }
+
+   function loadData(){
+    $http({
+        method: 'POST',
+        url: './ai_intent/intent_get',
+        data: {intent_id:$scope.edit_id}
+    }).then(function successCallback(response) {
+        console.log(response);
+        
+        var editData = response.data;
+        if(editData.cancel_prompt =! null){
+            $scope.cancelText = editData.cancel_prompt.prompt_text;
+        }
+        if(editData.confirmText =! null){
+            $scope.confirmText = editData.confirm_prompt.prompt_text;
+        }
+        $scope.confirmText = editData.confirm_prompt.prompt_text;
+        $scope.responseList = editData.response_prompt;
+        $scope.name = editData.intent;
+        $scope.utterancesList = editData.sentence;
+        $scope.slotsList = 	 editData.slots;
+        $scope.create_date = editData.create_date
+     
+    }, function errorCallback(response) {
+        console.log(response);
+    });
+
+}
    
 }]);

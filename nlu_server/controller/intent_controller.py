@@ -37,9 +37,9 @@ class IntentWebController(object):
             admin_id = payload.get("admin_id", None)
             intent = payload.get("intent", None)
             slots = []
-            if 'slots' in payload:
-                slots = payload.get("slots", list())
-            sentences = payload.get("sentences", list())
+            if 'slot' in payload:
+                slots = payload.get("slot", list())
+            sentences = payload.get("sentence", list())
             confirm_prompt = None
             if 'confirm_prompt' in payload:
                 confirm_prompt = payload.get("confirm_prompt", None)
@@ -57,40 +57,38 @@ class IntentWebController(object):
             intent_db.create_date = datetime.datetime.now()
 
             sentences_list = []
-            ent_save = False
             for sentence in sentences:
-                slot_list = []
-                for slot in slots:
-                    name = slotent.get("name")
-                    slot_type = slot.get("slotType")
-                    entity_id = slot_type.get("entity_id")
-                    slot_prompts = slot.get("prompt", list())
-                    required = slot.get("required")
-                    slot_db = Slot()
-                    if sentence.find(name) >= 0:
-                        slot_db.slot_id = generate_key_generator()
-                        slot_db.name = name
-                        slot_db.entity_id = entity_id
-                        slot_db.required = required
-                        slot_prompt_list = []
-                        for slot_prompt in slot_prompts:
-                            prompt_text = slot_prompt.get("prompt_text")
-                            action_type = slot_prompt.get("action_type")
-                            slot_prompt_db = Prompt()
-                            slot_prompt_db.prompt_id = generate_key_generator()
-                            slot_prompt_db.prompt_text = prompt_text
-                            slot_prompt_db.prompt_type = "entity"
-                            slot_prompt_db.action_type = action_type
-                            slot_prompt_list.append(slot_prompt_db)
-                        slot_db.prompt = slot_prompt_list
-                        slot_list.append(slot_db)
                 sentences_db = Sentence()
                 sentences_db.sentence_id = generate_key_generator()
-                sentences_db.sentence = sentence
-                sentences_db.slot = slot_list
+                sentences_db.sentence = sentence.get("sentence")
                 sentences_list.append(sentences_db)
+            slot_list = []
+            for slot in slots:
+                name = slot.get("name")
+                slot_type = slot.get("slotType")
+                entity_id = slot_type.get("entity_id")
+                slot_prompts = slot.get("prompt", list())
+                required = slot.get("required")
+                slot_db = Slot()
+                slot_db.slot_id = generate_key_generator()
+                slot_db.name = name
+                slot_db.entity_id = entity_id
+                slot_db.required = required
+                slot_prompt_list = []
+                for slot_prompt in slot_prompts:
+                    prompt_text = slot_prompt.get("prompt_text")
+                    action_type = slot_prompt.get("action_type")
+                    slot_prompt_db = Prompt()
+                    slot_prompt_db.prompt_id = generate_key_generator()
+                    slot_prompt_db.prompt_text = prompt_text
+                    slot_prompt_db.prompt_type = "entity"
+                    slot_prompt_db.action_type = action_type
+                    slot_prompt_list.append(slot_prompt_db)
+                slot_db.prompt = slot_prompt_list
+                slot_list.append(slot_db)
 
             intent_db.sentence = sentences_list
+            intent_db.slot = slot_list
             
             prompt_list = []
             if confirm_prompt is not None:
@@ -137,9 +135,9 @@ class IntentWebController(object):
             intent = payload.get("intent", None)
             create_date = payload.get("create_date")
             slots = []
-            if 'slots' in payload:
-                slots = payload.get("slots", list())
-            sentences = payload.get("sentences", list())
+            if 'slot' in payload:
+                slots = payload.get("slot", list())
+            sentences = payload.get("sentence", list())
             confirm_prompt = None
             if 'confirm_prompt' in payload:
                 confirm_prompt = payload.get("confirm_prompt", None)
@@ -152,10 +150,12 @@ class IntentWebController(object):
 
             intent_delete_db = Intent()
             intents = intent_delete_db.query.filter_by(intent_id = intent_id).first()
+            db.session.delete(intents)
+            db.session.commit()
             try:
-                intent_db = Intent()
 
-                intent_db.intent_id = intent_id
+                intent_db = Intent()
+                intent_db.intent_id = generate_key_generator()
                 intent_db.intent_name = intent
                 intent_db.admin_id = admin_id
                 intent_db.create_date = create_date
@@ -163,99 +163,62 @@ class IntentWebController(object):
 
                 sentences_list = []
                 for sentence in sentences:
-                    slot_list = []
-                    sentence_id = None
-                    if "sentence_id" in sentence:
-                        sentence_id = sentence.get("sentence_id")
-                    sentence_text = sentence
-                    for slot in slots:
-                        slot_id = None
-                        if "slot_id" in slot:
-                            slot_id = ent.get("slot_id")
-                        name = ent.get("name")
-                        slot_type = slot.get("slotType")
-                        entity_id = slot_type.get("entity_id")
-                        required = slot.get("required")
-                        slot_prompts = ent.get("prompt", list())
-                        slot_db = Slot()
-                        if sentence_text.find(name) >= 0:
-                            if slot_id is not None or slot_id is not "":
-                                slot_db.slot_id = slot_id
-                            else:
-                                slot_db.slot_id = generate_key_generator()
-                            slot_db.name = name
-                            slot_db.entity_id = entity_id
-                            slot_prompt_list = []
-                            for slot_prompt in slot_prompts:
-                                prompt_id = None
-                                if "prompt_id" in slot_prompt:
-                                    prompt_id = slot_prompt.get("prompt_id")
-                                prompt_text = slot_prompt.get("prompt_text")
-                                action_type = slot_prompt.get("action_type")
-                                slot_prompt_db = Prompt()
-                                if prompt_id is not None or prompt_id is not "":
-                                    slot_prompt_db.prompt_id = prompt_id
-                                else:
-                                    slot_prompt_db.prompt_id = generate_key_generator()
-                                slot_prompt_db.prompt_text = prompt_text
-                                slot_prompt_db.prompt_type = "entity"
-                                slot_prompt_db.action_type = action_type
-                                slot_prompt_db.append(slot_prompt_db)
-                            slot_db.prompt = slot_prompt_list
-                            slot_list.append(slot_db)
                     sentences_db = Sentence()
-                    if sentence_id is not None or sentence_id is not "":
-                        sentences_db.sentence_id = sentence_id
-                    else:
-                        sentences_db.sentence_id = generate_key_generator()
-                    sentences_db.sentence = sentence_text
-                    sentences_db.slot = slot_list
+                    sentences_db.sentence_id = generate_key_generator()
+                    sentences_db.sentence = sentence.get("sentence")
                     sentences_list.append(sentences_db)
+                slot_list = []
+                for slot in slots:
+                    name = slot.get("name")
+                    slot_type = slot.get("slotType")
+                    entity_id = slot_type.get("entity_id")
+                    slot_prompts = slot.get("prompt", list())
+                    required = slot.get("required")
+                    slot_db = Slot()
+                    slot_db.slot_id = generate_key_generator()
+                    slot_db.name = name
+                    slot_db.entity_id = entity_id
+                    slot_db.required = required
+                    slot_prompt_list = []
+                    for slot_prompt in slot_prompts:
+                        prompt_text = slot_prompt.get("prompt_text")
+                        action_type = slot_prompt.get("action_type")
+                        slot_prompt_db = Prompt()
+                        slot_prompt_db.prompt_id = generate_key_generator()
+                        slot_prompt_db.prompt_text = prompt_text
+                        slot_prompt_db.prompt_type = "entity"
+                        slot_prompt_db.action_type = action_type
+                        slot_prompt_list.append(slot_prompt_db)
+                    slot_db.prompt = slot_prompt_list
+                    slot_list.append(slot_db)
 
                 intent_db.sentence = sentences_list
+                intent_db.slot = slot_list
                 
                 prompt_list = []
                 if confirm_prompt is not None:
-                    prompt_id = None
-                    if "prompt_id" in confirm_prompt:
-                        prompt_id = confirm_prompt.get("prompt_id")
                     confirm_prompt_text = confirm_prompt.get("prompt_text")
                     action_type = confirm_prompt.get("action_type")
                     confirm_prompt_db = Prompt()
-                    if prompt_id is not None or prompt_id is not "":
-                        confirm_prompt_db.prompt_id = prompt_id
-                    else:
-                        confirm_prompt_db.prompt_id = generate_key_generator()
+                    confirm_prompt_db.prompt_id = generate_key_generator()
                     confirm_prompt_db.prompt_text = confirm_prompt_text
                     confirm_prompt_db.prompt_type = "confirm"
                     confirm_prompt_db.action_type = action_type
                     prompt_list.append(confirm_prompt_db)
                 if cancel_prompt is not None:
-                    prompt_id = None
-                    if "prompt_id" in cancel_prompt:
-                        prompt_id = cancel_prompt.get("prompt_id")
                     confirm_prompt_text = cancel_prompt.get("prompt_text")
                     action_type = cancel_prompt.get("action_type")
                     cancel_prompt_db = Prompt()
-                    if prompt_id is not None or prompt_id is not "":
-                        cancel_prompt_db.prompt_id = prompt_id
-                    else:
-                        cancel_prompt_db.prompt_id = generate_key_generator()
+                    cancel_prompt_db.prompt_id = generate_key_generator()
                     cancel_prompt_db.prompt_text = confirm_prompt_text
                     cancel_prompt_db.prompt_type = "cancel"
                     cancel_prompt_db.action_type = action_type
                     prompt_list.append(cancel_prompt_db)
                 for response_prompt in response_prompts:
-                    prompt_id = None
-                    if "prompt_id" in response_prompt:
-                        prompt_id = response_prompt.get("prompt_id")
                     response_prompt_text = response_prompt.get("prompt_text")
                     action_type = response_prompt.get("action_type")
                     response_prompt_db = Prompt()
-                    if prompt_id is not None or prompt_id is not "":
-                        response_prompt_db.prompt_id = prompt_id
-                    else:
-                        response_prompt_db.prompt_id = generate_key_generator()
+                    response_prompt_db.prompt_id = generate_key_generator()
                     response_prompt_db.prompt_text = response_prompt_text
                     response_prompt_db.prompt_type = "response"
                     response_prompt_db.action_type = action_type
@@ -263,8 +226,6 @@ class IntentWebController(object):
 
                 intent_db.prompt = prompt_list
 
-                db.session.delete(intents)
-                db.session.commit()
 
                 db.session.add(intent_db)
                 db.session.commit()
@@ -303,9 +264,11 @@ class IntentWebController(object):
             for int_bot in intent_bots:
                 intent_id = int_bot.intent_id
                 intent = int_bot.intent_name
+                create_date = int_bot.create_date
                 intent={
-                    "intent_id":intent_id,
-                    "intent":intent
+                    "intent_id": intent_id,
+                    "intent": intent,
+                    "create_date": create_date.strftime('%Y-%m-%d %H:%M')
                 }
                 intent_list.append(intent)
             output = {"intent_list":intent_list}
@@ -320,53 +283,55 @@ class IntentWebController(object):
 
             intent_id = intents.intent_id
             intent = intents.intent_name
+            slots = intents.slot
             sentences = intents.sentence
             prompts = intents.prompt
+            create_date = intents.create_date
             
             sent_list=[]
-            slot_list=[]
             for sent in sentences:
                 sentence_id = sent.sentence_id
                 sentence_text = sent.sentence
-                slots = sent.slot
-                for slo in slots:
-                    slot_id = slo.slot_id
-                    name = slo.name
-                    entity_id = slo.entity_id
-                    ent_db = Entity()
-                    ent = ent_db.query.filter_by(entity_id = entity_id).first()
-                    required = slo.required
-                    prom_list = []
-                    for prom in slo.prompt:
-                        prompt_id = prom.prompt_id
-                        prompt_text = prom.prompt_text
-                        prompt_type = prom.prompt_type
-                        action_type = prom.action_type
-                        ent_prompt_json = {
-                            "prompt_id":prompt_id,
-                            "prompt_text":prompt_text,
-                            "prompt_type":prompt_type,
-                            "action_type":action_type
-                        }
-                        prom_list.append(ent_prompt_json)
-                    slot_json={
-                            "slot_id":slot_id,
-                            "name":name,
-                            "slotType":{
-                                "entity_id":ent.entity_id,
-                                "entity_name":ent.entity_name,
-                                "entity_type":ent.entity_type,
-                                "entity_extractor":ent.entity_extractor
-                            },
-                            "prompt":prom_list,
-                            "required":required
-                    }
-                    slot_list.append(slot_json)
                 sent_json={
                     "sentence_id":sentence_id,
                     "sentence":sentence_text,
                 }
                 sent_list.append(sent_json)
+            slot_list=[]
+            for slo in slots:
+                slot_id = slo.slot_id
+                name = slo.name
+                entity_id = slo.entity_id
+                ent_db = Entity()
+                ent = ent_db.query.filter_by(entity_id = entity_id).first()
+                required = slo.required
+                prom_list = []
+                for prom in slo.prompt:
+                    prompt_id = prom.prompt_id
+                    prompt_text = prom.prompt_text
+                    prompt_type = prom.prompt_type
+                    action_type = prom.action_type
+                    ent_prompt_json = {
+                            "prompt_id":prompt_id,
+                            "prompt_text":prompt_text,
+                            "prompt_type":prompt_type,
+                            "action_type":action_type
+                        }
+                    prom_list.append(ent_prompt_json)
+                slot_json={
+                        "slot_id":slot_id,
+                        "name":name,
+                        "slotType":{
+                            "entity_id":ent.entity_id,
+                            "entity_name":ent.entity_name,
+                            "entity_type":ent.entity_type,
+                            "entity_extractor":ent.entity_extractor
+                        },
+                        "prompt":prom_list,
+                        "required":required
+                }
+                slot_list.append(slot_json)
+                
 
             confirm_prompt=None
             cancel_prompt=None
@@ -393,12 +358,17 @@ class IntentWebController(object):
                 "intent":intent,
                 "sentence":sent_list,
                 "slots":slot_list,
-                "response_prompt":response_prompts
+                "response_prompt":response_prompts,
+                "create_date": create_date.strftime('%Y-%m-%d %H:%M')
             }
             if confirm_prompt is not None:
                 output.update({"confirm_prompt":confirm_prompt})
+            else:
+                output.update({"confirm_prompt":"null"})
             if cancel_prompt is not None:
                 output.update({"cancel_prompt":cancel_prompt})
+            else:
+                output.update({"cancel_prompt":"null"})
             return (json_to_string(output))
 
         @intent_webhook.route("/binding_admin_intent", methods=['POST'])

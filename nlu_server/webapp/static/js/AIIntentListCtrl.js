@@ -36,7 +36,7 @@ appControllers.controller('AiIntentListCtrl',
 				$http({
 					method: 'POST',
 					url: './ai_intent/intent_list',
-					data: { "bot_id": "be090fcbc28ba19ac835879c36f861f4" }
+					data: { "admin_id": "40w9dse0277455f634fw40439sd" }
 				}).then(function successCallback(response) {
 					console.log(response.data);
 					$scope.intent_list = response.data.intent_list;
