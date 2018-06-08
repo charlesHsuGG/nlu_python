@@ -41,7 +41,6 @@ DEFAULT_CONFIG = {
     "response_log": "logs",
     "storage": None,
     "aws_endpoint_url": None,
-    "duckling_dimensions": None,
     "duckling_http_url": None,
     "locale": None,
     "intent_classifier_sklearn": {

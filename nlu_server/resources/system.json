@@ -5,6 +5,5 @@
   "language": "zh",
   "locale": "zh_TW",
   "system_path": "/opt/nfs/nlu_system_data/models",
-  "duckling_http_url":"http://192.168.2.60:8000",
-  "duckling_dimensions": ["time", "email", "phone_number", "duration", "ordinal", "temperature", "Url"]
+  "duckling_http_url":"http://192.168.2.60:8000"
 }

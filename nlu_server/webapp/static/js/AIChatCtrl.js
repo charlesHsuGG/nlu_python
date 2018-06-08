@@ -6,6 +6,8 @@ appControllers.controller('AIChatCtrl',
 		 function ($scope, $http, MercueRequests,$state,ModalService){
 
 		   $scope.messageList = [];
+		   $scope.admin_id = "40w9dse0277455f634fw40439sd";
+    	   $scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
 		//    setData();
 		//    function setData(){
 		// 	   var msg = {}
@@ -82,13 +84,14 @@ appControllers.controller('AIChatCtrl',
 				$http({
 					method: 'POST',
 					url: './chat',
-					data: { "admin_id": "40w9dse0277455f634fw40439sd",
+					data: { "admin_id": $scope.admin_id,
+					"model_id": $scope.model_id,
 					"message": text}
 				}).then(function successCallback(response) {
 					console.log(response);
 					var editData = response.data;
 
-
+					$scope.intent = editData.intent;
 					$scope.slot_list = editData.slots;
 					$scope.entity_list = editData.entities;
 					$scope.intent_ranking_list = editData.intent_ranking;

@@ -10,7 +10,7 @@ $scope.goPage = function(index){
     console.log("click");
     console.log(index);
     $scope.page = index;
-    for (var i = 1 ; i<6;i++){
+    for (var i = 1 ; i<7;i++){
         console.log(i);
         if( i == index){
         $("#page_"+i).css("color", "darkturquoise");

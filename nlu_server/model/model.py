@@ -35,6 +35,7 @@ class Intent(db.Model):
     intent_id = db.Column(db.String(32), nullable=True, primary_key=True)
     intent_name = db.Column(db.Text, nullable=False)
     admin_id = db.Column(db.String(32), nullable=False)
+    model_id = db.Column(db.String(32), nullable=False)
     create_date = db.Column(db.DATETIME, nullable=False)
     update_date = db.Column(db.DATETIME, nullable=False)  
     sentence = db.relationship('Sentence', secondary=intent_sentence, lazy='select',
@@ -96,7 +97,9 @@ class Entity(db.Model):
     entity_name = db.Column(db.Text, nullable=False)
     entity_type = db.Column(db.Text, nullable=False)
     entity_extractor = db.Column(db.String(80), nullable=False)
+    duckling_name = db.Column(db.String(80), nullable=False)
     admin_id = db.Column(db.String(80), nullable=False)
+    model_id = db.Column(db.String(32), nullable=False)
 
     def __repr__(self):
         return '<Entity %r>' % (self.entity_id)
@@ -109,6 +112,7 @@ class Article(db.Model):
     article_title = db.Column(db.Text, nullable=False)
     article_content = db.Column(db.Text, nullable=False)
     admin_id = db.Column(db.String(80), nullable=False)
+    model_id = db.Column(db.String(32), nullable=False)
     create_date = db.Column(db.DATETIME, nullable=False)
     update_date = db.Column(db.DATETIME, nullable=False) 
     entity_value = db.relationship('EntityValue', secondary=article_entity_value, lazy='select',
@@ -131,28 +135,28 @@ class EntityValue(db.Model):
     def __repr__(self):
         return '<EntityValue %r>' % self.entity_value_id
 
-config_node= db.Table('config_node',
-    db.Column('config_id', db.String(32), db.ForeignKey('config.config_id'), primary_key=True),
+model_node= db.Table('model_node',
+    db.Column('model_id', db.String(32), db.ForeignKey('model.model_id'), primary_key=True),
     db.Column('node_id', db.String(32), db.ForeignKey('node.node_id'), primary_key=True)
 )
 
-class Config(db.Model):
+class Model(db.Model):
 
-	# __tablename__ = 'config'
+	# __tablename__ = 'model'
 
-    config_id = db.Column(db.String(32), nullable=True, primary_key=True)
-    config_name = db.Column(db.String(80), nullable=False)
+    model_id = db.Column(db.String(32), nullable=True, primary_key=True)
+    model_name = db.Column(db.String(80), nullable=False)
     model_path = db.Column(db.String(255), nullable=False)
     mitie_embeding_path = db.Column(db.String(255), nullable=False)
     w2v_embeding_path = db.Column(db.String(255), nullable=False)
     w2v_embeding_type = db.Column(db.String(20), nullable=False)
     admin_id = db.Column(db.String(32), nullable=False)
-    node = db.relationship('Node', secondary=config_node, lazy='select',
-            backref=db.backref('config', lazy=True), cascade="all,delete",
+    node = db.relationship('Node', secondary=model_node, lazy='select',
+            backref=db.backref('model', lazy=True), cascade="all,delete",
             order_by='Node.order')
 
     def __repr__(self):
-        return '<Config %r>' % self.config_id
+        return '<Model %r>' % self.model_id
 
 class Admin(db.Model):
 

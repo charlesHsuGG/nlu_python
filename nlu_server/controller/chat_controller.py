@@ -20,7 +20,7 @@ from rasa_nlu.model import Interpreter
 
 from flask import Blueprint, request,  json
 
-from nlu_server.model.model import Entity, Article, EntityValue, Config, Intent, Sentence, Slot, Prompt, Admin
+from nlu_server.model.model import Entity, Article, EntityValue, Model, Intent, Sentence, Slot, Prompt, Admin
 
 
 logger = logging.getLogger(__name__)
@@ -35,8 +35,9 @@ class ChatWebController(object):
             payload = request.json
             text = payload.get("message", None)
             admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
 
-            result = find_intent(system_config, admin_id, text)
+            result = find_intent(system_config, admin_id, model_id, text)
 
             print(result)
             
@@ -47,87 +48,104 @@ class ChatWebController(object):
 
             intent_db = Intent()
             intents = intent_db.query.filter_by(intent_name = intent_name, admin_id = admin_id).first()
-
-            slots = intents.slot
-            prompts = intents.prompt
-
-            bot_response = None
+            
             secure_random = random.SystemRandom()
 
-            slot_list = []
-            for slot in slots:
-                required = slot.required
-                entity_id = slot.entity_id
-                slot_name = slot.name
-                slot_prompts = slot.prompt
-                slot_json ={
-                    slot_name : None
+            if intents is not None:
+                slots = intents.slot
+                prompts = intents.prompt
+
+                bot_response = None
+
+                slot_list = []
+                for slot in slots:
+                    required = slot.required
+                    entity_id = slot.entity_id
+                    slot_name = slot.name
+                    slot_prompts = slot.prompt
+                    slot_json ={
+                        "name" : slot_name
+                    }
+                    ent_db = Entity()
+                    ent = ent_db.query.filter_by(entity_id = entity_id).first()
+                    if required is True:
+                        required = False
+                        for find_ent in entities:
+                            if find_ent.get("entity").find(ent.entity_name) == 0:
+                                slot_json.update({"value":find_ent.get("value")})
+
+                                required = True
+                            elif find_ent.get("entity").find(ent.duckling_name) == 0:
+                                slot_json.update({"value":find_ent.get("value")})
+
+                                required = True
+                        if required == False:
+                            bot_response = secure_random.choice(slot_prompts).prompt_text
+
+                    else:
+                        for find_ent in entities:
+                            if find_ent.get("entity") is ent.entity_name:
+                                slot_json.update({"value":find_ent.get("value")})
+                    slot_list.append(slot_json)
+
+                if bot_response is None:
+                    respon_confirm = False
+                    confirm_prompts =[]
+                    response_prompts =[]
+                    for prompt in prompts:
+                        if prompt.prompt_type.find("confirm") == 0 and prompt.prompt_text is not None:
+                            confirm_prompts.append(prompt)
+                            respon_confirm = True
+                        if prompt.prompt_type.find("response") == 0 and prompt.prompt_text is not None:
+                            response_prompts.append(prompt)
+                    print(str(confirm_prompts))
+                    print(str(response_prompts))
+                    if respon_confirm == True:
+                        print(secure_random.choice(confirm_prompts))
+                        bot_response = secure_random.choice(confirm_prompts).prompt_text
+                    else:
+                        print(secure_random.choice(response_prompts))
+                        bot_response = secure_random.choice(response_prompts).prompt_text
+                reponse_josn ={
+                    "intent":intent_name,
+                    "intent_ranking" : result.get("intent_ranking"),
+                    "entities" : result.get("entities"),
+                    "bot_response" : bot_response,
+                    "slots" : slot_list
                 }
-                ent_db = Entity()
-                ent = ent_db.query.filter_by(entity_id = entity_id).first()
-                if required is True:
-                    required = False
-                    for find_ent in entities:
-                        if find_ent.get("entity").find(ent.entity_name) == 0:
-                            slot_json[slot_name] = find_ent.get("value")
-                            required = True
-                    if required == False:
-                        bot_response = secure_random.choice(slot_prompts).prompt_text
+            else:
+                random_unknow_messages = ["我不明白你的意思","很抱歉,我學得還不夠多,不能明白你的意思","再見"]
+                bot_response = secure_random.choice(random_unknow_messages)
 
-                else:
-                    for find_ent in entities:
-                        if find_ent.get("entity") is ent.entity_name:
-                            slot_json[slot_name] = find_ent.get("value")
-                slot_list.append(slot_json)
-
-            if bot_response is None:
-                respon_confirm = False
-                confirm_prompts =[]
-                response_prompts =[]
-                for prompt in prompts:
-                    if prompt.prompt_type.find("confirm") == 0 and prompt.prompt_text is not None:
-                        confirm_prompts.append(prompt)
-                        respon_confirm = True
-                    if prompt.prompt_type.find("response") == 0 and prompt.prompt_text is not None:
-                        response_prompts.append(prompt)
-                print(str(confirm_prompts))
-                print(str(response_prompts))
-                if respon_confirm == True:
-                    print(secure_random.choice(confirm_prompts))
-                    bot_response = secure_random.choice(confirm_prompts).prompt_text
-                else:
-                    print(secure_random.choice(response_prompts))
-                    bot_response = secure_random.choice(response_prompts).prompt_text
-
-            reponse_josn ={
-                "intent_ranking" : result.get("intent_ranking"),
-                "entities" : result.get("entities"),
-                "bot_response" : bot_response,
-                "slots" : slot_list
-            }
+                reponse_josn ={
+                    "intent":intent_name,
+                    "intent_ranking" : result.get("intent_ranking"),
+                    "entities" : result.get("entities"),
+                    "bot_response" : bot_response
+                }
             
             print(str(reponse_josn))
             return json_to_string(reponse_josn)
 
         return chat_webhook
 
-def find_intent(system_config, admin_id, message):
-    config_db = Config()
-    config = config_db.query.filter_by(admin_id = admin_id).first()
-    nodes = config.node
+def find_intent(system_config, admin_id, model_id, message):
+    model_db = Model()
+    model = model_db.query.filter_by(admin_id = admin_id, model_id = model_id).first()
+    nodes = model.node
     pipeline = []
     for node in nodes:
         pipeline.append(node.module_name)
     print(str(pipeline))
-    model_metadata = Metadata.load(config.model_path)
+    model_metadata = Metadata.load(model.model_path)
     print(str(model_metadata.metadata))
-    model_metadata.metadata.update({"mitie_file":config.mitie_embeding_path,
-            "embedding_model_path":config.w2v_embeding_path,
-            "embedding_type":config.w2v_embeding_type,
+    model_metadata.metadata.update({"mitie_file":model.mitie_embeding_path,
+            "embedding_model_path":model.w2v_embeding_path,
+            "embedding_type":model.w2v_embeding_type,
             "pipeline":pipeline})
     print(str(model_metadata.metadata))
 
-    meta = Metadata(model_metadata.metadata, config.model_path)
+    meta = Metadata(model_metadata.metadata, model.model_path)
 
     interpreter = Interpreter.create(meta, system_config)
     result = interpreter.parse(message)

@@ -32,7 +32,7 @@ from rasa_nlu.model import Trainer
 from nlu_server.shared import db
 from nlu_server.utils.data_router import RasaNLU
 from nlu_server.utils.generate_key import generate_key_generator
-from nlu_server.model.model import Entity, Article, EntityValue, Config, Intent, Sentence, Slot, Prompt, Admin
+from nlu_server.model.model import Entity, Article, EntityValue, Model, Intent, Sentence, Slot, Prompt, Admin
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +47,10 @@ class TrainWebController(object):
         def train():
             payload = request.json
             admin_id = payload.get("admin_id", None)
-            config_db = Config()
-            config = config_db.query.filter_by(admin_id = admin_id).first()
-            nodes = config.node
+            model_id = payload.get("model_id", None)
+            model_db = Model()
+            model = model_db.query.filter_by(model_id = model_id, admin_id = admin_id).first()
+            nodes = model.node
             pipeline = []
             for node in nodes:
                 pipeline.append(node.module_name)
@@ -57,9 +58,9 @@ class TrainWebController(object):
 
             model_config = system_config
 
-            model_config.override({"mitie_file":config.mitie_embeding_path,
-            "embedding_model_path":config.w2v_embeding_path,
-            "embedding_type":config.w2v_embeding_type,
+            model_config.override({"mitie_file":model.mitie_embeding_path,
+            "embedding_model_path":model.w2v_embeding_path,
+            "embedding_type":model.w2v_embeding_type,
             "pipeline":pipeline})
 
             print(str(model_config.as_dict()))
@@ -68,8 +69,8 @@ class TrainWebController(object):
             articles = article_db.query.filter_by(admin_id = admin_id).all()
             data_list =[]
             for article in articles:
-                text = articles.article_content
-                entity_values = articles.entity_value
+                text = article.article_content
+                entity_values = article.entity_value
                 entities = []
                 for entity_value in entity_values:
                     value = entity_value.entity_value
@@ -158,15 +159,15 @@ class TrainWebController(object):
                 training_examples.append(Message(e["text"], data))
             train_data = TrainingData(training_examples)
             interpreter = trainer.train(train_data)
-            admin_id = config.admin_id
+            admin_id = model.admin_id
             admin_db = Admin()
             admin = admin_db.query.filter_by(admin_id = admin_id).first()
             persisted_path = trainer.persist(model_config['system_path'], persistor,
                                             admin.admin_name,
-                                            admin.admin_name+'_model_'+config.config_id)
-            config.path = model_config['system_path'] + "/" + \
+                                            admin.admin_name+'_model_'+model.model_id)
+            model.path = model_config['system_path'] + "/" + \
                             admin.admin_name + "/" + \
-                            admin.admin_name+'_model'+config.config_id
+                            admin.admin_name+'_model'+model.model_id
             db.session.commit()
             response = {"code":1, "seccess": True, "nlu_data": nlu_data}
             return (json_to_string(response))
