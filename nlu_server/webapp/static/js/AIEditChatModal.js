@@ -1,8 +1,8 @@
 'use strict';
 var appControllers = angular.module('app.aieditchatmodalctrl', []);
 
-appControllers.controller('AIEditChatModalCtrl',['$scope', '$http','$window' ,'close','MercueRequests','DTOptionsBuilder' ,
-function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder){
+appControllers.controller('AIEditChatModalCtrl',['$scope', '$http','$window' ,'close','MercueRequests','DTOptionsBuilder','data' ,
+function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder,data){
 	 
 	console.log("call editchat...");
 	$scope.sendData = {};
@@ -10,7 +10,7 @@ function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder){
   
 	
 	function init()    {
-
+		console.log(data);
 		
 	}
 

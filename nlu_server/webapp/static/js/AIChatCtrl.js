@@ -6,27 +6,18 @@ appControllers.controller('AIChatCtrl',
 		 function ($scope, $http, MercueRequests,$state,ModalService){
 
 		   $scope.messageList = [];
-		//    setData();
-		//    function setData(){
-		// 	   var msg = {}
-		// 	   msg.text = "測試"
-		// 	   msg.sender = "admin"
-		// 	   $scope.messageList.push(msg);
-		// 	   $scope.messageList.push(msg);
-		// 	   var msg = {}
-		// 	   msg.text = "測試"
-		// 	   msg.sender = "cutomer"
-		// 	   $scope.messageList.push(msg);
-		// 	   $scope.messageList.push(msg);
-		// 	   console.log("sets");
-		// 	   console.log( $scope.messageList);
-		//    }
+ 
             
-			$scope.editIntent = function(){
+			$scope.editIntent = function(index){
 				console.log("edit")
+				var msg = $scope.messageList[index];
+
 				ModalService.showModal({
 					templateUrl: "/ai/static/views/aichatedit_modal.html",
 					controller: "AIEditChatModalCtrl",
+					inputs: {
+						data:msg
+					  },
 					preClose: (modal) => { modal.element.modal('hide'); } 
 				}).then(function(modal) {
 					modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
@@ -44,12 +35,14 @@ appControllers.controller('AIChatCtrl',
             
 			$scope.submit = function(){
 				 console.log("submit")
-				 var msg = {}
-				 msg.text = $scope.textInput;
-				 msg.sender = "cutomer"
-				 $scope.messageList.push(msg);
+				//  var msg = {}
+				//  msg.text = $scope.textInput;
+				//  msg.sender = "cutomer"
+				//  $scope.messageList.push(msg);
+				//  $scope.textInput = "";
+		 
+				 sendData($scope.textInput);
 				 $scope.textInput = "";
-				 sendData(msg.text);
 			}
 
 			$scope.checkBtn = function(message){
@@ -79,6 +72,8 @@ appControllers.controller('AIChatCtrl',
 			}
 
 			function sendData(text) {
+				console.log(text);
+
 				$http({
 					method: 'POST',
 					url: './chat',
@@ -88,6 +83,12 @@ appControllers.controller('AIChatCtrl',
 					console.log(response);
 					var editData = response.data;
 
+				    var msg = {}
+					msg.text = text;
+					msg.sender = "cutomer"
+					msg.data = editData;
+					$scope.messageList.push(msg);
+					
 
 					$scope.slot_list = editData.slots;
 					$scope.entity_list = editData.entities;
@@ -95,7 +96,9 @@ appControllers.controller('AIChatCtrl',
 
 					var msg = {}
 			   		msg.text = editData.bot_response;
-			   		msg.sender = "admin";
+					msg.sender = "admin";
+					   
+
 					$scope.messageList.push(msg);
 				}, function errorCallback(response) {
 					

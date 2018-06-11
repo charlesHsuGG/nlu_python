@@ -63,21 +63,12 @@
                         <!-- 聊天界面 -->
                         <div style="overflow:hidden; height: 700px;background: #4357ad"  >
                             <div class="pt-3  "   style=" overflow-y: scroll;height:85%">
-
-                                <!-- <div class="w-100 angent-text "><p class="border-lp pl-2" >你好：請問有什麼能夠為您服務的嗎？</p></div> -->
-                               
-                                <!-- <div class="w-100 custom-text  ">
-                                <div class="border-rp pr-2">我想要訂餐廳  
-                                <div>   
-                                <button ng-show="checkBtn(message)" type="button" class="btn btn-outline-light  mt-1 float-right" ng-click="editIntent()">修改意圖</button>
-                            </div>
-                            </div>
-                             </div> -->
+ 
                              <div class="w-100 mt-2" ng-repeat="message in messageList track by $index" ng-class="checkAdmin(message)">
                               
                                     <div  ng-class="checkTextRight(message)">{{message.text}}
                                     <div>   
-                                    <button ng-show="checkBtn(message)" type="button" class="btn btn-outline-light  mt-1 float-right" ng-click="editIntent()">意圖</button>
+                                    <button ng-show="checkBtn(message)" type="button" class="btn btn-outline-light  mt-1 float-right" ng-click="editIntent($index)">意圖</button>
                                 </div>
                                 </div>
                                  </div>     
