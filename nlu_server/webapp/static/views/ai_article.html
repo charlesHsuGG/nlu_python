@@ -22,7 +22,12 @@ textarea {
 
 					<!-- 原文 -->
 
+					<div class="form-group col-md-12" >
+						<input class="form-control "  placeholder="請輸入標題" style="display: inline; width: 85%;" ng-model="textTitle">
+					</div>
+
 					<div class="col-md-12 " style="background: #4357ad; color: white">
+						
 						<div class="row">
 							<div class="col-md-12">
 								<h1 style="margin-top: 20px">請輸入原文</h1>
@@ -85,8 +90,8 @@ textarea {
 							</tr>
 							<tr ng-repeat="tag in tagList track by $index"
 								style="text-align: center; vertical-align: middle;">
-								<td style="font-size: 18px;">{{tag.string}}</td>
-								<td style="font-size: 18px;">{{tag.tag }}</td>
+								<td style="font-size: 18px;">{{tag.value}}</td>
+								<td style="font-size: 18px;">{{tag.entity }}</td>
 								<td><button type="button" class="btn btn-primary"
 									ng-click="deleteTag($index)"
 									style="background: #3d4b8b; color: white;">刪除</button></td>

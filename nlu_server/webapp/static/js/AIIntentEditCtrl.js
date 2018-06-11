@@ -19,6 +19,9 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	,function ($http,$scope,$state,MercueRequests,DTOptionsBuilder,ModalService,$sce){
 
 	console.log("ai intent edit ctrl...");
+	$scope.admin_id = "40w9dse0277455f634fw40439sd";
+	$scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
+			
 	$scope.utterancesList = [];
 	$scope.slotsList = [];
 	$scope.responseList = [];
@@ -199,8 +202,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		sendData.confirm_prompt = confirm_prompt;
 		sendData.cancel_prompt = cancel_prompt;
 		sendData.response_prompt = $scope.responseList;
-		sendData.admin_id =  "40w9dse0277455f634fw40439sd";
-		
+		sendData.admin_id =  $scope.admin_id;
+		sendData.model_id =  $scope.model_id;
 		
 		var url = "./ai_intent/intent_save"
 		if($scope.editMode == true){

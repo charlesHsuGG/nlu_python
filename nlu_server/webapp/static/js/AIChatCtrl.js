@@ -77,7 +77,8 @@ appControllers.controller('AIChatCtrl',
 				$http({
 					method: 'POST',
 					url: './chat',
-					data: { "admin_id": "40w9dse0277455f634fw40439sd",
+					data: { "admin_id": $scope.admin_id,
+					"model_id": $scope.model_id,
 					"message": text}
 				}).then(function successCallback(response) {
 					console.log(response);

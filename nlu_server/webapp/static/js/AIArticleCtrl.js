@@ -1,31 +1,31 @@
 'use strict';
 var appControllers = angular.module('app.aiarticlectrl', ['ngSanitize']);
  
-appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests','$sce'
-    ,function ($scope,$state,MercueRequests,$sce){
+appControllers.controller('AiArticleCtrl',['$http','$scope', '$state', 'MercueRequests','$sce'
+    ,function ($http,$scope,$state,MercueRequests,$sce){
    
    console.log("ai AiArticleCtrl list ctrl...");
     $('#color_pick').minicolors();
     //選取玩圖片事件
     $scope.tagList = [];
 	$scope.tag = "";
-	var entityList = [];
+    var entityList = [];
+    $scope.admin_id = "40w9dse0277455f634fw40439sd";
+    $scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
    init();
    
    function init()
    {
-       setTimeout(function(){
+            var url = location.href.toString(); 
+            console.log(url);
             url = url.split("?");
             console.log(url[1]);
             if(url[1] != null){
                 console.log("edit mode");		 
                 $scope.edit_id = url[1];
-                $scope.submitText = "更新"
                 $scope.editMode = true;
                 loadData();
             }
-   
-       },300);
    }
    
    $scope.submitText = function(){
@@ -33,23 +33,32 @@ appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests',
        console.log($scope.userInput)
        var sendData = {};
        sendData.message = $scope.userInput;
-       sendData.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model"
+       sendData.admin_id = $scope.admin_id;
+       sendData.model_id = $scope.model_id;
 
-       MercueRequests.cueRequest(function(data, status, headers, config){
-		   console.log(data);
-           if (data.code == 1) {
-				entityList = data.entities;
-				console.log(entityList);
-				console.log(entityList.length);
-				$scope.tagList = entityList;
-				console.log("get_entities:"+$scope.tagList.toString());
-				$scope.serverText = $scope.userInput;
-				reSetTag();
-           }else{alert(data.message);}
-       },function(data, status, headers, config){
-           console.log(data);        
-       }, "./ai_entity/entity_get", sendData);    
-
+       $http({
+            method: 'POST',
+            url: "./ai_entity/entity_extractor",
+            data: sendData
+        }).then(function successCallback(response) {
+            console.log(response);
+            
+            var editData = response.data;
+            
+            console.log(editData);
+            if (editData.code == 1) {
+                    entityList = editData.entities;
+                    console.log(entityList);
+                    console.log(entityList.length);
+                    $scope.tagList = entityList;
+                    console.log("get_entities:"+$scope.tagList.toString());
+                    $scope.serverText = $scope.userInput;
+                    reSetTag();
+            }else{alert(editData.message);}
+            
+        }, function errorCallback(response) {
+            console.log(response);
+        });
    }    
  
    
@@ -73,10 +82,10 @@ appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests',
    
    //建立tagList
    var tagData = {};
-       tagData.tag = $scope.tag;
-       tagData.string = selectString;
+       tagData.entity = $scope.tag;
+       tagData.value = selectString;
 	   tagData.color = color;
-	   tagData.extractor = "ner_mitie";
+	   tagData.value_from = "user";
  
        $scope.tagList.push(tagData);
        
@@ -123,27 +132,37 @@ appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests',
 
    $scope.sendText = function(){
 		console.log("send");
-		var sendData = {};
-    	sendData.message = $scope.userInput;
-		sendData.entities = $scope.tagList;
-		MercueRequests.cueRequest(function(data, status, headers, config){
-		   console.log(data);
-           if (data.code == 1) {
-				var sendData1 = {};
-				sendData1.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model"
-	 
-				MercueRequests.cueRequest(function(data, status, headers, config){
-					console.log(data);
-					if (data.code == 1) {
-						alert("訓練完成");
-					}
-				},function(data, status, headers, config){
-					console.log(data);        
-				}, "./ai_entity/entity_mitie_train", sendData1);	
+        var sendData = {};
+        sendData.admin_id = $scope.admin_id;
+        sendData.model_id = $scope.model_id;
+        sendData.article_title = $scope.textTitle;
+    	sendData.article_content = $scope.userInput;
+        sendData.entities = $scope.tagList;
+        var posturl = "./ai_entity/article_save";
+        if($scope.editMode == true){
+            posturl = "./ai_entity/article_update";
+            sendData.article_id = $scope.edit_id;
+			sendData.create_date = $scope.create_date
+        }
+        console.log(sendData);
+
+        $http({
+            method: 'POST',
+            url: posturl,
+            data: sendData
+        }).then(function successCallback(response) {
+            console.log(response);
+            
+            var editData = response.data;
+            
+            if (editData.code == 1) {
+                alert("更新完成");
+                $state.go("page",{page:"ai_article_list"});
 		   }
-		},function(data, status, headers, config){
-			console.log(data);        
-		}, "./ai_entity/entity_save", sendData); 
+         
+        }, function errorCallback(response) {
+            console.log(response);
+        });
    }
    
    function replaceRange(s, start, end, substitute) {
@@ -152,9 +171,12 @@ appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests',
    function reSetTag(){
        angular.forEach($scope.tagList, function(value, key) {
            console.log(value);
-           var HtmlTag = "<mark" + " style='background:"+value.color+";margin-bottom:2px ;border-radius: 25px; font-size:9px ; padding: 3px;  border:1px solid #238bd6;'>"+value.tag+"</mark>"
-           var myRegExp = new RegExp(value.string, 'g');
-           $scope.serverText = $scope.serverText.replace(myRegExp,"<mark class=tag-"+value.tag+" style='margin :1px ;border-radius: 25px;  padding: 3px;  border:1px solid #238bd6;'>"+value.string+HtmlTag+"</mark>" );
+           if ('color' in value == false) {
+                value.color = "#1E90FF";
+           }
+           var HtmlTag = "<mark" + " style='background:"+value.color+";margin-bottom:2px ;border-radius: 25px; font-size:9px ; padding: 3px;  border:1px solid #238bd6;'>"+value.entity+"</mark>"
+           var myRegExp = new RegExp(value.value, 'g');
+           $scope.serverText = $scope.serverText.replace(myRegExp,"<mark class=tag-"+value.entity+" style='margin :1px ;border-radius: 25px;  padding: 3px;  border:1px solid #238bd6;'>"+value.value+HtmlTag+"</mark>" );
            console.log("reSet");
          } );
    }
@@ -162,24 +184,25 @@ appControllers.controller('AiArticleCtrl',['$scope', '$state', 'MercueRequests',
    function loadData(){
     $http({
         method: 'POST',
-        url: './ai_intent/intent_get',
-        data: {intent_id:$scope.edit_id}
+        url: './ai_entity/article_get',
+        data: {article_id:$scope.edit_id}
     }).then(function successCallback(response) {
         console.log(response);
         
         var editData = response.data;
-        if(editData.cancel_prompt =! null){
-            $scope.cancelText = editData.cancel_prompt.prompt_text;
-        }
-        if(editData.confirmText =! null){
-            $scope.confirmText = editData.confirm_prompt.prompt_text;
-        }
-        $scope.confirmText = editData.confirm_prompt.prompt_text;
-        $scope.responseList = editData.response_prompt;
-        $scope.name = editData.intent;
-        $scope.utterancesList = editData.sentence;
-        $scope.slotsList = 	 editData.slots;
+        
+        entityList = editData.entities;
+        console.log(entityList);
+        console.log(entityList.length);
+        $scope.tagList = entityList;
         $scope.create_date = editData.create_date
+        console.log("get_entities:"+$scope.tagList.toString());
+        $scope.userInput = editData.article_content;
+        $scope.serverText = editData.article_content;
+        $scope.textTitle = editData.article_title
+        $scope.admin_id = editData.admin_id;
+        $scope.model_id = editData.model_id;
+        reSetTag();
      
     }, function errorCallback(response) {
         console.log(response);

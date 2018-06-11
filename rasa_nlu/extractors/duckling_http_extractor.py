@@ -32,11 +32,10 @@ class DucklingHTTPExtractor(EntityExtractor):
 
     provides = ["entities"]
 
-    def __init__(self, duckling_url, language, locale, dimensions=None):
+    def __init__(self, duckling_url, language, locale):
         # type: (Text, Text, Optional[List[Text]]) -> None
 
         super(DucklingHTTPExtractor, self).__init__()
-        self.dimensions = dimensions
         self.duckling_url = duckling_url
         self.language = language
         self.locale = locale
@@ -47,8 +46,7 @@ class DucklingHTTPExtractor(EntityExtractor):
 
         return DucklingHTTPExtractor(config["duckling_http_url"],
                                      config["language"],
-                                     config["locale"],
-                                     config["duckling_dimensions"])
+                                     config["locale"])
 
     def _duckling_parse(self, text):
         """Sends the request to the duckling server and parses the result."""
@@ -81,15 +79,15 @@ class DucklingHTTPExtractor(EntityExtractor):
                          "Error: {}".format(e))
             return []
 
-    def _filter_irrelevant_matches(self, matches):
-        """Only return dimensions the user configured"""
+    # def _filter_irrelevant_matches(self, matches):
+    #     """Only return dimensions the user configured"""
 
-        if self.dimensions:
-            return [match
-                    for match in matches
-                    if match["dim"] in self.dimensions]
-        else:
-            return matches
+    #     if self.dimensions:
+    #         return [match
+    #                 for match in matches
+    #                 if match["dim"] in self.dimensions]
+    #     else:
+    #         return matches
 
     def process(self, message, **kwargs):
         # type: (Message, **Any) -> None
@@ -98,8 +96,8 @@ class DucklingHTTPExtractor(EntityExtractor):
         if self.duckling_url is not None:
 
             matches = self._duckling_parse(message.text)
-            relevant_matches = self._filter_irrelevant_matches(matches)
-            for match in relevant_matches:
+            # relevant_matches = self._filter_irrelevant_matches(matches)
+            for match in matches:
                 value = extract_value(match)
                 entity = {
                     "start": match["start"],
@@ -132,5 +130,4 @@ class DucklingHTTPExtractor(EntityExtractor):
         
         return DucklingHTTPExtractor(config.get("duckling_http_url"),
                                      config.get("language"),
-                                     config["locale"],
-                                     config["duckling_dimensions"])
+                                     config["locale"])

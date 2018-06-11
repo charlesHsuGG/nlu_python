@@ -35,6 +35,7 @@ class IntentWebController(object):
             payload = request.json
             print(payload)
             admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
             intent = payload.get("intent", None)
             slots = []
             if 'slot' in payload:
@@ -54,6 +55,7 @@ class IntentWebController(object):
             intent_db.intent_id = generate_key_generator()
             intent_db.intent_name = intent
             intent_db.admin_id = admin_id
+            intent_db.model_id = model_id
             intent_db.create_date = datetime.datetime.now()
 
             sentences_list = []
@@ -132,6 +134,7 @@ class IntentWebController(object):
             payload = request.json
             intent_id = payload.get("intent_id", None)
             admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
             intent = payload.get("intent", None)
             create_date = payload.get("create_date")
             slots = []
@@ -158,6 +161,7 @@ class IntentWebController(object):
                 intent_db.intent_id = generate_key_generator()
                 intent_db.intent_name = intent
                 intent_db.admin_id = admin_id
+                intent_db.model_id = model_id
                 intent_db.create_date = create_date
                 intent_db.update_date = datetime.datetime.now()
 
@@ -257,9 +261,15 @@ class IntentWebController(object):
            
             payload = request.json
             admin_id = payload.get("admin_id", None)
+            model_id = None
+            if "model_id" in payload:
+                model_id = payload.get("model_id", None)
             intent_db = Intent()
-            intent_bots = intent_db.query.filter_by(admin_id = admin_id).all()
-            
+            if model_id is not None:
+                intent_bots = intent_db.query.filter_by(admin_id = admin_id,model_id = model_id).all()
+            else:
+                intent_bots = intent_db.query.filter_by(admin_id = admin_id).all()
+
             intent_list=[]
             for int_bot in intent_bots:
                 intent_id = int_bot.intent_id
@@ -283,6 +293,8 @@ class IntentWebController(object):
 
             intent_id = intents.intent_id
             intent = intents.intent_name
+            admin_id = intents.admin_id
+            model_id = intents.model_id
             slots = intents.slot
             sentences = intents.sentence
             prompts = intents.prompt
@@ -356,6 +368,8 @@ class IntentWebController(object):
             output={
                 "intent_id":intent_id,
                 "intent":intent,
+                "admin_id":admin_id,
+                "model_id":model_id,
                 "sentence":sent_list,
                 "slots":slot_list,
                 "response_prompt":response_prompts,
@@ -375,6 +389,7 @@ class IntentWebController(object):
         def binding_node_intent():
             payload = request.json
             admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
             intent_id = payload.get("intent_id", None)
             intent_db = Intent()
             intents = intent_db.query.filter_by(intent_id = intent_id).first()
@@ -382,6 +397,7 @@ class IntentWebController(object):
             response = {}
             if intents is not None:
                 intents.admin_id = admin_id
+                intents.model_id = model_id
                 db.session.commit()
 
                 response = {"code":1, "seccess": True}
