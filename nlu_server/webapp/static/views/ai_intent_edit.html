@@ -99,11 +99,11 @@
 								<tbody>
 									<tr ng-repeat="slots in slotsList track by $index">
 										<td class="center" style="vertical-align: middle">{{$index}}</td>
-										<td class="center" style="vertical-align: middle">{{slots.name}}</td>
+										<td class="center" style="vertical-align: middle">Slot_{{$index}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.required}}</td>
-										<td class="center" style="vertical-align: middle">{{slots.slotType.entity_name}}</td>
+										<td class="center" style="vertical-align: middle">{{slots.entity_name}}</td>
 										<td class="center" style="vertical-align: middle">
-											<sapn ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</sapn>
+											<span ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</span>
 										</td>
 										<td class="center" style="vertical-align: middle">
 											<button type="button" class="btn btn-danger" ng-click="deleteSlots($index)">刪除</button>
@@ -200,8 +200,9 @@
 				
 			<h5 class="mt-2">{{dynamicPopover.content}}</h5>
 			<hr class="w-100">
-			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">{{slot.name}}</button>
-			  
+			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">Slot_{{$index}}</button>
+			<button ng-repeat="Entities in defaultEntities" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(Entities)">{{Entities.entity_name}}</button>
+			
 			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">新增slot</button>
 			 
 			</div> 

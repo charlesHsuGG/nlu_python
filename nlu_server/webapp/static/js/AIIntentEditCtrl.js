@@ -30,7 +30,6 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	$scope.submitText = "送出"
 	$scope.selectText = "";
 	$scope.editMode = false;
-
 	$scope.popoverIsOpen = [];
 	// .withBootstrap()
 	// .withDisplayLength(5)
@@ -41,13 +40,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	// .withOption('paging', true) 
 	// .withDOM('lfrt<"row"<"col-md-4"i><"col-md-8"p>>');
 
-	
-	$scope.dynamicPopover = {
-		content: 'Hello, World!',
-		templateUrl: 'myPopoverTemplate.html',
-		title: $scope.selectText
-	  };
-	 
+
 	 
 	  
 	init();
@@ -67,7 +60,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		 }
 		 //設定反白事件
 		 setMouseUp();
-	 
+		 loadEntity();
 		 
 
 
@@ -142,6 +135,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		ModalService.showModal({
 			templateUrl: "/ai/static/views/aislotadd_modal.html",
 			controller: "aiSlotAddModalCtrl",
+			inputs:{data:{}},
 			preClose: (modal) => { modal.element.modal('hide'); } 
 		}).then(function(modal) {
 			modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
@@ -172,7 +166,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			alert("請新增回應句");
 			return
 		}
-
+ 
+	
 
 		var sendUtterances = [];
 		console.log($scope.name);
@@ -265,29 +260,55 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log($scope.utterancesList[$scope.selectPop]);
 		console.log($scope.selectText);
 		console.log(slot);
+	 
+
 
 		var myRegExp = new RegExp($scope.selectText, 'g');
 		var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
-		var tag = '<button class="badge badge-primary">'+slot.name+'</button>';
-
+		var tag = '<button class="badge badge-primary">'+slot.entity_name+'</button>';
 		var sentenceHtml =  sentence.replace(myRegExp,tag);
-		$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.name+'}');
 
-		console.log($scope.utterancesList);
-		sentence = sentence.replace(myRegExp,'{'+slot.name+'}')
-		console.log(sentence);
-		var tagData = {};
+		if( slot.entity_id != null){
+			console.log("edit")
+			closeAllPop();
+			ModalService.showModal({
+				templateUrl: "/ai/static/views/aislotadd_modal.html",
+				controller: "aiSlotAddModalCtrl",
+				inputs:{data:slot},
+				preClose: (modal) => { modal.element.modal('hide'); } 
+			}).then(function(modal) {
+				modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
+				modal.element.modal();
+				modal.close.then(function(data) {
+					console.log(data);
+					if(data != "cancel"){
+						$scope.slotsList.push(data);
+						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
+						console.log($scope.utterancesList);
+						sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}')
+						console.log(sentence);
+						var tagData = {};
+						$scope.utterancesList[$scope.selectPop].sentence = sentence;
+						$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
+						console.log($scope.utterancesList[$scope.selectPop]);
+						$scope.$apply();
+					}
+				});
+			});
+		}else{
 
-		
-		$scope.utterancesList[$scope.selectPop].sentence = sentence;
-		//$scope.utterancesList[$scope.selectPop].sentenceHtml =  $sce.trustAsHtml( '<span >'+sentenceHtml+ '</span>');
-		$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
-		
+			$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
+			console.log($scope.utterancesList);
+			sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}')
+			console.log(sentence);
+			var tagData = {};
+			$scope.utterancesList[$scope.selectPop].sentence = sentence;
+			$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
+			console.log($scope.utterancesList[$scope.selectPop]);
+			$scope.$apply();
+		}
+	
 
-
-		console.log($scope.utterancesList[$scope.selectPop]);
-
-		$scope.$apply();
 	
 	}
 		
@@ -354,5 +375,24 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		return ''
 	}
 
+
+	//讀取entity
+	function loadEntity() {
+		$http({
+			method: 'POST',
+			url: './ai_entity/entity_list',
+			data: { "admin_id": $scope.admin_id,
+					"model_id": $scope.model_id}
+		}).then(function successCallback(response) {
+			console.log(response);
+			var editData = response.data;
+			//$scope.entity_list = editData.entities;
+			$scope.defaultEntities = 	 editData.entities;
+			console.log($scope.slotsList)
+		}, function errorCallback(response) {
+			
+		});
+
+	}
 }]);
 
