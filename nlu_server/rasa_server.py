@@ -16,7 +16,6 @@ import io
 import re
 import six
 import glob
-import mitie
 import getpass
 import simplejson
 from builtins import str

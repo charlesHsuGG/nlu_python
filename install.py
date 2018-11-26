@@ -1,4 +1,6 @@
 import pip
+from pip._internal import main
+import pkg_resources
 
 requirments = [
    "gevent",
@@ -20,17 +22,17 @@ requirments = [
    "spacy",
    "Flask",
    "mysqlclient",
-   "SQLAlchemy",
+   "flask_sqlalchemy",
    "PyYAML"
 ]
 
-packages = [package.project_name for package in pip.get_installed_distributions()]
+packages = [package.project_name for package in pkg_resources.working_set]
 
 for requirment in requirments:  
     if requirment not in packages:
         if requirment is "mitie":
-            pip.main(['install', "git+https://github.com/mit-nlp/MITIE.git"])
+            main(['install', "git+https://github.com/mit-nlp/MITIE.git"])
         else:
-            pip.main(['install', requirment])
+            main(['install', requirment])
     else:
         print("already installed "+requirment)

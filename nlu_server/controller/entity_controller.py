@@ -385,7 +385,7 @@ class EntityWebController(object):
                         db.session.commit()
 
             response = {"code":1, "seccess": True}
-            return json_to_string(entity_json)
+            return json_to_string(response)
             
 
 
