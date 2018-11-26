@@ -23,7 +23,7 @@ from rasa_nlu.utils import json_to_string
 from nlu_server.shared import db
 from nlu_server.utils.data_router import RasaNLU
 from nlu_server.utils.generate_key import generate_key_generator
-from nlu_server.model.model import Entity, Article, EntityValue, Model
+from nlu_server.model.model import Entity, Article, EntityValue, Model, Admin
 
 logger = logging.getLogger(__name__)
 
@@ -339,6 +339,9 @@ class EntityWebController(object):
             admin_id = payload.get("admin_id", None)
             model_id = payload.get("model_id", None)
             entities = payload.get("entities", None)
+
+            admin_db = Admin()
+            admin = admin_db.query.filter_by(admin_id = admin_id).first()
             for entity in entities:
                 entity_name = entity.get("entity", None)
 
@@ -346,12 +349,14 @@ class EntityWebController(object):
                 ent = ent_db.query.filter_by(entity_name = entity_name).first()
 
                 if ent is None:
-                    
                     entity_db = Entity()
                     entity_id = generate_key_generator()
                     entity_db.entity_id = entity_id
                     entity_db.entity_name = entity_name
-                    entity_db.entity_type = "user"
+                    if admin.admin_name == "system":
+                        entity_db.entity_type = "system"
+                    else:
+                        entity_db.entity_type = "user"
                     entity_db.admin_id = admin_id
                     entity_db.model_id = model_id
 
@@ -359,6 +364,7 @@ class EntityWebController(object):
                     db.session.commit()
                     
                     entity_value_list = entity.get("entity_value_list", list())
+                    print(entity_value_list)
 
                     
                     for entity_value in entity_value_list:
@@ -383,6 +389,45 @@ class EntityWebController(object):
                         entity_value_db.entity_id = ent.entity_id
                         db.session.add(entity_value_db)
                         db.session.commit()
+
+            response = {"code":1, "seccess": True}
+            return json_to_string(response)
+
+
+
+        @entity_webhook.route("/entity_update", methods=['POST'])
+        def entity_save():
+            payload = request.json
+            admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
+            entities = payload.get("entities", None)
+
+            admin_db = Admin()
+            admin = admin_db.query.filter_by(admin_id = admin_id).first()
+            for entity in entities:
+                entity_name = entity.get("entity", None)
+
+                ent_db = Entity()
+                ent = ent_db.query.filter_by(entity_name = entity_name).first()
+
+                entity_value_list = entity.get("entity_value_list", list())
+
+                for entity_value in entity_value_list:
+                    entity_value_id = entity_value.entity_value_id
+                    ent_value_db = EntityValue()
+                    ent_value = ent_db.query.filter_by(entity_value_id = entity_value_id).first()
+                    db.session.delete(ent_value)
+                    db.session.commit()
+                
+                for entity_value in entity_value_list:
+                    entity_value = entity_value.get("entity_value", None)
+                    entity_value_db = EntityValue()
+                    entity_value_db.entity_value_id = generate_key_generator()
+                    entity_value_db.entity_value = entity_value
+                    entity_value_db.value_from = "user"
+                    entity_value_db.entity_id = ent.entity_id
+                    db.session.add(entity_value_db)
+                    db.session.commit()
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)

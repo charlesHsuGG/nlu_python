@@ -1,7 +1,7 @@
 {
   "name": "system",
   "server_ip":"0.0.0.0",
-  "port":5050,
+  "port":5000,
   "language": "zh",
   "locale": "zh_TW",
   "system_path": "/opt/nfs/nlu_system_data/models",
