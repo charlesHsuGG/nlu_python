@@ -2,8 +2,8 @@
 var appControllers = angular.module('app.aientitylistctrl', []);
 
 appControllers.controller('AIEntityListCtrl',
-	['$scope', '$http', 'MercueRequests', '$state',
-		function ($scope, $http, MercueRequests, $state) {
+	['$scope', '$http', 'MercueRequests', '$state','ModalService',
+		function ($scope, $http, MercueRequests, $state,ModalService) {
 
 			console.log("list ctrl...");
 			$scope.admin_id = "40w9dse0277455f634fw40439sd";
@@ -12,11 +12,7 @@ appControllers.controller('AIEntityListCtrl',
 			function init() {
 				loadData();
 			}
-
-			$scope.addSlots = function () {
-				console.log("click");
-				$state.go("page", { page: "ai_intent_edit" });
-			}
+ 
 
 			$scope.train = function () {
 				$http({
@@ -50,5 +46,79 @@ appControllers.controller('AIEntityListCtrl',
 
 			}
 
+			$scope.addSlots = function(){
+				console.log("add")
+				ModalService.showModal({
+					templateUrl: "/ai/static/views/aislotadd_modal.html",
+					controller: "aiSlotAddModalCtrl",
+					preClose: (modal) => { modal.element.modal('hide'); } 
+				}).then(function(modal) {
+					modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
+					modal.element.modal();
+					modal.close.then(function(data) {
+						console.log(data);
+						if(data != "cancel"){
+							addSlotRequest(data);
+						}
+					});
+				});
+			}
+			$scope.editIntent = function(index){
 
+				$http({
+					method: 'POST',
+					url: './ai_entity/entity_save',
+					data: {"entity_id":""}
+				}).then(function successCallback(response) {
+					console.log(response);
+ 
+
+				}, function errorCallback(response) {
+					
+				});
+
+				console.log(index);
+				console.log($scope.entity_list[index])
+				ModalService.showModal({
+					templateUrl: "/ai/static/views/aislotadd_modal.html",
+					controller: "aiSlotAddModalCtrl",
+					preClose: (modal) => { modal.element.modal('hide'); } 
+				}).then(function(modal) {
+					modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
+					modal.element.modal();
+					modal.close.then(function(data) {
+						console.log(data);
+						if(data != "cancel"){
+							// $scope.slotsList.push(data);
+							console.log(data);
+
+						}
+					});
+				});
+			 
+			}
+	
+			function addSlotRequest(data) {
+				var finalObj = {};
+				var sendArray = [];
+				var sendObj = {};
+				sendObj.entity = data.entity;
+				sendObj.entity_value_list = data.entity_value_list;
+				sendArray.push(sendObj);
+				finalObj.admin_id = "40w9dse0277455f634fw40439sd";
+				finalObj.entities =  sendArray;
+				console.log(finalObj);
+				$http({
+					method: 'POST',
+					url: './ai_entity/entity_save',
+					data: finalObj
+				}).then(function successCallback(response) {
+					console.log(response);
+ 
+
+				}, function errorCallback(response) {
+					
+				});
+
+			}
 		}]);

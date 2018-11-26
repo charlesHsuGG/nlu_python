@@ -66,7 +66,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 				loadData();
 		 }
 		 //設定反白事件
-		 
+		 setMouseUp();
 	 
 		 
 
@@ -89,7 +89,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		utterances.slot = [];
 		$scope.utterancesList.push(utterances);
 		$scope.currentUtterance = "";
-		setMouseUp();
+		
 	}
 	//刪除例句
 	$scope.deleteUtterances  = function(index){
