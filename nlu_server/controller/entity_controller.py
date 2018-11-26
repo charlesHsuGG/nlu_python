@@ -396,7 +396,7 @@ class EntityWebController(object):
 
 
         @entity_webhook.route("/entity_update", methods=['POST'])
-        def entity_save():
+        def entity_update():
             payload = request.json
             admin_id = payload.get("admin_id", None)
             model_id = payload.get("model_id", None)
