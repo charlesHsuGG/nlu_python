@@ -1,18 +1,28 @@
 'use strict';
 var appControllers = angular.module('app.aislotaddmodalctrl', []);
 
-appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'close','MercueRequests','DTOptionsBuilder' ,function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder){
+appControllers.controller('aiSlotAddModalCtrl',['$scope', '$http','$window' ,'close','MercueRequests','DTOptionsBuilder','data' ,function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder,data){
 	 
 	console.log("call slotCtrlctrl...");
 	$scope.promptList = [];
 	$scope.sendData = {};
 	$scope.sendData.required = false;
 	init();
-  
+	$scope.admin_id = "40w9dse0277455f634fw40439sd";
+	$scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
 	
 	function init()    {
+		console.log(data);
 		var dataPost = {};
 		dataPost.admin_id = "40w9dse0277455f634fw40439sd";
+		if (data.entity_name != null){
+			console.log( data.entity_value_list);
+			$scope.sendData.entity = data.entity_name;
+			if( data.entity_value_list != null){
+				$scope.promptList = data.entity_value_list;
+			}
+
+		}
 		//dataPost.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model";
 		// $http({
 		// 	method: 'POST',
