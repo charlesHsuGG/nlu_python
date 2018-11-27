@@ -212,7 +212,6 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 
 		console.log(sendData);
 		//ttw
-		return;
 		$http({
 			method: 'POST',
 			url: url ,
@@ -424,7 +423,6 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			data: finalObj
 		}).then(function successCallback(response) {
 			console.log(response);
-			loadData();
 
 		}, function errorCallback(response) {
 

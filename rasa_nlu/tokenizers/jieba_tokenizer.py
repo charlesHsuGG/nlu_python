@@ -18,9 +18,9 @@ import glob
 import jieba
 # Add jieba userdict file
 jieba.set_dictionary('./jieba_dict/dict.txt')
-# jieba_userdicts = glob.glob("./jieba_userdict/*")
-# for jieba_userdict in jieba_userdicts:
-#     jieba.load_userdict(jieba_userdict)
+jieba_userdicts = glob.glob("./jieba_userdict/*")
+for jieba_userdict in jieba_userdicts:
+    jieba.load_userdict(jieba_userdict)
 
 
 class JiebaTokenizer(Tokenizer, Component):
@@ -56,6 +56,7 @@ class JiebaTokenizer(Tokenizer, Component):
         # type: (Text) -> List[Token]
         tokenized = jieba.tokenize(text)
         tokens = [Token(word, start) for (word, start, end) in tokenized]
+        print(tokens)
 
         return tokens
 

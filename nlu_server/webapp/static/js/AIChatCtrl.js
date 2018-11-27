@@ -6,7 +6,8 @@ appControllers.controller('AIChatCtrl',
 		 function ($scope, $http, MercueRequests,$state,ModalService){
 
 		   $scope.messageList = [];
- 
+		   $scope.admin_id = "40w9dse0277455f634fw40439sd";
+		   $scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
             
 			$scope.editIntent = function(index){
 				console.log("edit")

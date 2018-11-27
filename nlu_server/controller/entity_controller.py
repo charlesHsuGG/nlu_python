@@ -415,15 +415,15 @@ class EntityWebController(object):
                 ent_db = Entity()
                 ent = ent_db.query.filter_by(entity_name = entity_name).first()
 
-                entity_value_list = entity.get("entity_value_list", list())
+                ent_value_db = EntityValue()
+                entity_values = ent_value_db.query.filter_by(entity_id = ent.entity_id).all()
 
-                for entity_value in entity_value_list:
-                    entity_value = entity_value.get("entity_value", None)
-                    ent_value_db = EntityValue()
-                    ent_value = ent_value_db.query.filter_by(entity_value = entity_value).first()
-                    db.session.delete(ent_value)
+                for entity_value in entity_values:
+                    db.session.delete(entity_value)
                     db.session.commit()
                 
+                entity_value_list = entity.get("entity_value_list", list())
+
                 check_value = []
                 for entity_value in entity_value_list:
                     entity_value = entity_value.get("entity_value", None)
@@ -450,7 +450,7 @@ class EntityWebController(object):
             ent = ent_db.query.filter_by(entity_id = entity_id).first()
 
             ent_value_db = EntityValue()
-            entity_value_list = ent_db.query.filter_by(entity_id = ent.entity_id).all()
+            entity_value_list = ent_value_db.query.filter_by(entity_id = entity_id).all()
 
             for entity_value in entity_value_list:
                 db.session.delete(entity_value)
@@ -466,40 +466,53 @@ class EntityWebController(object):
         @entity_webhook.route("/entity_value_update", methods=['POST'])
         def entity_value_update():
             payload = request.json
-            entity_name = payload.get("entity", None)
-            entity_value_list = payload.get("entity_value_list", None)
+            admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
+            entities = payload.get("entities", None)
+            print(entities)
+            
+            admin_db = Admin()
+            admin = admin_db.query.filter_by(admin_id = admin_id).first()
 
-            ent_db = Entity()
-            ent = ent_db.query.filter_by(entity_name = entity_name).first()
+            for entity in entities:
+                entity_name = entity.get("entity", None)
 
-            if ent is None:
-                entity_db = Entity()
-                entity_id = generate_key_generator()
-                entity_db.entity_id = entity_id
-                entity_db.entity_name = entity_name
-                if admin.admin_name == "system":
-                    entity_db.entity_type = "system"
-                else:
-                    entity_db.entity_type = "user"
-                entity_db.admin_id = admin_id
-                entity_db.model_id = model_id
+                ent_db = Entity()
+                ent = ent_db.query.filter_by(entity_name = entity_name).first()
+                
+                entity_id = None
+                if ent is None:
+                    entity_db = Entity()
+                    entity_id = generate_key_generator()
+                    entity_db.entity_id = entity_id
+                    entity_db.entity_name = entity_name
+                    if admin.admin_name == "system":
+                        entity_db.entity_type = "system"
+                    else:
+                        entity_db.entity_type = "user"
+                    entity_db.admin_id = admin_id
+                    entity_db.model_id = model_id
 
-                db.session.add(entity_db)
-                db.session.commit()
-
-            for entity_value in entity_value_list:
-                entity_value = entity_value.get("entity_value", None)
-                ent_value_db = EntityValue()
-                entity_value = ent_db.query.filter_by(entity_value = entity_value, entity_id = ent.entity_id).first()
-
-                if entity_value is None:
-                    entity_value_db = EntityValue()
-                    entity_value_db.entity_value_id = generate_key_generator()
-                    entity_value_db.entity_value = entity_value
-                    entity_value_db.value_from = "user"
-                    entity_value_db.entity_id = ent.entity_id
-                    db.session.add(entity_value_db)
+                    db.session.add(entity_db)
                     db.session.commit()
+                else:
+                    entity_id = ent.entity_id
+                
+                entity_value_list = entity.get("entity_value_list", list())
+
+                for entity_value in entity_value_list:
+                    value = entity_value.get("entity_value", None)
+                    ent_value_db = EntityValue()
+                    entity_value = ent_value_db.query.filter_by(entity_value = value, entity_id = entity_id).first()
+                    print(entity_value)
+                    if entity_value is None:
+                        entity_value_db = EntityValue()
+                        entity_value_db.entity_value_id = generate_key_generator()
+                        entity_value_db.entity_value = value
+                        entity_value_db.value_from = "user"
+                        entity_value_db.entity_id = entity_id
+                        db.session.add(entity_value_db)
+                        db.session.commit()
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)

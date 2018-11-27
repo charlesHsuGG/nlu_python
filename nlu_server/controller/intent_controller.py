@@ -66,28 +66,32 @@ class IntentWebController(object):
                 sentences_list.append(sentences_db)
             slot_list = []
             for slot in slots:
-                name = slot.get("name")
-                slot_type = slot.get("slotType")
-                entity_id = slot_type.get("entity_id")
-                slot_prompts = slot.get("prompt", list())
-                required = slot.get("required")
-                slot_db = Slot()
-                slot_db.slot_id = generate_key_generator()
-                slot_db.name = name
-                slot_db.entity_id = entity_id
-                slot_db.required = required
-                slot_prompt_list = []
-                for slot_prompt in slot_prompts:
-                    prompt_text = slot_prompt.get("prompt_text")
-                    action_type = slot_prompt.get("action_type")
-                    slot_prompt_db = Prompt()
-                    slot_prompt_db.prompt_id = generate_key_generator()
-                    slot_prompt_db.prompt_text = prompt_text
-                    slot_prompt_db.prompt_type = "entity"
-                    slot_prompt_db.action_type = action_type
-                    slot_prompt_list.append(slot_prompt_db)
-                slot_db.prompt = slot_prompt_list
-                slot_list.append(slot_db)
+                entity_value_list = slot.get("entity_value", list())
+                for entity_value in entity_value_list:
+                    value = entity_value.get("entity_value", None)
+                    entity = slot.get("entity")
+                    ent_db = Entity()
+                    ent = ent_db.query.filter_by(entity_name = entity).first()
+                    entity_id = ent.entity_id
+                    slot_prompts = slot.get("prompt", list())
+                    required = slot.get("required")
+                    slot_db = Slot()
+                    slot_db.slot_id = generate_key_generator()
+                    slot_db.name = value
+                    slot_db.entity_id = entity_id
+                    slot_db.required = required
+                    # slot_prompt_list = []
+                    # for slot_prompt in slot_prompts:
+                    #     prompt_text = slot_prompt.get("prompt_text")
+                    #     action_type = slot_prompt.get("action_type")
+                    #     slot_prompt_db = Prompt()
+                    #     slot_prompt_db.prompt_id = generate_key_generator()
+                    #     slot_prompt_db.prompt_text = prompt_text
+                    #     slot_prompt_db.prompt_type = "entity"
+                    #     slot_prompt_db.action_type = action_type
+                    #     slot_prompt_list.append(slot_prompt_db)
+                    # slot_db.prompt = slot_prompt_list
+                    slot_list.append(slot_db)
 
             intent_db.sentence = sentences_list
             intent_db.slot = slot_list
@@ -173,28 +177,32 @@ class IntentWebController(object):
                     sentences_list.append(sentences_db)
                 slot_list = []
                 for slot in slots:
-                    name = slot.get("name")
-                    slot_type = slot.get("slotType")
-                    entity_id = slot_type.get("entity_id")
-                    slot_prompts = slot.get("prompt", list())
-                    required = slot.get("required")
-                    slot_db = Slot()
-                    slot_db.slot_id = generate_key_generator()
-                    slot_db.name = name
-                    slot_db.entity_id = entity_id
-                    slot_db.required = required
-                    slot_prompt_list = []
-                    for slot_prompt in slot_prompts:
-                        prompt_text = slot_prompt.get("prompt_text")
-                        action_type = slot_prompt.get("action_type")
-                        slot_prompt_db = Prompt()
-                        slot_prompt_db.prompt_id = generate_key_generator()
-                        slot_prompt_db.prompt_text = prompt_text
-                        slot_prompt_db.prompt_type = "entity"
-                        slot_prompt_db.action_type = action_type
-                        slot_prompt_list.append(slot_prompt_db)
-                    slot_db.prompt = slot_prompt_list
-                    slot_list.append(slot_db)
+                    entity_value_list = slot.get("entity_value", list())
+                    for entity_value in entity_value_list:
+                        value = entity_value.get("entity_value", None)
+                        entity = slot.get("entity")
+                        ent_db = Entity()
+                        ent = ent_db.query.filter_by(entity_name = entity).first()
+                        entity_id = ent.entity_id
+                        slot_prompts = slot.get("prompt", list())
+                        required = slot.get("required")
+                        slot_db = Slot()
+                        slot_db.slot_id = generate_key_generator()
+                        slot_db.name = value
+                        slot_db.entity_id = entity_id
+                        slot_db.required = required
+                        # slot_prompt_list = []
+                        # for slot_prompt in slot_prompts:
+                        #     prompt_text = slot_prompt.get("prompt_text")
+                        #     action_type = slot_prompt.get("action_type")
+                        #     slot_prompt_db = Prompt()
+                        #     slot_prompt_db.prompt_id = generate_key_generator()
+                        #     slot_prompt_db.prompt_text = prompt_text
+                        #     slot_prompt_db.prompt_type = "entity"
+                        #     slot_prompt_db.action_type = action_type
+                        #     slot_prompt_list.append(slot_prompt_db)
+                        # slot_db.prompt = slot_prompt_list
+                        slot_list.append(slot_db)
 
                 intent_db.sentence = sentences_list
                 intent_db.slot = slot_list
@@ -317,29 +325,26 @@ class IntentWebController(object):
                 ent_db = Entity()
                 ent = ent_db.query.filter_by(entity_id = entity_id).first()
                 required = slo.required
-                prom_list = []
-                for prom in slo.prompt:
-                    prompt_id = prom.prompt_id
-                    prompt_text = prom.prompt_text
-                    prompt_type = prom.prompt_type
-                    action_type = prom.action_type
-                    ent_prompt_json = {
-                            "prompt_id":prompt_id,
-                            "prompt_text":prompt_text,
-                            "prompt_type":prompt_type,
-                            "action_type":action_type
-                        }
-                    prom_list.append(ent_prompt_json)
+                # prom_list = []
+                # for prom in slo.prompt:
+                #     prompt_id = prom.prompt_id
+                #     prompt_text = prom.prompt_text
+                #     prompt_type = prom.prompt_type
+                #     action_type = prom.action_type
+                #     ent_prompt_json = {
+                #             "prompt_id":prompt_id,
+                #             "prompt_text":prompt_text,
+                #             "prompt_type":prompt_type,
+                #             "action_type":action_type
+                #         }
+                #     prom_list.append(ent_prompt_json)
                 slot_json={
                         "slot_id":slot_id,
-                        "name":name,
-                        "slotType":{
-                            "entity_id":ent.entity_id,
-                            "entity_name":ent.entity_name,
-                            "entity_type":ent.entity_type,
-                            "entity_extractor":ent.entity_extractor
-                        },
-                        "prompt":prom_list,
+                        "entity":ent.entity_name,
+                        "entity_value":[{
+                            "entity_value":name,
+                        }],
+                        # "prompt":prom_list,
                         "required":required
                 }
                 slot_list.append(slot_json)

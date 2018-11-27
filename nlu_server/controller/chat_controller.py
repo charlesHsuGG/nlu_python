@@ -42,7 +42,9 @@ class ChatWebController(object):
             print(result)
             
             intent = result.get("intent", None)
-            intent_name = intent.get("name")
+            intent_name = None
+            if intent is not None:
+                intent_name = intent.get("name")
 
             entities = result.get("entities", list())
 
@@ -114,7 +116,7 @@ class ChatWebController(object):
                     "slots" : slot_list
                 }
             else:
-                random_unknow_messages = ["我不明白你的意思","很抱歉,我學得還不夠多,不能明白你的意思","再見"]
+                random_unknow_messages = ["我不明白你的意思","很抱歉,我學得還不夠多,不能明白你的意思"]
                 bot_response = secure_random.choice(random_unknow_messages)
 
                 reponse_josn ={

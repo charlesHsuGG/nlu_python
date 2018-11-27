@@ -79,14 +79,15 @@ class TrainWebController(object):
                     entity_id = entity_value.entity_id
                     ent_db = Entity()
                     ent = ent_db.query.filter_by(entity_id = entity_id).first()
-                    entity = ent.entity_name
-                    entity_json = {
-                        "entity":entity,
-                        "start":start,
-                        "end":end,
-                        "value":value
-                    }
-                    entities.append(entity_json)
+                    if ent is not None:
+                        entity = ent.entity_name
+                        entity_json = {
+                            "entity":entity,
+                            "start":start,
+                            "end":end,
+                            "value":value
+                        }
+                        entities.append(entity_json)
                 data = {
                     "text":text,
                     "entities":entities
@@ -100,16 +101,14 @@ class TrainWebController(object):
                 for sent in sentences:
                     text = sent.sentence
                     slots = intent.slot
-                    entities = []
                     for slot in slots:
                         ent_db = Entity()
                         ent = ent_db.query.filter_by(entity_id = slot.entity_id).first()
                         entity_name = ent.entity_name
-                        slot_name = slot.name
-                        replace_str = "{" + slot_name + "}"
+                        replace_str = "{" + entity_name + "}"
                         if text.find(replace_str) >= 0:
-                            text = text.replace(replace_str, entity_name)
-                            start = text.find(entity_name)
+                            sentenceText = text.replace(replace_str, entity_name)
+                            start = sentenceText.find(entity_name)
                             end = start + len(entity_name)
                             entity_json = {
                                     "entity":entity_name,
@@ -117,17 +116,30 @@ class TrainWebController(object):
                                     "end":end,
                                     "value":entity_name
                                 }
-                            entities.append(entity_json)
+                            data = {
+                                "text":sentenceText,
+                                "intent":intent_name,
+                                "entities":[entity_json]
+                            }
+                            data_list.append(data)
                             ent_value_db = EntityValue()
                             ent_values = ent_value_db.query.filter_by(entity_id = slot.entity_id).all()
                             for ent_value in ent_values:
+                                sentenceText = text.replace(replace_str, ent_value.entity_value)
+                                start = sentenceText.find(ent_value.entity_value)
+                                end = start + len(ent_value.entity_value)
                                 entity_json = {
                                     "entity":entity_name,
                                     "start":start,
                                     "end":end,
                                     "value":ent_value.entity_value
                                 }
-                                entities.append(entity_json)
+                                data = {
+                                    "text":sentenceText,
+                                    "intent":intent_name,
+                                    "entities":[entity_json]
+                                }
+                                data_list.append(data)
                         # else:
                         #     entity_json = {
                         #             "entity":entity_name,
@@ -136,18 +148,13 @@ class TrainWebController(object):
                         #             "value":entity_name
                         #         }
                         #     entities.append(entity_json)
-                    data = {
-                        "text":text,
-                        "intent":intent_name,
-                        "entities":entities
-                    }
-                    data_list.append(data)
 
             nlu_data = {
                 "rasa_nlu_data": {
                     "common_examples":data_list
                 }
             }
+            print(nlu_data)
             trainer = Trainer(model_config)
             persistor = create_persistor(model_config)
             commons = nlu_data['rasa_nlu_data'].get("common_examples", list())
