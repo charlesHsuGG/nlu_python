@@ -451,7 +451,7 @@ class EntityWebController(object):
             entity_value_list = ent_db.query.filter_by(entity_id = ent.entity_id).all()
 
             for entity_value in entity_value_list:
-                db.session.delete(ent_value)
+                db.session.delete(entity_value)
                 db.session.commit()
             
             db.session.delete(ent)
