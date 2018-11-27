@@ -402,6 +402,7 @@ class EntityWebController(object):
         @entity_webhook.route("/entity_update", methods=['POST'])
         def entity_update():
             payload = request.json
+            print(payload)
             admin_id = payload.get("admin_id", None)
             model_id = payload.get("model_id", None)
             entities = payload.get("entities", None)
@@ -419,7 +420,7 @@ class EntityWebController(object):
                 for entity_value in entity_value_list:
                     entity_value = entity_value.get("entity_value", None)
                     ent_value_db = EntityValue()
-                    ent_value = ent_db.query.filter_by(entity_value = entity_value).first()
+                    ent_value = ent_value_db.query.filter_by(entity_value = entity_value).first()
                     db.session.delete(ent_value)
                     db.session.commit()
                 
@@ -442,6 +443,7 @@ class EntityWebController(object):
         @entity_webhook.route("/entity_delete", methods=['POST'])
         def entity_delete():
             payload = request.json
+            print(payload)
             entity_id = payload.get("entity_id", None)
 
             ent_db = Entity()
