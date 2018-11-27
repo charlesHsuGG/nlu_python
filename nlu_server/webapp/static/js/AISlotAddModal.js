@@ -24,6 +24,14 @@ appControllers.controller('aiSlotAddModalCtrl', ['$scope', '$http', '$window', '
 				$scope.promptList = data.entity_value_list;
 			}
 
+		} else {
+			console.log(data.entity_value_list);
+			if (data.entity_value_list != null) {
+				if (data.entity_value_list != null) {
+					$scope.promptList = data.entity_value_list;
+				}
+			}
+
 		}
 		//dataPost.model_dir = "/opt/nfs/nlu_system_data/models/system/system_model";
 		// $http({

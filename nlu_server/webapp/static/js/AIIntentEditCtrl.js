@@ -132,19 +132,41 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	$scope.addSlots = function(){
 		closeAllPop();
 		console.log("add")
+		var myRegExp = new RegExp($scope.selectText, 'g');
+		var sentence = $scope.utterancesList[$scope.selectPop].sentence;
+		console.log(sentence);
 		ModalService.showModal({
 			templateUrl: "/ai/static/views/aislotadd_modal.html",
 			controller: "aiSlotAddModalCtrl",
-			inputs:{data:{}},
+			inputs:{data:{entity_value_list:[{entity_value:$scope.selectText}]}},
 			preClose: (modal) => { modal.element.modal('hide'); } 
 		}).then(function(modal) {
 			modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
 			modal.element.modal();
 			modal.close.then(function(data) {
-				console.log(data);
 				if(data != "cancel"){
-					$scope.slotsList.push(data);
+					console.log(data);
+					var entity = data.entity;
+					var required = data.required;
+					for (var i = 0; i < data.entity_value.length; i++) {
+						var value = data.entity_value[i].entity_value;
+						var dataValue = {
+											"entity":entity,
+											"required":required,
+											"entity_value":[{"entity_value":value}]
+										};
+						$scope.slotsList.push(dataValue);
+					}
 					addSlotRequest(data);
+					console.log($scope.utterancesList);
+					$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+data.entity+'}');
+					sentence = sentence.replace(myRegExp,'{'+data.entity+'}')
+					console.log(sentence);
+					var tagData = {};
+					$scope.utterancesList[$scope.selectPop].sentence = sentence;
+					$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
+					console.log($scope.utterancesList[$scope.selectPop]);
+					$scope.$apply();
 				}
 			});
 		});
@@ -273,6 +295,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		if( slot.entity_id != null){
 			console.log("edit")
 			closeAllPop();
+			slot.entity_value_list = [{entity_value:$scope.selectText}];
 			ModalService.showModal({
 				templateUrl: "/ai/static/views/aislotadd_modal.html",
 				controller: "aiSlotAddModalCtrl",
@@ -423,7 +446,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			data: finalObj
 		}).then(function successCallback(response) {
 			console.log(response);
-
+			
+			loadEntity();
 		}, function errorCallback(response) {
 
 		});
