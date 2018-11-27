@@ -6,5 +6,9 @@
     {
         "name": "root",
         "path": "/system.json" 
+    },
+    {
+        "name": "kevin",
+        "path": "/system.json" 
     }
 ]

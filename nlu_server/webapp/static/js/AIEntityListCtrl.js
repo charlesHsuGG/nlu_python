@@ -125,7 +125,7 @@ appControllers.controller('AIEntityListCtrl',
 					data: finalObj
 				}).then(function successCallback(response) {
 					console.log(response);
- 
+					loadData();
 
 				}, function errorCallback(response) {
 					
