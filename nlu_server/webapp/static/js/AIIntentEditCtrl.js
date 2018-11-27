@@ -129,16 +129,19 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 			$scope.responseList.splice(index, 1);
 		}
 	}
-	$scope.addSlots = function(){
+	$scope.addSlots = function(newAddSlot){
 		closeAllPop();
 		console.log("add")
-		var myRegExp = new RegExp($scope.selectText, 'g');
-		var sentence = $scope.utterancesList[$scope.selectPop].sentence;
-		console.log(sentence);
+		var dataInput = {"data":{}};
+		if (newAddSlot != true) {
+			var myRegExp = new RegExp($scope.selectText, 'g');
+			var sentence = $scope.utterancesList[$scope.selectPop].sentence;
+			dataInput = {"data":{"entity_value_list":[{"entity_value":$scope.selectText}]}};
+		}
 		ModalService.showModal({
 			templateUrl: "/ai/static/views/aislotadd_modal.html",
 			controller: "aiSlotAddModalCtrl",
-			inputs:{data:{entity_value_list:[{entity_value:$scope.selectText}]}},
+			inputs:dataInput,
 			preClose: (modal) => { modal.element.modal('hide'); } 
 		}).then(function(modal) {
 			modal.element.on('hidden.bs.modal', function () {$('.ngmodal').remove(); });
