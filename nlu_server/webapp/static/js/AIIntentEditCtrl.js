@@ -144,6 +144,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 				console.log(data);
 				if(data != "cancel"){
 					$scope.slotsList.push(data);
+					addSlotRequest(data);
 				}
 			});
 		});
@@ -284,6 +285,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 				modal.close.then(function(data) {
 					console.log(data);
 					if(data != "cancel"){
+
+						addSlotRequest(data);
 						$scope.slotsList.push(data);
 						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
 						console.log($scope.utterancesList);
@@ -294,6 +297,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 						$scope.utterancesList[$scope.selectPop].sentenceHtml = sentence;
 						console.log($scope.utterancesList[$scope.selectPop]);
 						$scope.$apply();
+
+
 					}
 				});
 			});
@@ -395,5 +400,37 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		});
 
 	}
+	//addsloty
+	function addSlotRequest(data) {
+		var url = './ai_entity/entity_value_update'
+		var finalObj = {};
+		var sendArray = [];
+		var sendObj = {};
+		sendObj.entity = data.entity;
+		sendObj.entity_value_list = data.entity_value;
+		sendArray.push(sendObj);
+		
+		// finalObj.admin_id = "40w9dse0277455f634fw40439sd";
+		// finalObj.entities = sendArray;
+	
+		finalObj.admin_id = $scope.admin_id;
+		finalObj.model_id = $scope.model_id;
+		finalObj.entities =  sendArray;
+
+		console.log(finalObj);
+		$http({
+			method: 'POST',
+			url: url,
+			data: finalObj
+		}).then(function successCallback(response) {
+			console.log(response);
+			loadData();
+
+		}, function errorCallback(response) {
+
+		});
+
+	}
+
 }]);
 
