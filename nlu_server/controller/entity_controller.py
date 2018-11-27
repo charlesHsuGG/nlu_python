@@ -364,31 +364,35 @@ class EntityWebController(object):
                     db.session.commit()
                     
                     entity_value_list = entity.get("entity_value_list", list())
-                    print(entity_value_list)
-
                     
+                    check_value = []
                     for entity_value in entity_value_list:
                         entity_value = entity_value.get("entity_value", None)
-                        entity_value_db = EntityValue()
-                        entity_value_db.entity_value_id = generate_key_generator()
-                        entity_value_db.entity_value = entity_value
-                        entity_value_db.value_from = "user"
-                        entity_value_db.entity_id = entity_id
-                        db.session.add(entity_value_db)
-                        db.session.commit()
+                        if entity_value not in check_value:
+                            entity_value_db = EntityValue()
+                            entity_value_db.entity_value_id = generate_key_generator()
+                            entity_value_db.entity_value = entity_value
+                            entity_value_db.value_from = "user"
+                            entity_value_db.entity_id = entity_id
+                            db.session.add(entity_value_db)
+                            db.session.commit()
+                            check_value.append(entity_value)
                 else:
 
                     entity_value_list = entity.get("entity_value_list", list())
-                
+
+                    check_value = []
                     for entity_value in entity_value_list:
                         entity_value = entity_value.get("entity_value", None)
-                        entity_value_db = EntityValue()
-                        entity_value_db.entity_value_id = generate_key_generator()
-                        entity_value_db.entity_value = entity_value
-                        entity_value_db.value_from = "user"
-                        entity_value_db.entity_id = ent.entity_id
-                        db.session.add(entity_value_db)
-                        db.session.commit()
+                        if entity_value not in check_value:
+                            entity_value_db = EntityValue()
+                            entity_value_db.entity_value_id = generate_key_generator()
+                            entity_value_db.entity_value = entity_value
+                            entity_value_db.value_from = "user"
+                            entity_value_db.entity_id = ent.entity_id
+                            db.session.add(entity_value_db)
+                            db.session.commit()
+                            check_value.append(entity_value)
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)
@@ -413,21 +417,24 @@ class EntityWebController(object):
                 entity_value_list = entity.get("entity_value_list", list())
 
                 for entity_value in entity_value_list:
-                    entity_value_id = entity_value.entity_value_id
+                    entity_value = entity_value.get("entity_value", None)
                     ent_value_db = EntityValue()
-                    ent_value = ent_db.query.filter_by(entity_value_id = entity_value_id).first()
+                    ent_value = ent_db.query.filter_by(entity_value = entity_value).first()
                     db.session.delete(ent_value)
                     db.session.commit()
                 
+                check_value = []
                 for entity_value in entity_value_list:
                     entity_value = entity_value.get("entity_value", None)
-                    entity_value_db = EntityValue()
-                    entity_value_db.entity_value_id = generate_key_generator()
-                    entity_value_db.entity_value = entity_value
-                    entity_value_db.value_from = "user"
-                    entity_value_db.entity_id = ent.entity_id
-                    db.session.add(entity_value_db)
-                    db.session.commit()
+                    if entity_value not in check_value:
+                        entity_value_db = EntityValue()
+                        entity_value_db.entity_value_id = generate_key_generator()
+                        entity_value_db.entity_value = entity_value
+                        entity_value_db.value_from = "user"
+                        entity_value_db.entity_id = ent.entity_id
+                        db.session.add(entity_value_db)
+                        db.session.commit()
+                        check_value.append(entity_value)
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)
@@ -452,7 +459,31 @@ class EntityWebController(object):
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)
-            
+        
+
+        @entity_webhook.route("/entity_update_one", methods=['POST'])
+        def entity_update_one():
+            payload = request.json
+            entity_id = payload.get("entity_id", None)
+            entity_value = payload.get("entity_value", None)
+
+            ent_db = Entity()
+            ent = ent_db.query.filter_by(entity_id = entity_id).first()
+
+            ent_value_db = EntityValue()
+            entity_value = ent_db.query.filter_by(entity_value = entity_value).first()
+
+            if entity_value is None:
+                entity_value_db = EntityValue()
+                entity_value_db.entity_value_id = generate_key_generator()
+                entity_value_db.entity_value = entity_value
+                entity_value_db.value_from = "user"
+                entity_value_db.entity_id = ent.entity_id
+                db.session.add(entity_value_db)
+                db.session.commit()
+
+            response = {"code":1, "seccess": True}
+            return json_to_string(response)
 
 
         return entity_webhook

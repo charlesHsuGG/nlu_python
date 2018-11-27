@@ -151,8 +151,14 @@ appControllers.controller('AIEntityListCtrl',
 				sendObj.entity = data.entity;
 				sendObj.entity_value_list = data.entity_value;
 				sendArray.push(sendObj);
-				finalObj.admin_id = "40w9dse0277455f634fw40439sd";
-				finalObj.entities = sendArray;
+ 
+				// finalObj.admin_id = "40w9dse0277455f634fw40439sd";
+				// finalObj.entities = sendArray;
+ 
+				finalObj.admin_id = $scope.admin_id;
+				finalObj.model_id = $scope.model_id;
+				finalObj.entities =  sendArray;
+ 
 				console.log(finalObj);
 				$http({
 					method: 'POST',
