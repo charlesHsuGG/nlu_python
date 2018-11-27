@@ -69,11 +69,13 @@ appControllers.controller('AIEntityListCtrl',
 					modal.close.then(function (data) {
 						console.log(data);
 						if (data != "cancel") {
-							addSlotRequest(data);
+							addSlotRequest(data,false);
 						}
 					});
 				});
 			}
+
+			//編輯
 			$scope.editIntent = function (index) {
 				console.log(index);
 				console.log($scope.entity_list[index].entity_id);
@@ -104,10 +106,12 @@ appControllers.controller('AIEntityListCtrl',
 						modal.element.modal();
 						modal.close.then(function (data) {
 							console.log(data);
+
+							
 							if (data != "cancel") {
 								// $scope.slotsList.push(data);
 								console.log(data);
-
+								addSlotRequest(data,true,index);
 							}
 						});
 					});
@@ -143,18 +147,21 @@ appControllers.controller('AIEntityListCtrl',
 				});
 
 			}
-			function addSlotRequest(data) {
-
+			function addSlotRequest(data,isedit,index) {
+				var url = './ai_entity/entity_save'
 				var finalObj = {};
 				var sendArray = [];
 				var sendObj = {};
 				sendObj.entity = data.entity;
 				sendObj.entity_value_list = data.entity_value;
 				sendArray.push(sendObj);
- 
+				
 				// finalObj.admin_id = "40w9dse0277455f634fw40439sd";
 				// finalObj.entities = sendArray;
- 
+				if(isedit == true){
+					url = './ai_entity/entity_update';
+					finalObj.entity_id = index;
+				}
 				finalObj.admin_id = $scope.admin_id;
 				finalObj.model_id = $scope.model_id;
 				finalObj.entities =  sendArray;
@@ -162,7 +169,7 @@ appControllers.controller('AIEntityListCtrl',
 				console.log(finalObj);
 				$http({
 					method: 'POST',
-					url: './ai_entity/entity_save',
+					url: url,
 					data: finalObj
 				}).then(function successCallback(response) {
 					console.log(response);
