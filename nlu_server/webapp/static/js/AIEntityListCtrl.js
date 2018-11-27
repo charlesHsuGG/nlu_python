@@ -130,6 +130,7 @@ appControllers.controller('AIEntityListCtrl',
 				console.log(index);
 				console.log($scope.entity_list[index].entity_id);
 				var id = $scope.entity_list[index].entity_id;
+				console.log(id);
 				$http({
 					method: 'POST',
 					url: './ai_entity/entity_delete',
