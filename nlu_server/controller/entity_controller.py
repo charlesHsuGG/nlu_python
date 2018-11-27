@@ -461,26 +461,43 @@ class EntityWebController(object):
             return json_to_string(response)
         
 
-        @entity_webhook.route("/entity_update_one", methods=['POST'])
-        def entity_update_one():
+        @entity_webhook.route("/entity_value_update", methods=['POST'])
+        def entity_value_update():
             payload = request.json
-            entity_id = payload.get("entity_id", None)
-            entity_value = payload.get("entity_value", None)
+            entity_name = payload.get("entity", None)
+            entity_value_list = payload.get("entity_value_list", None)
 
             ent_db = Entity()
-            ent = ent_db.query.filter_by(entity_id = entity_id).first()
+            ent = ent_db.query.filter_by(entity_name = entity_name).first()
 
-            ent_value_db = EntityValue()
-            entity_value = ent_db.query.filter_by(entity_value = entity_value).first()
+            if ent is None:
+                entity_db = Entity()
+                entity_id = generate_key_generator()
+                entity_db.entity_id = entity_id
+                entity_db.entity_name = entity_name
+                if admin.admin_name == "system":
+                    entity_db.entity_type = "system"
+                else:
+                    entity_db.entity_type = "user"
+                entity_db.admin_id = admin_id
+                entity_db.model_id = model_id
 
-            if entity_value is None:
-                entity_value_db = EntityValue()
-                entity_value_db.entity_value_id = generate_key_generator()
-                entity_value_db.entity_value = entity_value
-                entity_value_db.value_from = "user"
-                entity_value_db.entity_id = ent.entity_id
-                db.session.add(entity_value_db)
+                db.session.add(entity_db)
                 db.session.commit()
+
+            for entity_value in entity_value_list:
+                entity_value = entity_value.get("entity_value", None)
+                ent_value_db = EntityValue()
+                entity_value = ent_db.query.filter_by(entity_value = entity_value, entity_id = ent.entity_id).first()
+
+                if entity_value is None:
+                    entity_value_db = EntityValue()
+                    entity_value_db.entity_value_id = generate_key_generator()
+                    entity_value_db.entity_value = entity_value
+                    entity_value_db.value_from = "user"
+                    entity_value_db.entity_id = ent.entity_id
+                    db.session.add(entity_value_db)
+                    db.session.commit()
 
             response = {"code":1, "seccess": True}
             return json_to_string(response)
