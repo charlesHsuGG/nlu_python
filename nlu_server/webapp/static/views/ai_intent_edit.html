@@ -89,22 +89,20 @@
 								<thead>
 									<tr>
 										<th class=" ">順序</th>
-										<th class=" ">名稱</th>
-										<th class=" ">必填</th>
 										<th class=" ">類型</th>
-										<th class=" ">提示字元</th>
+										<th class=" ">必填</th>
+				
+										<th class=" ">Value</th>
 										<th class=" ">功能</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr ng-repeat="slots in slotsList track by $index">
 										<td class="center" style="vertical-align: middle">{{$index}}</td>
-										<td class="center" style="vertical-align: middle">Slot_{{$index}}</td>
+										<td class="center" style="vertical-align: middle">{{slots.entity}}</td>
 										<td class="center" style="vertical-align: middle">{{slots.required}}</td>
-										<td class="center" style="vertical-align: middle">{{slots.entity_name}}</td>
-										<td class="center" style="vertical-align: middle">
-											<span ng-repeat="prompt in slots.prompt">{{prompt.prompt_text}}</span>
-										</td>
+										<td class="center" style="vertical-align: middle"><span ng-repeat="entitys in slots.entity_value ">{{entitys.entity_value}}</span></td>
+								
 										<td class="center" style="vertical-align: middle">
 											<button type="button" class="btn btn-danger" ng-click="deleteSlots($index)">刪除</button>
 										</td>
@@ -200,8 +198,9 @@
 				
 			<h5 class="mt-2">{{dynamicPopover.content}}</h5>
 			<hr class="w-100">
-			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">Slot_{{$index}}</button>
-			<button ng-repeat="Entities in defaultEntities" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(Entities)">{{Entities.entity_name}}</button>
+			<button ng-repeat="slot in slotsList" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(slot)">{{slotsList.entity}}</button>
+			<hr>
+			<button ng-repeat="Entities in defaultEntities" class="btn btn-block btn-light   " style="text-align:left" ng-click="setSlot(Entities)">{{Entities.entity_name}}(系統)</button>
 			
 			  <button class="btn  btn-block btn-primary mt-2" ng-click="addSlots()">新增slot</button>
 			 

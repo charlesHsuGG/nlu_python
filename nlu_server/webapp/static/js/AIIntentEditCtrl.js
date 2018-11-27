@@ -210,6 +210,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 
 
 		console.log(sendData);
+		//ttw
+		return;
 		$http({
 			method: 'POST',
 			url: url ,
@@ -313,7 +315,6 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 	}
 		
 	$scope.closePop = function()   {
-	console.log("123");
 	closeAllPop();   
 		  $scope.$apply();
 	}
