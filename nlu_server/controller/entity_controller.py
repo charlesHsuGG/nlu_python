@@ -314,11 +314,13 @@ class EntityWebController(object):
             entity = entity_db.query.filter_by(entity_id = entity_id).first()
             entity_value_db = EntityValue()
             entity_values = entity_value_db.query.filter_by(entity_id = entity_id).all()
+            synonyms_list = entity_value.synonyms.split(',')
             entity_value_list = []
             for entity_value in entity_values:
                 json ={
                     "entity_value_id":entity_value.entity_value_id,
                     "entity_value":entity_value.entity_value,
+                    "synonyms":synonyms_list,
                     "entity_id":entity_value.entity_id,
                     "value_from":entity_value.value_from
                 }
