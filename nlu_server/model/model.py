@@ -127,6 +127,7 @@ class EntityValue(db.Model):
 
     entity_value_id = db.Column(db.String(32), nullable=True, primary_key=True)
     entity_value = db.Column(db.Text, nullable=False)
+    synonyms = db.Column(db.Text, nullable=False)
     value_start = db.Column(db.Integer, nullable=False)
     value_end = db.Column(db.Integer, nullable=False)
     value_from = db.Column(db.String(32), nullable=False)
