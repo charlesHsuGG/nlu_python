@@ -158,7 +158,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 											"required":required,
 											"entity_value":[{"entity_value":value}]
 										};
-						if ($scope.slotsList.includes(dataValue) == false) {
+						if (containsObject(dataValue, $scope.slotsList) == false) {
 							$scope.slotsList.push(dataValue);
 						}
 					}
@@ -314,7 +314,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 					if(data != "cancel"){
 
 						addSlotRequest(data);
-						if ($scope.slotsList.includes(data) == false) {
+						if (containsObject(data, $scope.slotsList) == false) {
 							$scope.slotsList.push(data);
 						}
 						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
@@ -459,6 +459,21 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 
 		});
 
+	}
+
+	function containsObject(obj, list) {
+		var x;
+		console.log(obj);
+		for (x in list) {
+			console.log(list[x]);
+			if (list[x].entity == obj.entity) {
+				if (list[x].entity_value[0].entity_value == obj.entity_value[0].entity_value) {
+					return true;
+				}
+			}
+		}
+	
+		return false;
 	}
 
 }]);
