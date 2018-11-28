@@ -65,6 +65,7 @@ class IntentWebController(object):
                 sentences_db.sentence = sentence.get("sentence")
                 sentences_list.append(sentences_db)
             slot_list = []
+            check_list =[]
             for slot in slots:
                 entity_value_list = slot.get("entity_value", list())
                 for entity_value in entity_value_list:
@@ -73,13 +74,15 @@ class IntentWebController(object):
                     ent_db = Entity()
                     ent = ent_db.query.filter_by(entity_name = entity).first()
                     entity_id = ent.entity_id
-                    slot_prompts = slot.get("prompt", list())
                     required = slot.get("required")
-                    slot_db = Slot()
-                    slot_db.slot_id = generate_key_generator()
-                    slot_db.name = value
-                    slot_db.entity_id = entity_id
-                    slot_db.required = required
+                    if {"value":value,"entity_id":entity_id} not in check_list:
+                        slot_db = Slot()
+                        slot_db.slot_id = generate_key_generator()
+                        slot_db.name = value
+                        slot_db.entity_id = entity_id
+                        slot_db.required = required
+                        check_list.append({"value":value,"entity_id":entity_id})
+                    # slot_prompts = slot.get("prompt", list())
                     # slot_prompt_list = []
                     # for slot_prompt in slot_prompts:
                     #     prompt_text = slot_prompt.get("prompt_text")
@@ -176,6 +179,7 @@ class IntentWebController(object):
                     sentences_db.sentence = sentence.get("sentence")
                     sentences_list.append(sentences_db)
                 slot_list = []
+                check_list = []
                 for slot in slots:
                     entity_value_list = slot.get("entity_value", list())
                     for entity_value in entity_value_list:
@@ -184,13 +188,15 @@ class IntentWebController(object):
                         ent_db = Entity()
                         ent = ent_db.query.filter_by(entity_name = entity).first()
                         entity_id = ent.entity_id
-                        slot_prompts = slot.get("prompt", list())
                         required = slot.get("required")
-                        slot_db = Slot()
-                        slot_db.slot_id = generate_key_generator()
-                        slot_db.name = value
-                        slot_db.entity_id = entity_id
-                        slot_db.required = required
+                        if {"value":value,"entity_id":entity_id} not in check_list:
+                            slot_db = Slot()
+                            slot_db.slot_id = generate_key_generator()
+                            slot_db.name = value
+                            slot_db.entity_id = entity_id
+                            slot_db.required = required
+                            check_list.append({"value":value,"entity_id":entity_id})
+                        # slot_prompts = slot.get("prompt", list())
                         # slot_prompt_list = []
                         # for slot_prompt in slot_prompts:
                         #     prompt_text = slot_prompt.get("prompt_text")

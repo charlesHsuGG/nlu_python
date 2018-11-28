@@ -158,7 +158,9 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 											"required":required,
 											"entity_value":[{"entity_value":value}]
 										};
-						$scope.slotsList.push(dataValue);
+						if ($scope.slotsList.includes(dataValue) == false) {
+							$scope.slotsList.push(dataValue);
+						}
 					}
 					addSlotRequest(data);
 					console.log($scope.utterancesList);
@@ -312,7 +314,9 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 					if(data != "cancel"){
 
 						addSlotRequest(data);
-						$scope.slotsList.push(data);
+						if ($scope.slotsList.includes(data) == false) {
+							$scope.slotsList.push(data);
+						}
 						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
 						console.log($scope.utterancesList);
 						sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}')
