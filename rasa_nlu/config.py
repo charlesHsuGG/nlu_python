@@ -28,7 +28,7 @@ DEFAULT_CONFIG = {
     "embedding_model_path": None,
     "embedding_corpus_path": None,
     "embedding_type": None,
-    "num_threads": 1,
+    "num_threads": 4,
     "max_training_processes": 1,
     "system_path": "models",
     "path": "projects",

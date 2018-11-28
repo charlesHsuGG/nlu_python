@@ -68,6 +68,8 @@ class TrainWebController(object):
             article_db = Article()
             articles = article_db.query.filter_by(admin_id = admin_id).all()
             data_list =[]
+            synonyms_data=[]
+            check_synonyms=[]
             for article in articles:
                 text = article.article_content
                 entity_values = article.entity_value
@@ -107,25 +109,13 @@ class TrainWebController(object):
                         entity_name = ent.entity_name
                         replace_str = "{" + entity_name + "}"
                         if text.find(replace_str) >= 0:
-                            sentenceText = text.replace(replace_str, entity_name)
-                            start = sentenceText.find(entity_name)
-                            end = start + len(entity_name)
-                            entity_json = {
-                                    "entity":entity_name,
-                                    "start":start,
-                                    "end":end,
-                                    "value":entity_name
-                                }
-                            data = {
-                                "text":sentenceText,
-                                "intent":intent_name,
-                                "entities":[entity_json]
-                            }
-                            data_list.append(data)
                             ent_value_db = EntityValue()
                             ent_values = ent_value_db.query.filter_by(entity_id = slot.entity_id).all()
                             for ent_value in ent_values:
                                 sentenceText = text.replace(replace_str, ent_value.entity_value)
+                                synonyms_list = []
+                                if ent_value.synonyms is not None:
+                                    synonyms_list = ent_value.synonyms.split(',')
                                 start = sentenceText.find(ent_value.entity_value)
                                 end = start + len(ent_value.entity_value)
                                 entity_json = {
@@ -140,6 +130,18 @@ class TrainWebController(object):
                                     "entities":[entity_json]
                                 }
                                 data_list.append(data)
+                                if ent_value.entity_value not in check_synonyms:
+                                    if synonyms_list:
+                                        synonyms = []
+                                        for synonym in synonyms_list:
+                                            synonyms.append(synonym)
+                                        syn = {
+                                            "value":ent_value.entity_value,
+                                            "synonyms":synonyms
+                                        }
+                                        synonyms_data.append(syn)
+                                        check_synonyms.append(ent_value.entity_value)
+                                
                         # else:
                         #     entity_json = {
                         #             "entity":entity_name,
@@ -151,20 +153,23 @@ class TrainWebController(object):
 
             nlu_data = {
                 "rasa_nlu_data": {
-                    "common_examples":data_list
+                    "common_examples":data_list,
+                    "entity_synonyms": synonyms_data
                 }
             }
             print(nlu_data)
             trainer = Trainer(model_config)
             persistor = create_persistor(model_config)
             commons = nlu_data['rasa_nlu_data'].get("common_examples", list())
+            synonyms  = nlu_data['rasa_nlu_data'].get("entity_synonyms", list())
             training_examples = []
             for e in commons:
                 data = e.copy()
                 if "text" in data:
                     del data["text"]
                 training_examples.append(Message(e["text"], data))
-            train_data = TrainingData(training_examples)
+            entity_synonyms = transform_entity_synonyms(synonyms)
+            train_data = TrainingData(training_examples, entity_synonyms=entity_synonyms)
             interpreter = trainer.train(train_data)
             admin_id = model.admin_id
             admin_db = Admin()
@@ -191,4 +196,13 @@ def create_persistor(config):
         return get_persistor(config)
     else:
         return None
+
+def transform_entity_synonyms(synonyms, known_synonyms=None):
+    """Transforms the entity synonyms into a text->value dictionary"""
+    entity_synonyms = known_synonyms if known_synonyms else {}
+    for s in synonyms:
+        if "value" in s and "synonyms" in s:
+            for synonym in s["synonyms"]:
+                entity_synonyms[synonym] = s["value"]
+    return entity_synonyms
         

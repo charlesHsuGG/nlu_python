@@ -314,13 +314,12 @@ class EntityWebController(object):
             entity = entity_db.query.filter_by(entity_id = entity_id).first()
             entity_value_db = EntityValue()
             entity_values = entity_value_db.query.filter_by(entity_id = entity_id).all()
-            synonyms_list = entity_value.synonyms.split(',')
             entity_value_list = []
             for entity_value in entity_values:
                 json ={
                     "entity_value_id":entity_value.entity_value_id,
                     "entity_value":entity_value.entity_value,
-                    "synonyms":synonyms_list,
+                    "synonyms":entity_value.synonyms,
                     "entity_id":entity_value.entity_id,
                     "value_from":entity_value.value_from
                 }
@@ -370,10 +369,14 @@ class EntityWebController(object):
                     check_value = []
                     for entity_value in entity_value_list:
                         entity_value = entity_value.get("entity_value", None)
+                        synonyms = ""
+                        if 'synonyms' in entity_value:
+                            synonyms = entity_value.get("synonyms", None)
                         if entity_value not in check_value:
                             entity_value_db = EntityValue()
                             entity_value_db.entity_value_id = generate_key_generator()
                             entity_value_db.entity_value = entity_value
+                            entity_value_db.synonyms = synonyms
                             entity_value_db.value_from = "user"
                             entity_value_db.entity_id = entity_id
                             db.session.add(entity_value_db)
@@ -385,11 +388,16 @@ class EntityWebController(object):
 
                     check_value = []
                     for entity_value in entity_value_list:
-                        entity_value = entity_value.get("entity_value", None)
+                        value = entity_value.get("entity_value", None)
+                        synonyms = entity_value.get("synonyms", None).split(',')
+                        synonyms_list = ""
+                        for synonym in synonyms:
+                            synonyms_list += synonym
                         if entity_value not in check_value:
                             entity_value_db = EntityValue()
                             entity_value_db.entity_value_id = generate_key_generator()
-                            entity_value_db.entity_value = entity_value
+                            entity_value_db.entity_value = value
+                            entity_value_db.synonyms = synonyms_list
                             entity_value_db.value_from = "user"
                             entity_value_db.entity_id = ent.entity_id
                             db.session.add(entity_value_db)
@@ -428,11 +436,16 @@ class EntityWebController(object):
 
                 check_value = []
                 for entity_value in entity_value_list:
-                    entity_value = entity_value.get("entity_value", None)
+                    print(entity_value)
+                    value = entity_value.get("entity_value", None)
+                    synonyms = ""
+                    if 'synonyms' in entity_value:
+                        synonyms = entity_value.get("synonyms", None)
                     if entity_value not in check_value:
                         entity_value_db = EntityValue()
                         entity_value_db.entity_value_id = generate_key_generator()
-                        entity_value_db.entity_value = entity_value
+                        entity_value_db.entity_value = value
+                        entity_value_db.synonyms = synonyms
                         entity_value_db.value_from = "user"
                         entity_value_db.entity_id = ent.entity_id
                         db.session.add(entity_value_db)
@@ -504,6 +517,9 @@ class EntityWebController(object):
 
                 for entity_value in entity_value_list:
                     value = entity_value.get("entity_value", None)
+                    synonyms = ""
+                    if 'synonyms' in entity_value:
+                        synonyms = entity_value.get("synonyms", None)
                     ent_value_db = EntityValue()
                     entity_value = ent_value_db.query.filter_by(entity_value = value, entity_id = entity_id).first()
                     print(entity_value)
@@ -511,6 +527,7 @@ class EntityWebController(object):
                         entity_value_db = EntityValue()
                         entity_value_db.entity_value_id = generate_key_generator()
                         entity_value_db.entity_value = value
+                        entity_value_db.synonyms = synonyms
                         entity_value_db.value_from = "user"
                         entity_value_db.entity_id = entity_id
                         db.session.add(entity_value_db)
