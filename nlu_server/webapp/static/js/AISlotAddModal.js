@@ -12,7 +12,7 @@ appControllers.controller('aiSlotAddModalCtrl', ['$scope', '$http', '$window', '
 	$scope.model_id = "024a140e177851ea83a36ef0ed9b1ddd";
 
 	$scope.sendData.entity_value = "";
-
+	$scope.sameWordList = [];
 	function init() {
 		console.log(data);
 		var dataPost = {};
@@ -64,27 +64,40 @@ appControllers.controller('aiSlotAddModalCtrl', ['$scope', '$http', '$window', '
 		$scope.sendData.entity_value = "";
 		console.log($scope.promptList);
 	}
+
+	$scope.addSameWord = function () {
+		if ($scope.sameWord == "") {
+			alert("請輸入值");
+			return
+		}
+		
+		$scope.sameWordList.push($scope.sameWord);
+		$scope.sameWord = "";
+		console.log($scope.sameWordList);
+	}
+
 	$scope.deletePrompt = function (index) {
 		$scope.promptList.splice(index, 1);
-		
+
 	}
 	$scope.close = function (result) {
-		console.log($scope.promptList.length);
-		if ($scope.promptList.length == 0) {
-			alert("請新增值");
-			return;
-		} else if ($scope.sendData.entity == "") {
-			{
-				alert("請填入類別");
-				return;
-			}
-		}
+
 
 		$scope.sendData.entity_value = $scope.promptList;
 		console.log($scope.sendData);
 		if (result == "cancel") {
 			close("cancel", 500);
 		} else {
+			console.log($scope.promptList.length);
+			if ($scope.promptList.length == 0) {
+				alert("請新增值");
+				return;
+			} else if ($scope.sendData.entity == "") {
+				{
+					alert("請填入類別");
+					return;
+				}
+			}
 			close($scope.sendData, 500);
 		}
 
