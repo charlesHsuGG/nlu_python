@@ -153,6 +153,9 @@ appControllers.controller('AIEntityListCtrl',
 				var finalObj = {};
 				var sendArray = [];
 				var sendObj = {};
+				if(isedit == true){
+					sendObj.entity_id = data.entity_id;
+				}
 				sendObj.entity = data.entity;
 				sendObj.entity_value_list = data.entity_value;
 				sendArray.push(sendObj);
@@ -161,7 +164,6 @@ appControllers.controller('AIEntityListCtrl',
 				// finalObj.entities = sendArray;
 				if(isedit == true){
 					url = './ai_entity/entity_update';
-					finalObj.entity_id = index;
 				}
 				finalObj.admin_id = $scope.admin_id;
 				finalObj.model_id = $scope.model_id;
