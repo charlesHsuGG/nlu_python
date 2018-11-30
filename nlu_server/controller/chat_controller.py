@@ -71,6 +71,7 @@ class ChatWebController(object):
                     ent_db = Entity()
                     ent = ent_db.query.filter_by(entity_id = entity_id).first()
                     fill_slot = False
+                    if required == True:
                         for find_ent in entities:
                             if find_ent.get("entity").find(ent.entity_name) == 0:
                                 slot_json.update({"value":find_ent.get("value")})
