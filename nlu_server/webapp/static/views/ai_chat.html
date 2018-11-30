@@ -66,7 +66,7 @@
  
                              <div class="w-100 mt-2" ng-repeat="message in messageList track by $index" ng-class="checkAdmin(message)">
                               
-                                    <div  ng-class="checkTextRight(message)">{{message.text}}
+                                    <div  ng-class="checkTextRight(message)" style="word-break: keep-all;">{{message.text}}
                                     <div>     
                                     <button ng-show="checkBtn(message)" type="button" class="btn btn-outline-light  mt-1 float-right" ng-click="editIntent($index)">意圖:{{message.data.intent}}</button>
                                     </div>

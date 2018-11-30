@@ -60,6 +60,7 @@ class ChatWebController(object):
                 bot_response = None
 
                 slot_list = []
+                check_slot = []
                 for slot in slots:
                     required = slot.required
                     entity_id = slot.entity_id
@@ -85,8 +86,9 @@ class ChatWebController(object):
                             if find_ent.get("entity").find(ent.entity_name) == 0:
                                 slot_json.update({"value":find_ent.get("value")})
                         slot_json.update({"required":required, "fill_slot":True})
-
-                    slot_list.append(slot_json)
+                    if slot_json.get("name") not in check_slot:
+                        slot_list.append(slot_json)
+                        check_slot.append(slot_json.get("name"))
 
                 select_option = False
                 for slot in slot_list:
@@ -98,25 +100,27 @@ class ChatWebController(object):
                 check_list = []
                 if select_option == True:
                     intent_db = Intent()
-                    intents = intent_db.query.all()
+                    intents = intent_db.query.filter_by(admin_id = admin_id).all()
                     for intent in intents:
+                        select_intent_name = intent.intent_name
+                        sentences = intent.sentence
+                        sentence_list =[]
+                        for sentence in sentences:
+                            sentence_text = sentence.sentence
+                            sentence_list.append(sentence_text.replace("{","").replace("}",""))
                         intent_slots = intent.slot
                         for slot in slot_list:
+                            fill_slot = slot.get("fill_slot")
                             if fill_slot == True:
                                 for intent_slot in intent_slots:
-                                    intent = intent_slot.intent_name
                                     entity_id = intent_slot.entity_id
-                                    sentences = intent_slot.sentence
                                     entity_db = Entity()
                                     entity = entity_db.query.filter_by(entity_id = entity_id).first()
+
                                     if entity.entity_name.find(slot.get("name")) >= 0:
-                                        sentence_list =[]
-                                        for sentence in sentences:
-                                            sentence_text = sent.sentence
-                                            sentence_list.append(sentence_text)
-                                        if intent not in intent:
-                                            slections.append(secure_random.choice(sentence_list).prompt_text)
-                                            check_list.append(intent)
+                                        if intent not in check_list:
+                                            slections.append(secure_random.choice(sentence_list))
+                                            check_list.append(select_intent_name)
                 if bot_response is None:
                     respon_confirm = False
                     confirm_prompts =[]
@@ -131,10 +135,11 @@ class ChatWebController(object):
                     print(str(response_prompts))
                     if respon_confirm == True:
                         print(secure_random.choice(confirm_prompts))
-                        bot_response = secure_random.choice(confirm_prompts).prompt_text
+                        bot_response = secure_random.choice(confirm_prompts).prompt_text + "\n"
                     else:
                         print(secure_random.choice(response_prompts))
-                        bot_response = secure_random.choice(response_prompts).prompt_text
+                        bot_response = secure_random.choice(response_prompts).prompt_text + "\n"
+                print(check_list)
                 if check_list:
                     bot_response += "或者您想問:\n"
                     for slection in slections:

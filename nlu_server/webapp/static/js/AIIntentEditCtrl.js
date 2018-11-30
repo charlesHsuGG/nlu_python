@@ -134,6 +134,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log("add")
 		var dataInput = {"data":{}};
 		if (newAddSlot != true) {
+			var select = $scope.selectText;
 			var myRegExp = new RegExp($scope.selectText, 'g');
 			var sentence = $scope.utterancesList[$scope.selectPop].sentence;
 			dataInput = {"data":{"entity_value_list":[{"entity_value":$scope.selectText}]}};
@@ -164,8 +165,8 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 					}
 					addSlotRequest(data);
 					console.log($scope.utterancesList);
-					$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+data.entity+'}');
-					sentence = sentence.replace(myRegExp,'{'+data.entity+'}')
+					$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+select+'}');
+					sentence = sentence.replace(myRegExp,'{'+select+'}')
 					console.log(sentence);
 					var tagData = {};
 					$scope.utterancesList[$scope.selectPop].sentence = sentence;
@@ -291,7 +292,7 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 		console.log(slot);
 	 
 
-
+		var select = $scope.selectText;
 		var myRegExp = new RegExp($scope.selectText, 'g');
 		var sentence = 	$scope.utterancesList[$scope.selectPop].sentence;
 		var tag = '<button class="badge badge-primary">'+slot.entity_name+'</button>';
@@ -317,9 +318,9 @@ appControllers.controller('aiIntentEditCtrl',['$http','$scope', '$state', 'Mercu
 						if (containsObject(data, $scope.slotsList) == false) {
 							$scope.slotsList.push(data);
 						}
-						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}');
+						$scope.utterancesList[$scope.selectPop].sentence = sentence.replace(myRegExp,'{'+select+'}');
 						console.log($scope.utterancesList);
-						sentence = sentence.replace(myRegExp,'{'+slot.entity_name+'}')
+						sentence = sentence.replace(myRegExp,'{'+select+'}')
 						console.log(sentence);
 						var tagData = {};
 						$scope.utterancesList[$scope.selectPop].sentence = sentence;

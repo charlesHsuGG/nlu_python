@@ -97,7 +97,7 @@ appControllers.controller('AIChatCtrl',
 					$scope.intent_ranking_list = editData.intent_ranking;
 
 					var msg = {}
-			   		msg.text = editData.bot_response;
+			   		msg.text = editData.bot_response.replace(/\r\n|\n/g,"<br>");
 					msg.sender = "admin";
 					   
 

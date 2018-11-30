@@ -68,6 +68,7 @@ class TrainWebController(object):
             article_db = Article()
             articles = article_db.query.filter_by(admin_id = admin_id).all()
             data_list =[]
+            check_data_list=[]
             synonyms_data=[]
             check_synonyms=[]
             for article in articles:
@@ -107,14 +108,14 @@ class TrainWebController(object):
                         ent_db = Entity()
                         ent = ent_db.query.filter_by(entity_id = slot.entity_id).first()
                         entity_name = ent.entity_name
-                        replace_str = "{" + entity_name + "}"
+                        replace_str = "{" + slot.name + "}"
                         if text.find(replace_str) >= 0:
                             ent_value_db = EntityValue()
                             ent_values = ent_value_db.query.filter_by(entity_id = slot.entity_id).all()
                             for ent_value in ent_values:
-                                sentenceText = text.replace(replace_str, ent_value.entity_value)
+                                sentenceText = text.replace(replace_str, ent_value.entity_value).replace("{","").replace("}","")
                                 synonyms_list = []
-                                if ent_value.synonyms is not None:
+                                if ent_value.synonyms:
                                     synonyms_list = ent_value.synonyms.split(',')
                                 start = sentenceText.find(ent_value.entity_value)
                                 end = start + len(ent_value.entity_value)
@@ -124,12 +125,23 @@ class TrainWebController(object):
                                     "end":end,
                                     "value":ent_value.entity_value
                                 }
-                                data = {
-                                    "text":sentenceText,
-                                    "intent":intent_name,
-                                    "entities":[entity_json]
-                                }
-                                data_list.append(data)
+                                if sentenceText not in check_data_list:
+                                    data = {
+                                        "text":sentenceText,
+                                        "intent":intent_name,
+                                        "entities":[entity_json]
+                                    }
+                                    data_list.append(data)
+                                    check_data_list.append(sentenceText)
+                                else:
+                                    for i,update_data in enumerate(data_list):
+                                        checkSentenceText = update_data.get("text")
+                                        if checkSentenceText.find(sentenceText) == 0:
+                                            entities = update_data.get("entities", list())
+                                            entities.append(entity_json)
+                                            update_data.update({"entities":entities})
+                                            data_list[i] = update_data
+
                                 if ent_value.entity_value not in check_synonyms:
                                     if synonyms_list:
                                         synonyms = []
