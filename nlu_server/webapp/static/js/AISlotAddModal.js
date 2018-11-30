@@ -19,6 +19,7 @@ appControllers.controller('aiSlotAddModalCtrl', ['$scope', '$http', '$window', '
 		dataPost.admin_id = "40w9dse0277455f634fw40439sd";
 		if (data.entity_name != null) {
 			console.log(data.entity_value_list);
+			$scope.sendData.entity_id = data.entity_id;
 			$scope.sendData.entity = data.entity_name;
 			if (data.entity_value_list != null) {
 				$scope.promptList = data.entity_value_list;

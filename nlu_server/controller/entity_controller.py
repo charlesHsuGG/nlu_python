@@ -420,10 +420,13 @@ class EntityWebController(object):
             admin_db = Admin()
             admin = admin_db.query.filter_by(admin_id = admin_id).first()
             for entity in entities:
+                entity_id = entity.get("entity_id", None)
                 entity_name = entity.get("entity", None)
 
                 ent_db = Entity()
-                ent = ent_db.query.filter_by(entity_name = entity_name).first()
+                ent = ent_db.query.filter_by(entity_id = entity_id).first()
+                ent.entity_name = entity_name
+                db.session.commit()
 
                 ent_value_db = EntityValue()
                 entity_values = ent_value_db.query.filter_by(entity_id = ent.entity_id).all()
