@@ -17,10 +17,10 @@ from rasa_nlu.training_data import TrainingData
 import glob
 import jieba
 # Add jieba userdict file
-jieba.set_dictionary('./jieba_dict/dict.txt')
-jieba_userdicts = glob.glob("./jieba_userdict/*")
-for jieba_userdict in jieba_userdicts:
-    jieba.load_userdict(jieba_userdict)
+# jieba.set_dictionary('./jieba_dict/dict.txt')
+# jieba_userdicts = glob.glob("./jieba_userdict/*")
+# for jieba_userdict in jieba_userdicts:
+#     jieba.load_userdict(jieba_userdict)
 
 
 class JiebaTokenizer(Tokenizer, Component):

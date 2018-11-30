@@ -149,6 +149,7 @@ class Model(db.Model):
     model_name = db.Column(db.String(80), nullable=False)
     model_path = db.Column(db.String(255), nullable=False)
     mitie_embeding_path = db.Column(db.String(255), nullable=False)
+    embedding_corpus_path = db.Column(db.String(255), nullable=False)
     w2v_embeding_path = db.Column(db.String(255), nullable=False)
     w2v_embeding_type = db.Column(db.String(20), nullable=False)
     admin_id = db.Column(db.String(32), nullable=False)

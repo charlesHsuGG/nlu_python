@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
+import glob
 import os
 
 import typing
@@ -44,31 +45,35 @@ class W2VNLP(Component):
 
             if os.path.exists(self.embedding_model_path):
                 # already have model
-                if self.corpus:
+                txt_files = glob.glob(self.corpus+"*.txt")
+                if txt_files:
                     corpus = self.process_raw_data(self.corpus)
                     from gensim.models.keyedvectors import KeyedVectors
                     is_binary = True if self.embedding_type == "bin" else False
                     self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
                     self.wv_model.train(corpus, total_examples=self.wv_model.corpus_count, epochs=self.wv_model.iter)
-                    logger.info("retrain model") 
+                    print("retrain model") 
                 else:
                     from gensim.models.keyedvectors import KeyedVectors
                     is_binary = True if self.embedding_type == "bin" else False
                     self.wv_model = KeyedVectors.load_word2vec_format(self.embedding_model_path, binary=is_binary)
-                    logger.info("setting model as training data")
+                    print("setting model as training data")
             else:
-                if self.corpus:
+                print("train model") 
+                txt_files = glob.glob(self.corpus+"*.txt")
+                if txt_files:
                     corpus = self.process_raw_data(self.corpus)
-                    model = Word2Vec(corpus, size=config.train_config["size"],
-                                alpha=config.train_config["alpha"],
-                                window=config.train_config["window"],
-                                min_count=config.train_config["min_count"],
-                                workers=config.train_config["workers"],
-                                sample=config.train_config["sample"],
-                                sg=config.train_config["sg"],
-                                hs=config.train_config["hs"],
-                                negative=config.train_config["negative"],
-                                cbow_mean=1, iter=config.train_config["iter"])
+                    train_config = config.get("train_config")
+                    model = Word2Vec(corpus, size=train_config["size"],
+                                alpha=train_config["alpha"],
+                                window=train_config["window"],
+                                min_count=train_config["min_count"],
+                                workers=train_config["workers"],
+                                sample=train_config["sample"],
+                                sg=train_config["sg"],
+                                hs=train_config["hs"],
+                                negative=train_config["negative"],
+                                cbow_mean=1, iter=train_config["iter"])
                     self.wv_model = model
 
                 else:
@@ -118,7 +123,8 @@ class W2VNLP(Component):
 
     @classmethod
     def process_raw_data(cls, sentences, max_sentence_length=MAX_WORDS_IN_BATCH, limit=None):
-        from gensim.models.word2vec import LineSentence
+        from gensim.models.word2vec import PathLineSentences
         if sentences is not None:
-            return LineSentence(sentences, max_sentence_length=max_sentence_length, limit=limit)
+            return PathLineSentences(sentences, max_sentence_length=max_sentence_length, limit=limit)
         raise ValueError("Sentences needs at least one sentence.")
+        

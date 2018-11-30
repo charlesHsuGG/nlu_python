@@ -33,6 +33,13 @@ from nlu_server.controller.entity_controller import EntityWebController
 from nlu_server.controller.train_controller import TrainWebController
 from nlu_server.controller.chat_controller import ChatWebController
 
+import jieba
+# Add jieba userdict file
+jieba.set_dictionary('./jieba_dict/dict.txt')
+# jieba_userdicts = glob.glob("./jieba_userdict/*")
+# for jieba_userdict in jieba_userdicts:
+#     jieba.load_userdict(jieba_userdict)
+
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__,static_folder='webapp/static')

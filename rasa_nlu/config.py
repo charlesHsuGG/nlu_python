@@ -46,6 +46,18 @@ DEFAULT_CONFIG = {
     "intent_classifier_sklearn": {
         "C": [1, 2, 5, 10, 20, 100],
         "kernel": "linear"
+    },
+    "train_config": {
+        "size": 300,
+        "alpha": 0.025,
+        "window":5,
+        "min_count":5,
+        "sample":0.001,
+        "workers":4,
+        "sg":0,
+        "hs":0,
+        "negative":5,
+        "iter":5
     }
 }
 

@@ -84,7 +84,8 @@ class CRFEntityExtractor(EntityExtractor):
         x_train = np.asarray(sents)
         y_train = np.asarray(labels)
         print(len(x_train), 'train sequences')
-        self.ner = anago.Sequence(batch_size=1, word_emb_size=150,embeddings=model)
+        train_config = config.get("train_config")
+        self.ner = anago.Sequence(batch_size=1, word_emb_size=train_config["size"],embeddings=model)
         self.ner.train(x_train, y_train, x_train, y_train)
         self.ner.eval(x_train, y_train)
 

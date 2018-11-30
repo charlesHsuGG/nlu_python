@@ -12,6 +12,7 @@ import six
 import glob
 import mitie
 import datetime
+import jieba
 
 import typing
 from typing import Text
@@ -43,6 +44,35 @@ class TrainWebController(object):
     def data_router(self,system_config):
         train_webhook = Blueprint('train_webhook', __name__)
 
+        @train_webhook.route("/parse_wiki_data", methods=['POST'])
+        def parse_wiki_data():
+            payload = request.json
+            admin_id = payload.get("admin_id", None)
+            model_id = payload.get("model_id", None)
+            model_db = Model()
+            model = model_db.query.filter_by(model_id = model_id, admin_id = admin_id).first()
+            corpus_path = model.embedding_corpus_path
+            print("corpus path_detect:"+corpus_path)
+            from gensim.corpora import WikiCorpus
+            wiki_corpus = WikiCorpus('/opt/nfs/zhwiki-20170120-pages-articles.xml.bz2', lemmatize=False, dictionary={})
+            print("corpus loaded finished")
+            texts_num = 0
+            with open(corpus_path+"wiki_data_set.txt",'w',encoding='utf-8') as output:
+                for text in wiki_corpus.get_texts():
+                    words = jieba.cut(' '.join(text), cut_all=False)
+                    line_sentence = ""
+                    for tag in words:
+                        line_sentence += (tag)
+                    output.write(line_sentence + '\n')
+                    print(line_sentence)
+                    texts_num += 1
+                    if texts_num % 1000 == 0:
+                        print("已處理 %d 篇文章" % texts_num)
+            output.close()
+            response = {"code":1, "seccess": True}
+            return (json_to_string(response))
+
+
         @train_webhook.route("/train", methods=['POST'])
         def train():
             payload = request.json
@@ -59,6 +89,7 @@ class TrainWebController(object):
             model_config = system_config
 
             model_config.override({"mitie_file":model.mitie_embeding_path,
+            "embedding_corpus_path":model.embedding_corpus_path,
             "embedding_model_path":model.w2v_embeding_path,
             "embedding_type":model.w2v_embeding_type,
             "pipeline":pipeline})
