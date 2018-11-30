@@ -63,33 +63,59 @@ class ChatWebController(object):
                 for slot in slots:
                     required = slot.required
                     entity_id = slot.entity_id
-                    slot_name = slot.name
-                    slot_prompts = slot.prompt
+                    entity_db = Entity()
+                    entity = entity_db.query.filter_by(entity_id = entity_id).first()
                     slot_json ={
-                        "name" : slot_name
+                        "name" : entity.entity_name
                     }
                     ent_db = Entity()
                     ent = ent_db.query.filter_by(entity_id = entity_id).first()
-                    if required is True:
-                        required = False
+                    fill_slot = False
                         for find_ent in entities:
                             if find_ent.get("entity").find(ent.entity_name) == 0:
                                 slot_json.update({"value":find_ent.get("value")})
-
-                                required = True
-                            elif find_ent.get("entity").find(ent.duckling_name) == 0:
-                                slot_json.update({"value":find_ent.get("value")})
-
-                                required = True
-                        if required == False:
-                            bot_response = secure_random.choice(slot_prompts).prompt_text
-
+                                fill_slot = True
+                        if fill_slot is True:
+                            slot_json.update({"required":required, "fill_slot":True})
+                        else:
+                            slot_json.update({"required":required, "fill_slot":False})
                     else:
                         for find_ent in entities:
-                            if find_ent.get("entity") is ent.entity_name:
+                            if find_ent.get("entity").find(ent.entity_name) == 0:
                                 slot_json.update({"value":find_ent.get("value")})
+                        slot_json.update({"required":required, "fill_slot":True})
+
                     slot_list.append(slot_json)
 
+                select_option = False
+                for slot in slot_list:
+                    required_slot = slot.get("required")
+                    fill_slot = slot.get("fill_slot")
+                    if required_slot == True and fill_slot == False:
+                        select_option = True
+                slections = []
+                check_list = []
+                if select_option == True:
+                    intent_db = Intent()
+                    intents = intent_db.query.all()
+                    for intent in intents:
+                        intent_slots = intent.slot
+                        for slot in slot_list:
+                            if fill_slot == True:
+                                for intent_slot in intent_slots:
+                                    intent = intent_slot.intent_name
+                                    entity_id = intent_slot.entity_id
+                                    sentences = intent_slot.sentence
+                                    entity_db = Entity()
+                                    entity = entity_db.query.filter_by(entity_id = entity_id).first()
+                                    if entity.entity_name.find(slot.get("name")) >= 0:
+                                        sentence_list =[]
+                                        for sentence in sentences:
+                                            sentence_text = sent.sentence
+                                            sentence_list.append(sentence_text)
+                                        if intent not in intent:
+                                            slections.append(secure_random.choice(sentence_list).prompt_text)
+                                            check_list.append(intent)
                 if bot_response is None:
                     respon_confirm = False
                     confirm_prompts =[]
@@ -108,6 +134,10 @@ class ChatWebController(object):
                     else:
                         print(secure_random.choice(response_prompts))
                         bot_response = secure_random.choice(response_prompts).prompt_text
+                if check_list:
+                    bot_response += "或者您想問:\n"
+                    for slection in slections:
+                        bot_response += slection + "\n"
                 reponse_josn ={
                     "intent":intent_name,
                     "intent_ranking" : result.get("intent_ranking"),
