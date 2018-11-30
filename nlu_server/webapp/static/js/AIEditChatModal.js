@@ -11,7 +11,7 @@ function ($scope,$http,$window,close,MercueRequests,DTOptionsBuilder,data){
 	
 	function init()    {
 		console.log(data);
-		
+		$scope.slotList = data.data.slots
 	}
 
 	$scope.close = function(result) {

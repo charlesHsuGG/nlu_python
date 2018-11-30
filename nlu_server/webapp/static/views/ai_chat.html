@@ -69,8 +69,10 @@
                                     <div  ng-class="checkTextRight(message)">{{message.text}}
                                     <div>   
                                     <button ng-show="checkBtn(message)" type="button" class="btn btn-outline-light  mt-1 float-right" ng-click="editIntent($index)">意圖</button>
-                                </div>
-                                </div>
+                                    </div>
+                                    <span style="color:white">intent:{{message.data.intent}}</span>
+                                 </div>
+                               
                                  </div>     
                               
 

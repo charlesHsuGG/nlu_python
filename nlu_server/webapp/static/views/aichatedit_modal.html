@@ -12,12 +12,13 @@
                     <thead>
                         <tr>
                             <th class=" ">Slots</th>
-                            <th class=" ">內容</th>
+                            <!-- <th class=" ">內容</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="">
- 
+                        <tr ng-repeat="slot in slotList">
+                            <td >{{slot.name}}</td>
+                            
                         </tr>
                     </tbody>
                 </table>
