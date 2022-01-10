@@ -1,2 +1,3 @@
 jieba_dict/*
 jieba_userdict/*
+.vscode/*.json
